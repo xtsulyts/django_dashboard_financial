@@ -1,0 +1,118 @@
+1. Requerimientos del Proyecto
+Funcionales:
+
+Autenticación de usuarios:
+
+Registro y login de usuarios.
+Roles de usuario (Admin y Usuario).
+Autenticación mediante JWT para un acceso seguro.
+Gestión de Transacciones:
+
+CRUD para ingresos y gastos.
+Cada transacción tiene:
+Monto
+Fecha
+Categoría (alimentación, transporte, entretenimiento, etc.)
+Descripción opcional
+Tipo de transacción (Ingreso o Gasto)
+Categorías de Transacciones:
+
+Los usuarios pueden crear, editar o eliminar categorías para sus transacciones (por ejemplo, "Comida", "Renta", "Entretenimiento").
+Visualización de Datos Financieros:
+
+Gráficos de barras o líneas mostrando ingresos y gastos por mes, trimestre o año.
+Gráfico de "Balance total" mostrando la diferencia entre ingresos y gastos.
+Tabla con las transacciones recientes.
+Filtros y Búsqueda:
+
+Filtros por fecha (última semana, mes, trimestre, etc.)
+Búsqueda por descripción de transacción o categoría.
+Exportación de Datos:
+
+Los usuarios pueden exportar sus transacciones en formato CSV o Excel.
+Notificaciones:
+
+Notificación por correo electrónico sobre límites de presupuesto o transacciones grandes.
+2. Flujo de Trabajo
+Inicio de Sesión y Registro:
+
+El usuario accede al dashboard y si no tiene cuenta, puede registrarse.
+Si ya tiene cuenta, se autentica con JWT y accede a su tablero.
+Panel de Control (Dashboard):
+
+Vista general: Se muestra el balance total (ingresos vs. gastos) con gráficos dinámicos.
+Lista de transacciones: A la derecha o debajo, se muestra una tabla con las últimas transacciones. Cada transacción puede editarse o eliminarse.
+Gráfico de barras/líneas: Muestra los ingresos y gastos por mes o categoría.
+Gestión de Transacciones:
+
+El usuario puede agregar nuevas transacciones desde un formulario donde se ingresa:
+Monto
+Fecha
+Categoría (desplegable)
+Descripción (opcional)
+Tipo (Ingreso o Gasto)
+Una vez agregada, la transacción aparece en la lista.
+Filtros y Búsqueda:
+
+Los usuarios pueden filtrar transacciones por fecha (última semana, mes, etc.) o por categoría.
+Pueden buscar transacciones específicas usando una barra de búsqueda.
+Gráficos y Estadísticas:
+
+Los gráficos se actualizan dinámicamente según los filtros seleccionados. Se pueden elegir diferentes periodos para analizar (mensual, trimestral, anual).
+Exportación de Datos:
+
+Al finalizar su sesión o al necesitar los datos, el usuario puede exportar sus transacciones a un archivo CSV o Excel.
+3. Wireframe (Desglose Visual de Pantallas)
+A continuación te doy una descripción general de cómo serían las pantallas clave:
+
+Pantalla 1: Login/Registro
+Campos de entrada:
+Correo electrónico.
+Contraseña.
+Botones:
+Login (si ya tiene cuenta).
+Registro (si es nuevo usuario).
+Pantalla 2: Dashboard (Pantalla Principal)
+Encabezado:
+
+Título: "Mi Dashboard Financiero".
+Icono de perfil de usuario.
+Botón de logout.
+Sección de Estadísticas Generales:
+
+Balance Total: Caja con la diferencia entre ingresos y gastos.
+Gráfico de barras/líneas: Muestra los ingresos vs. gastos por mes.
+Estadísticas: Total de ingresos, total de gastos, porcentaje de ahorro, etc.
+Lista de Transacciones Recientes:
+
+Tabla con columnas:
+Monto
+Fecha
+Categoría
+Tipo (Ingreso/Gasto)
+Descripción
+Opciones (editar/eliminar)
+Botón de Agregar Transacción:
+
+Este botón llevará al formulario para crear una nueva transacción.
+Pantalla 3: Formulario de Nueva Transacción
+Campos de Entrada:
+
+Monto (campo numérico)
+Fecha (selector de fecha)
+Categoría (selector desplegable)
+Descripción (campo opcional)
+Tipo (Ingreso/Gasto - radio buttons)
+Botón de Guardar para agregar la transacción.
+
+Pantalla 4: Gráfico de Análisis Financiero
+Gráfico Interactivo:
+Gráfico de barras o líneas mostrando los ingresos y gastos a lo largo de diferentes periodos (mes, trimestre, año).
+Filtros:
+Selector de fechas: (última semana, mes actual, últimos 3 meses, etc.)
+Filtro por categoría.
+Pantalla 5: Exportación de Datos
+Botón para exportar:
+"Exportar a CSV" o "Exportar a Excel".
+Al hacer clic, se descarga un archivo con todas las transacciones filtradas.
+
