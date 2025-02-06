@@ -46,15 +46,12 @@ Sigue estos pasos para instalar y ejecutar el proyecto en tu entorno local.
 
 ### Backend (Django)
 
-1. Clona el repositorio:
+1. Clona el repositorio.
 
-   ```bash
-   git clone https://github.com/tu-usuario/dashboard-financiero.git
-   cd dashboard-financiero
 2. Crea un entorno virtual e instala las dependencias de Python:
    
   python3 -m venv venv
-  source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
+  source venv/bin/activate  # En Windows usa venv\Scripts\activate
   pip install -r requirements.txt
 
 3. Configura las variables de entorno:
