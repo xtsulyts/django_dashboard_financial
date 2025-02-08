@@ -23,5 +23,6 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', include("core"))
+    path('', include("core.urls")),
+    #path("", include("django_nextjs.urls")),
 ]

@@ -14,6 +14,8 @@ from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 import os
+from django_nextjs.render import render_nextjs_page_sync
+
 
 
 ##FORMULARIO DE CONTACTO##
