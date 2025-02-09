@@ -6,9 +6,9 @@ from django.urls import path
 # from django.contrib.auth import views as auth_views
 # from django.contrib.auth.views import LogoutView
 # #from  Farmacia import views
-from .views import  login, index
+from .views import  login_user, index
 
 urlpatterns = [
     path("", index, name="index"),
-    path("login/", login, name="login"),  
+    path("login_user/", login_user, name="login_user"),  
    ]

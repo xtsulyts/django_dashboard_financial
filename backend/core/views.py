@@ -13,20 +13,49 @@ from django.utils import timezone
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 import os
-
-
-
 from django.http import JsonResponse
-
-def index(request):
-    return JsonResponse({"message": "Comenzando con las url"})
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .forms import register_user_form
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+from .forms import register_user_form
 
 @csrf_exempt
-def login(request):
+def index(request):
+    """
+    Handle user registration requests from a React frontend.
+    Expects JSON data in the request body with 'username', 'email', and 'password1', 'password2'.
+    """
+    if request.method == 'POST':
+        # Parse the JSON data from the request body
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        # Create the form with the parsed data
+        form = register_user_form(data)
+        
+        if form.is_valid():
+            # Save the new user
+            user = form.save()
+            login_user(request, user)  # Log the user in automatically
+            return JsonResponse({'message': 'User registered successfully'}, status=201)
+        else:
+            # Return form errors in JSON format
+            return JsonResponse({'errors': form.errors}, status=400)
+    
+    # Handle non-POST requests
+    return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+@csrf_exempt
+def login_user(request):
     if request.method == "POST":
         data = json.loads(request.body)
         email = data.get("email")
@@ -39,6 +68,13 @@ def login(request):
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
+
+def logout(request):
+    try:
+        del request.session["member_id"]
+    except KeyError:
+        pass
+    return HttpResponse("You're logged out.")
 
 # ##FORMULARIO DE CONTACTO##
 
