@@ -1,7 +1,5 @@
-from typing import Any
+
 #from django.db.models.query import _BaseQuerySet
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 #from  core.forms import ContactoForm
 from django.urls import reverse
@@ -21,7 +19,7 @@ from .forms import register_user_form
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+
 from django.utils.decorators import method_decorator
 import json
 from .forms import register_user_form

@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Permitir solicitudes desde tu frontend
 ]
@@ -98,6 +99,8 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+AUTH_USER_MODEL = 'core.custom_user'  # Cambia 'core' al nombre de tu app si es necesario
 
 
 # Password validation
