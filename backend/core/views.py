@@ -43,7 +43,7 @@ def index(request):
         if form.is_valid():
             # Save the new user
             user = form.save()
-            login_user(request, user)  # Log the user in automatically
+            login(request, user)  # Log the user in automatically
             return JsonResponse({'message': 'User registered successfully'}, status=201)
         else:
             # Return form errors in JSON format

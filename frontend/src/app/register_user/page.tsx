@@ -107,7 +107,7 @@ const AuthComponent = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          {errors.password2 && <p className="text-red-500 text-xs">{errors.password2}</p>}
+         // {errors.password2 && <p className="text-red-500 text-xs">{errors.password2}</p>}
 
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
             Registrarse
