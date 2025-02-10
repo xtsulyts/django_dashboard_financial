@@ -23,7 +23,7 @@ const AuthComponent = () => {
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden");
       return;
-    }
+    } 7
 
     try {
       const response = await axios.post("http://localhost:8000/", {

@@ -3,6 +3,7 @@
 import { useState } from "react";
 export default function Login() {
   const [email, setEmail] = useState("");
+  const [user, setUser] = useState("")
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
@@ -11,12 +12,12 @@ export default function Login() {
     setError(null); // Resetear error antes de la petición
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ user, email, password }),
       });
 
       if (!response.ok) {
@@ -34,9 +35,16 @@ export default function Login() {
   return (
     <form onSubmit={handleLogin} className="flex flex-col gap-4">
       <h1 className="text-xl font-bold">Inicia Sesión</h1>
+      {/* <input
+        type="user"
+        placeholder="Usuario"
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+        className="p-2 border rounded"
+      /> */}
       <input
         type="email"
-        placeholder="Correo Electrónico"
+        placeholder="Usuario/Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="p-2 border rounded"

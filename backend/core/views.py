@@ -15,8 +15,10 @@ from django.http import JsonResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+
+from .models import custom_user
 from .forms import register_user_form
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 
@@ -59,59 +61,14 @@ def login_user(request):
         email = data.get("email")
         password = data.get("password")
 
-        # Validación simple (luego se puede integrar con el sistema de usuarios)
-        if email == "test@example.com" and password == "12345":
-            return JsonResponse({"message": "Login exitoso", "token": "fake-jwt-token"})
+        # Buscar el usuario por email
+        user = custom_user.objects.filter(email=email).first()
+        if user:
+            # Autenticación del usuario
+            authenticated_user = authenticate(username=user.username, password=password)
+            if authenticated_user is not None:
+                return JsonResponse({"message": "Login exitoso", "token": "fake-jwt-token"})
+
         return JsonResponse({"error": "Credenciales inválidas"}, status=401)
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
-
-
-def logout(request):
-    try:
-        del request.session["member_id"]
-    except KeyError:
-        pass
-    return HttpResponse("You're logged out.")
-
-# ##FORMULARIO DE CONTACTO##
-
-# def contacto(request, ):
-#   formulario = None
-#   if request.method == 'POST':
-      
-#       formulario = ContactoForm ( request.POST )
-#       if formulario.is_valid ():
-#         messages.success(request, 'Recibimos tu mensaje')
-             
-#         contacto_db = Contacto (
-#             nombre = formulario.cleaned_data ["nombre"],
-#             apellido = formulario.cleaned_data ["apellido"],
-#             email = formulario.cleaned_data ["email"],
-#             mensaje = formulario.cleaned_data ["mensaje"]
-#         )
-
-#         contacto_db.save()
-        
-#         return redirect('index')
-
-#       else:
-#         messages.error(request, 'al cargar formulario')
-       
-#   else:
-#       formulario = ContactoForm ()        
-#   context =  {
-#      'formulario_contacto'  : formulario 
-#     }
-#   return render(request, "contacto.html", context ) 
-
-
-# ##VISTAS DEL SITIO## 
-
-# def index(request):
-#     contexto = {'mensaje': '¡Hola desde la vista de inicio!'}
-#     return render(request, 'home.html', contexto)
-
-# @login_required
-# def modulo(request):
-#     return render(request, 'modulo.html')
