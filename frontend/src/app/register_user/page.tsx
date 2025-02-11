@@ -23,7 +23,7 @@ const AuthComponent = () => {
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden");
       return;
-    } 7
+    }
 
     try {
       const response = await axios.post("http://localhost:8000/", {
@@ -64,6 +64,9 @@ const AuthComponent = () => {
           </button>
         </>
       )}
+
+
+      {showForm === "login" && <Login />} {/* Renderizado condicional del componente Login */}
 
       {showForm === "signup" && (
         <form onSubmit={handleRegister} className="w-full max-w-sm">
@@ -107,15 +110,83 @@ const AuthComponent = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-         // {errors.password2 && <p className="text-red-500 text-xs">{errors.password2}</p>}
+          {errors.password2 && <p className="text-red-500 text-xs">{errors.password2}</p>}
 
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
             Registrarse
           </button>
         </form>
       )}
+
+     
     </div>
   );
 };
 
 export default AuthComponent;
+
+ function Login() {
+  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("")
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [currentView, setCurrentView] = useState<"auth" | "login" | null>("auth");
+
+  const handleLogin = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    setError(null); // Resetear error antes de la petición
+
+    try {
+      const response: Response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user, email, password }),
+      });
+
+
+      if (!response.ok) {
+        throw new Error("Credenciales inválidas o error del servidor.");
+        
+      }
+
+      const data = await response.json();
+      console.log("Datos del usuario:", data);
+      // Redirigir o manejar sesión si el backend devuelve un token
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <form onSubmit={handleLogin} className="flex flex-col gap-4">
+      <h1 className="text-xl font-bold">Inicia Sesión</h1>
+      {/* <input
+        type="user"
+        placeholder="Usuario"
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+        className="p-2 border rounded"
+      /> */}
+      <input
+        type="email"
+        placeholder="Usuario/Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="p-2 border rounded"
+      />
+      <input
+        type="password"
+        placeholder="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="p-2 border rounded"
+      />
+      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+        Iniciar Sesión
+      </button>
+      {error && <p className="text-red-500">{error}</p>}
+    </form>
+  );
+}
