@@ -35,7 +35,7 @@ const AuthComponent = () => {
 
       if (response.status === 201) {
         alert("Usuario creado con exito");
-        console.log("Datos del usuario cargados exitosamente!", ({username, email}) );
+        console.log("Datos del usuario cargados exitosamente!", ({username, email, password}) );
         setShowForm(null); // Resetea el componente tras registro
       }
     } catch (error: any) {
