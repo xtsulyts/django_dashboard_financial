@@ -33,7 +33,7 @@ def index(request):
     Expects JSON data in the request body with 'username', 'email', and 'password1', 'password2'.
     """
     if request.method == 'POST':
-        # Parse the JSON data from the request body
+    
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
@@ -45,14 +45,14 @@ def index(request):
         if form.is_valid():
             # Save the new user
             user = form.save()
-            login(request, user)  # Log the user in automatically
+            login(request, user) 
             return JsonResponse({'message': 'User registered successfully'}, status=201)
         else:
-            # Return form errors in JSON format
+            
             return JsonResponse({'errors': form.errors}, status=400)
     
-    # Handle non-POST requests
-    return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+   
+    return JsonResponse({'': 'url de inicio./8000'}, status=405)
 
 @csrf_exempt
 def login_user(request):
@@ -61,10 +61,10 @@ def login_user(request):
         email = data.get("email")
         password = data.get("password")
 
-        # Buscar el usuario por email
+       
         user = custom_user.objects.filter(email=email).first()
         if user:
-            # Autenticación del usuario
+        
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user is not None:
                 return JsonResponse({"message": "Login exitoso", "token": "fake-jwt-token"})

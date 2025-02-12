@@ -33,8 +33,9 @@ const AuthComponent = () => {
         password2: confirmPassword,
       });
 
-      if (response.status === 200) {
-        alert("Registro exitoso");
+      if (response.status === 201) {
+        alert("Usuario creado con exito");
+        console.log("Datos del usuario cargados exitosamente!", ({username, email}) );
         setShowForm(null); // Resetea el componente tras registro
       }
     } catch (error: any) {
@@ -137,7 +138,7 @@ export default AuthComponent;
     setError(null); // Resetear error antes de la petición
 
     try {
-      const response: Response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
+      const response: Response = await fetch("http://localhost:8000//login_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
