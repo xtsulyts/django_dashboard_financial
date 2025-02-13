@@ -9,9 +9,9 @@ export default function Home() {
   
   return (
     <>
-      <Header/>
+      
       <AuthComponent/>
-      <Footer/>
+    
     </>
   );
 }
