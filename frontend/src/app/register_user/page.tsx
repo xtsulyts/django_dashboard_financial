@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 /**
  * Componente de registro y control inicial de opciones
  * @returns JSX.Element
  */
 const AuthComponent = () => {
+  const router = useRouter();
   const [showForm, setShowForm] = useState<string | null>(null); // Maneja la vista actual (login o sign up)
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -37,6 +39,7 @@ const AuthComponent = () => {
         alert("Usuario creado con exito");
         console.log("Datos del usuario cargados exitosamente!", ({username, email, password}) );
         setShowForm(null); // Resetea el componente tras registro
+        router.push('./home');
       }
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
@@ -127,6 +130,7 @@ const AuthComponent = () => {
 export default AuthComponent;
 
  function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("")
   const [password, setPassword] = useState("");
@@ -154,6 +158,7 @@ export default AuthComponent;
 
       const data = await response.json();
       console.log("Datos del usuario:", data);
+      router.push('./home');
       // Redirigir o manejar sesión si el backend devuelve un token
     } catch (err: any) {
       setError(err.message);
