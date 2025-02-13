@@ -137,7 +137,7 @@ export default AuthComponent;
     setError(null); // Resetear error antes de la petición
 
     try {
-      const response: Response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
+      const response: Response = await fetch("http://localhost:8000/login_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

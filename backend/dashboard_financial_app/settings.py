@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'dashboard_financial_app.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dashboard_financial_db",
+        "NAME": "dash_board_financial_db",
         "USER": "postgres",
         "PASSWORD": "avmayo852",
         "HOST": "127.0.0.1",
