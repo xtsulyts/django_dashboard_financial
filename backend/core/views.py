@@ -1,30 +1,18 @@
 
-#from django.db.models.query import _BaseQuerySet
-from django.http import HttpResponse, HttpResponseRedirect
-#from  core.forms import ContactoForm
-from django.urls import reverse
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.decorators.csrf import csrf_protect
-import sys
 from django.utils import timezone
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView
-import os
 from django.http import JsonResponse
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import json
-
 from .models import custom_user
 from .forms import register_user_form
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
 from django.http import JsonResponse
-
-from django.utils.decorators import method_decorator
-import json
 from .forms import register_user_form
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 @csrf_exempt
 def index(request):
@@ -101,74 +89,42 @@ def index(request):
     return JsonResponse({'error': 'Método no permitido. URL de inicio: /8000'}, status=405)
 
 
+
+
 @csrf_exempt
 def login_user(request):
-    """
-    Maneja las solicitudes de inicio de sesión desde un frontend en React.
-
-    Esta función procesa solicitudes POST para autenticar a un usuario existente. 
-    Espera recibir datos en formato JSON con los siguientes campos:
-
-    - 'email': Dirección de correo electrónico del usuario.
-    - 'password': Contraseña del usuario.
-
-    Pasos:
-    1. Extraer y analizar los datos JSON del cuerpo de la solicitud.
-    2. Buscar un usuario en la base de datos con el correo electrónico proporcionado.
-    3. Si el usuario existe, intentar autenticarlo con la contraseña ingresada.
-    4. Si la autenticación es exitosa, devolver un mensaje de éxito junto con un token (simulado).
-    5. Si las credenciales son incorrectas, devolver un error 401.
-    6. Si el método de la solicitud no es POST, devolver un error 405.
-
-    Retorna:
-        JsonResponse: Una respuesta JSON indicando éxito con un token o detalles de error.
-    """
     if request.method == "POST":
-        """ 
-        Extraer los datos JSON de la solicitud.
-
-        Se espera que el frontend envíe un objeto JSON con las claves 'email' y 'password'. 
-        """
         data = json.loads(request.body)
         email = data.get("email")
         password = data.get("password")
 
-        """ 
-        Buscar al usuario en la base de datos usando el correo electrónico.
-
-        `custom_user.objects.filter(email=email).first()`:
-        - Busca en la base de datos un usuario con el email proporcionado.
-        - `.first()` se usa para evitar errores en caso de que haya múltiples resultados.
-        - Si no encuentra un usuario, `user` será `None`.
-        """
         user = custom_user.objects.filter(email=email).first()
         if user:
-            """ 
-            Intentar autenticar al usuario con la contraseña proporcionada.
-
-            `authenticate(username=user.username, password=password)`:
-            - Django usa el nombre de usuario (`username`) y la contraseña para la autenticación.
-            - Si la contraseña es correcta, devuelve el objeto del usuario autenticado.
-            - Si es incorrecta, devuelve `None`.
-            """
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user is not None:
-                """ 
-                Si la autenticación es exitosa, devolver un mensaje de éxito con un token (simulado).
+                # Generar los tokens JWT
+                refresh = RefreshToken.for_user(authenticated_user)
+                access_token = str(refresh.access_token)
                 
-                *Nota:* Actualmente, este código usa un token ficticio ("fake-jwt-token").
-                En un entorno real, se debería generar un token JWT válido para la autenticación.
-                """
-                return JsonResponse({"message": "Login exitoso", "token": "fake-jwt-token"})
+                return JsonResponse({
+                    "message": "Login exitoso",
+                    "access_token": access_token,
+                    "refresh_token": str(refresh)  # El refresh token también se envía
+                })
 
-        """ 
-        Si el usuario no existe o la contraseña es incorrecta, devolver un error 401 (No autorizado).
-        """
         return JsonResponse({"error": "Credenciales inválidas"}, status=401)
 
-    """ 
-    Si el método de la solicitud no es POST, devolver una respuesta 405 (Método no permitido).
-
-    Esto evita que otros métodos HTTP interactúen con el endpoint de inicio de sesión.
-    """
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    return JsonResponse({"user": request.user.username})
+
+
+
+
+
