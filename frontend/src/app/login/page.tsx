@@ -1,65 +1,86 @@
 "use client"
 ;
-import { useState } from "react";
+import React, { useState } from "react";
+
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [user, setUser] = useState("")
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(null); // Estado para almacenar los datos del usuario
 
   const handleLogin = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     setError(null); // Resetear error antes de la petición
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
+      // 1. Hacer login para obtener los tokens
+      const loginResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user, email, password }),
+        body: JSON.stringify({ email, password }), // Asegúrate de que el backend espera `email` y `password`
       });
 
-      if (!response.ok) {
+      if (!loginResponse.ok) {
         throw new Error("Credenciales inválidas o error del servidor.");
       }
 
-      const data = await response.json();
-      console.log("Datos del usuario:", data);
-      // Redirigir o manejar sesión si el backend devuelve un token
+      const { access_token } = await loginResponse.json(); // Extraer el access_token de la respuesta
+
+      // 2. Usar el access_token para obtener los datos del usuario
+      const profileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user_profile/`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${access_token}`, // Enviar el token en el header
+        },
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error("Error al obtener los datos del usuario.");
+      }
+
+      const userData = await profileResponse.json(); // Obtener los datos del usuario
+      setUserData(userData); // Guardar los datos del usuario en el estado
+      console.log("Datos del usuario:", userData);
+
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Mostrar el error en caso de fallo
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold">Inicia Sesión</h1>
-      {/* <input
-        type="user"
-        placeholder="Usuario"
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        className="p-2 border rounded"
-      /> */}
-      <input
-        type="email"
-        placeholder="Usuario/Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Iniciar Sesión
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
-    </form>
+    <div>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Iniciar sesión</button>
+      </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {userData && (
+        <div>
+          <h2>Datos del usuario:</h2>
+          <pre>{JSON.stringify(userData, null, 2)}</pre>
+        </div>
+      )}
+    </div>
   );
 }
