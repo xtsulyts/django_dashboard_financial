@@ -3,14 +3,14 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-//import { useUser } from "../context/UserContext";
+import { useUser } from "../contex/UserContex";
 
 
 
 
 
 function Login() {
-  //const { loginUser } = useUser();
+  const { loginUser } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

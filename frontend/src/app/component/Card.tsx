@@ -1,7 +1,7 @@
 // Card.tsx
 "use client"; // Esto es necesario para componentes de cliente en Next.js
 
-import { useUser } from "../context/UserContext";
+import { useUser } from "../contex/UserContex";
 
 const Card = () => {
   const { user } = useUser();
