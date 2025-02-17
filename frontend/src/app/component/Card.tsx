@@ -5,6 +5,7 @@ import { useUser } from "../contex/UserContex";
 
 const Card = () => {
   const { user } = useUser();
+  console.log(useUser)
 
   return (
     <div className="flex justify-center py-10">

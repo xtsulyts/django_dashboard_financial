@@ -1,3 +1,6 @@
+"use client";
+
+
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 // Definir la estructura de los datos del usuario

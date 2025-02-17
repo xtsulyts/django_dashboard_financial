@@ -10,11 +10,11 @@ export default function Home() {
   
   return (
     <>
-    <UserProvider>
-      
+    
+      <UserProvider>
       <AuthComponent/>
-
-    </UserProvider>
+      </UserProvider>
+    
     
     </>
   );

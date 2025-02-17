@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
-
-
-
-
 
 function Login() {
   const { loginUser } = useUser();
@@ -15,7 +10,6 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [userData, setUserData] = useState(null); // Estado para almacenar los datos del usuario
 
   const handleLogin = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
@@ -30,27 +24,19 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
 
-
       if (!response.ok) {
         throw new Error("Credenciales inválidas o error del servidor.");
-        
       }
 
-    //   const data = await response.json();
-    //   console.log("Datos del usuarioooo:", data);
-
       const { access_token } = await response.json(); // Extraer el access_token de la respuesta
-      console.log("token de acceso:", access_token)
-      router.push('./home');
+      console.log("Token de acceso:", access_token);
 
-      // Redirigir o manejar sesión si el backend devuelve un token
-
+      // Obtener los datos del usuario
       const profileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user_profile/`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${access_token}`, // Enviar el token en el header
         },
-
       });
 
       if (!profileResponse.ok) {
@@ -58,10 +44,13 @@ function Login() {
       }
 
       const userData = await profileResponse.json(); // Obtener los datos del usuario
-      setUserData(userData); // Guardar los datos del usuario en el estado
       console.log("Datos del usuario:", userData);
 
+      // Actualizar el estado del usuario antes de redirigir
+      loginUser(userData);
 
+      // Redirigir al usuario a la página de inicio
+      router.push('./home');
 
     } catch (err: any) {
       setError(err.message);

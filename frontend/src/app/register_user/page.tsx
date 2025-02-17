@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Login from "../login/page";
 
+
 /**
  * Componente de registro y control inicial de opciones
  * @returns JSX.Element
