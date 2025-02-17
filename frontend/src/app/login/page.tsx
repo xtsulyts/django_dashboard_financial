@@ -3,16 +3,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+//import { useUser } from "../context/UserContext";
+
 
 
 
 
 function Login() {
+  //const { loginUser } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [currentView, setCurrentView] = useState<"auth" | "login" | null>("auth");
   const [userData, setUserData] = useState(null); // Estado para almacenar los datos del usuario
 
   const handleLogin = async (event: { preventDefault: () => void; }) => {
