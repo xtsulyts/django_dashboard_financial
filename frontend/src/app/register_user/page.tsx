@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Login from "../login/page";
 
 /**
  * Componente de registro y control inicial de opciones
@@ -129,70 +130,77 @@ const AuthComponent = () => {
 
 export default AuthComponent;
 
- function Login() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [user, setUser] = useState("")
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [currentView, setCurrentView] = useState<"auth" | "login" | null>("auth");
+//  function Login() {
+//   const router = useRouter();
+//   const [email, setEmail] = useState("");
+//   const [user, setUser] = useState("")
+//   const [password, setPassword] = useState("");
+//   const [error, setError] = useState(null);
+//   const [currentView, setCurrentView] = useState<"auth" | "login" | null>("auth");
 
-  const handleLogin = async (event: { preventDefault: () => void; }) => {
-    event.preventDefault();
-    setError(null); // Resetear error antes de la petición
+//   const handleLogin = async (event: { preventDefault: () => void; }) => {
+//     event.preventDefault();
+//     setError(null); // Resetear error antes de la petición
 
-    try {
-      const response: Response = await fetch("http://localhost:8000//login_user/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user, email, password }),
-      });
+//     try {
+//       const response: Response = await fetch("http://localhost:8000/login_user/", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ user, email, password }),
+//       });
 
 
-      if (!response.ok) {
-        throw new Error("Credenciales inválidas o error del servidor.");
+//       if (!response.ok) {
+//         throw new Error("Credenciales inválidas o error del servidor.");
         
-      }
+//       }
 
-      const data = await response.json();
-      console.log("Datos del usuario:", data);
-      router.push('./home');
-      // Redirigir o manejar sesión si el backend devuelve un token
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
+      
+      
+//       const data = await response.json();
+//       console.log("Datos del usuario:", data);
 
-  return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold">Inicia Sesión</h1>
-      {/* <input
-        type="user"
-        placeholder="Usuario"
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        className="p-2 border rounded"
-      /> */}
-      <input
-        type="email"
-        placeholder="Usuario/Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Iniciar Sesión
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
-    </form>
-  );
-}
+//       // const { access_token } = await response.json(); // Extraer el access_token de la respuesta
+//       // console.log("token", access_token)
+//       router.push('./login');
+//       // Redirigir o manejar sesión si el backend devuelve un token
+
+
+//     } catch (err: any) {
+//       setError(err.message);
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleLogin} className="flex flex-col gap-4">
+//       <h1 className="text-xl font-bold">Inicia Sesión</h1>
+//       {/* <input
+//         type="user"
+//         placeholder="Usuario"
+//         value={user}
+//         onChange={(e) => setUser(e.target.value)}
+//         className="p-2 border rounded"
+//       /> */}
+//       <input
+//         type="email"
+//         placeholder="Usuario/Email"
+//         value={email}
+//         onChange={(e) => setEmail(e.target.value)}
+//         className="p-2 border rounded"
+//       />
+//       <input
+//         type="password"
+//         placeholder="Contraseña"
+//         value={password}
+//         onChange={(e) => setPassword(e.target.value)}
+//         className="p-2 border rounded"
+//       />
+//       <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+//         Iniciar Sesión
+//       </button>
+//       {error && <p className="text-red-500">{error}</p>}
+//     </form>
+//   );
+// }

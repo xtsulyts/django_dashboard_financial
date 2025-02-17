@@ -107,7 +107,7 @@ def login_user(request):
                 access_token = str(refresh.access_token)
                 
                 return JsonResponse({
-                    "message": "Login exitoso",
+                    "message": "Loginnnn exitoso",
                     "access_token": access_token,
                     "refresh_token": str(refresh)  # El refresh token también se envía
                 })
@@ -122,7 +122,9 @@ def login_user(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-    return JsonResponse({"user": request.user.username})
+    return JsonResponse({"user": request.user.username,
+                         "email": request.user.email,
+                         "password:": request.user.password})
 
 
 

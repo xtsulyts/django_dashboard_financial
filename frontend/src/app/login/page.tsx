@@ -1,11 +1,18 @@
-"use client"
-;
-import React, { useState } from "react";
+"use client";
 
-export default function Login() {
+import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+
+
+
+function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [currentView, setCurrentView] = useState<"auth" | "login" | null>("auth");
   const [userData, setUserData] = useState(null); // Estado para almacenar los datos del usuario
 
   const handleLogin = async (event: { preventDefault: () => void; }) => {
@@ -13,27 +20,35 @@ export default function Login() {
     setError(null); // Resetear error antes de la petición
 
     try {
-      // 1. Hacer login para obtener los tokens
-      const loginResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
+      const response: Response = await fetch("http://localhost:8000/login_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }), // Asegúrate de que el backend espera `email` y `password`
+        body: JSON.stringify({ email, password }),
       });
 
-      if (!loginResponse.ok) {
+
+      if (!response.ok) {
         throw new Error("Credenciales inválidas o error del servidor.");
+        
       }
 
-      const { access_token } = await loginResponse.json(); // Extraer el access_token de la respuesta
+    //   const data = await response.json();
+    //   console.log("Datos del usuarioooo:", data);
 
-      // 2. Usar el access_token para obtener los datos del usuario
+      const { access_token } = await response.json(); // Extraer el access_token de la respuesta
+      console.log("token de acceso:", access_token)
+      router.push('./home');
+
+      // Redirigir o manejar sesión si el backend devuelve un token
+
       const profileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user_profile/`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${access_token}`, // Enviar el token en el header
         },
+
       });
 
       if (!profileResponse.ok) {
@@ -44,43 +59,43 @@ export default function Login() {
       setUserData(userData); // Guardar los datos del usuario en el estado
       console.log("Datos del usuario:", userData);
 
-    } catch (err) {
-      setError(err.message); // Mostrar el error en caso de fallo
+
+
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Iniciar sesión</button>
-      </form>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {userData && (
-        <div>
-          <h2>Datos del usuario:</h2>
-          <pre>{JSON.stringify(userData, null, 2)}</pre>
-        </div>
-      )}
-    </div>
+    <form onSubmit={handleLogin} className="flex flex-col gap-4">
+      <h1 className="text-xl font-bold">Inicia Sesiónnnnnn</h1>
+      {/* <input
+        type="user"
+        placeholder="Usuario"
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+        className="p-2 border rounded"
+      /> */}
+      <input
+        type="email"
+        placeholder="Usuario/Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="p-2 border rounded"
+      />
+      <input
+        type="password"
+        placeholder="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="p-2 border rounded"
+      />
+      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+        Iniciar Sesión
+      </button>
+      {error && <p className="text-red-500">{error}</p>}
+    </form>
   );
 }
+
+export default Login;
