@@ -4,6 +4,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Login from "../login/page";
+import Footer from "../component/Footer";
+import React from 'react';
 
 
 /**
@@ -39,9 +41,9 @@ const AuthComponent = () => {
 
       if (response.status === 201) {
         alert("Usuario creado con exito");
-        console.log("Datos del usuario cargados exitosamente!", ({username, email, password}) );
+        console.log("Datos del usuario cargados exitosamente!", ({ username, email, password }));
         setShowForm(null); // Resetea el componente tras registro
-        router.push('./home');
+        router.push('./login');
       }
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
@@ -52,81 +54,102 @@ const AuthComponent = () => {
     }
   };
 
+
+  const handleExit = () => {
+    window.location.reload();
+  }
+
+
   return (
-    <div className="flex flex-col items-center p-8">
+    <div className="flex flex-col items-center p-8 min-h-screen bg-gray-100">
+      {/* Título principal */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-800">Your Financial</h1>
+      </div>
+  
+      {/* Logo */}
+      <div className="mb-8">
+        <img
+          src="/pie-chart.svg" // Asegúrate de tener el logo en la carpeta "public"
+          alt="Logo"
+          className="w-32 h-32 mx-auto"
+        />
+      </div>
+  
+      {/* Contenedor de las opciones de login o registro */}
       {!showForm && (
-        <>
+        <div className="flex flex-col gap-6 w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
           <button
-            className="bg-blue-500 text-white px-4 py-2 m-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full font-semibold hover:bg-blue-600 transition duration-300"
             onClick={() => setShowForm("signup")}
           >
-            Sign Up
+            Regístrate
           </button>
           <button
-            className="bg-green-500 text-white px-4 py-2 m-2 rounded"
-            onClick={() => setShowForm("login")}
+            className="bg-green-500 text-white px-4 py-2 rounded w-full font-semibold hover:bg-green-600 transition duration-300"
+            onClick={() => router.push("./login")}
           >
-            Login
+            Iniciar sesión
           </button>
-        </>
+        </div>
       )}
-
-
-      {showForm === "login" && <Login />} {/* Renderizado condicional del componente Login */}
-
+  
+      {/* Renderizado condicional para login y registro */}
+      {showForm === "login" && <Login />}
+  
       {showForm === "signup" && (
-        <form onSubmit={handleRegister} className="w-full max-w-sm">
-          <h2 className="text-xl font-bold mb-4">Registro de Usuario</h2>
-
-          <label className="block mb-2">Nombre de Usuario:</label>
-          <input
-            type="text"
-            className={`border p-2 w-full mb-4 ${errors.username ? "border-red-500" : ""}`}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          {errors.username && <p className="text-red-500 text-xs">{errors.username}</p>}
-
-          <label className="block mb-2">Correo Electrónico:</label>
-          <input
-            type="email"
-            className={`border p-2 w-full mb-4 ${errors.email ? "border-red-500" : ""}`}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-
-          <label className="block mb-2">Contraseña:</label>
-          <input
-            type="password"
-            className={`border p-2 w-full mb-4 ${errors.password1 ? "border-red-500" : ""}`}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {errors.password1 && <p className="text-red-500 text-xs">{errors.password1}</p>}
-
-          <label className="block mb-2">Confirmar Contraseña:</label>
-          <input
-            type="password"
-            className={`border p-2 w-full mb-4 ${errors.password2 ? "border-red-500" : ""}`}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          {errors.password2 && <p className="text-red-500 text-xs">{errors.password2}</p>}
-
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+        <form
+          onSubmit={handleRegister}
+          className="flex flex-col items-center w-full max-w-sm bg-white p-8 rounded-lg shadow-md gap-6"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Registro de Usuario</h2>
+  
+          {/* Campos del formulario */}
+          {[
+            { label: "Nombre de Usuario", value: username, setValue: setUsername, error: errors.username },
+            { label: "Correo Electrónico", value: email, setValue: setEmail, error: errors.email },
+            { label: "Contraseña", value: password, setValue: setPassword, error: errors.password1, type: "password" },
+            { label: "Confirmar Contraseña", value: confirmPassword, setValue: setConfirmPassword, error: errors.password2, type: "password" },
+          ].map(({ label, value, setValue, error, type = "text" }) => (
+            <div className="w-full mb-4" key={label}>
+              <label className="text-sm font-medium text-gray-700 mb-2">{label}</label>
+              <input
+                type={type}
+                className={`border p-3 w-full rounded-md ${error ? "border-red-500" : "border-gray-300"}`}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                required
+              />
+              {error && <p className="text-red-500 text-xs">{error}</p>}
+            </div>
+          ))}
+  
+          {/* Botones del formulario */}
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-blue-700 transition duration-300"
+          >
             Registrarse
+          </button>
+  
+          <button
+            onClick={handleExit}
+            className="bg-red-500 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-red-600 transition duration-300 mt-4"
+          >
+            Volver
           </button>
         </form>
       )}
-
-     
+  
+      {/* Footer en la parte inferior */}
+      <div className="mt-auto w-full bg-gray-800 text-white py-4">
+        <Footer />
+      </div>
     </div>
   );
+  
+
+
 };
 
 export default AuthComponent;

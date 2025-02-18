@@ -28,11 +28,12 @@ function Login() {
         throw new Error("Credenciales inválidas o error del servidor.");
       }
 
-      const { access_token } = await response.json(); // Extraer el access_token de la respuesta
+      const { access_token, message } = await response.json(); // Extraer el access_token de la respuesta
       console.log("Token de acceso:", access_token);
+      console.log(message)
 
       // Obtener los datos del usuario
-      const profileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user_profile/`, {
+      const profileResponse = await fetch("http://localhost:8000/user_profile/", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${access_token}`, // Enviar el token en el header
@@ -44,7 +45,7 @@ function Login() {
       }
 
       const userData = await profileResponse.json(); // Obtener los datos del usuario
-      console.log("Datos del usuario:", userData);
+      console.log("Datos desde user_profile back:", userData);
 
       // Actualizar el estado del usuario antes de redirigir
       loginUser(userData);
@@ -57,36 +58,53 @@ function Login() {
     }
   };
 
+  const handleExit = () => {
+    router.push('./')
+  }
+
   return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-4">
-      <h1 className="text-xl font-bold">Inicia Sesiónnnnnn</h1>
-      {/* <input
-        type="user"
-        placeholder="Usuario"
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-        className="p-2 border rounded"
-      /> */}
-      <input
-        type="email"
-        placeholder="Usuario/Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Iniciar Sesión
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
-    </form>
+    <div className="flex justify-center items-center h-screen">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
+      >
+        <h1 className="text-xl font-bold text-center">Inicia Sesión</h1>
+  
+        <input
+          type="email"
+          placeholder="Usuario/Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+  
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+  
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+        >
+          Iniciar Sesión
+        </button>
+
+        <button
+            onClick={handleExit} // Asigna la función handleLogout al botón
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          >
+            Volver
+          </button>
+  
+        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+      </form>
+    </div>
   );
+  
 }
 
 export default Login;

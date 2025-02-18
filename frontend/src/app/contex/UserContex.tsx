@@ -1,13 +1,15 @@
 "use client";
 
-
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import md5 from "md5";
+
 
 // Definir la estructura de los datos del usuario
 interface User {
   username: string;
   email: string;
   role: "admin" | "user";
+  avatar?: string;  // Agregar campo avatar
 }
 
 // Definir la estructura del contexto
@@ -23,6 +25,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  // Cargar el usuario desde el localStorage al iniciar la aplicación
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -30,14 +33,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const loginUser = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
+  // En loginUser, asegurarse de almacenar el avatar
+const loginUser = (userData: User) => {
+  const avatar = userData.avatar || "https://www.gravatar.com/avatar/default";
+  const userWithAvatar = { ...userData, avatar };
+  setUser(userWithAvatar);
+  localStorage.setItem("user", JSON.stringify(userWithAvatar));
+};
 
+  // Función para cerrar sesión
   const logoutUser = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+    setUser(null); // Elimina el usuario del estado
+    localStorage.removeItem("user"); // Elimina el usuario del almacenamiento local
   };
 
   return (
@@ -47,7 +54,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook personalizado para usar el contexto
+// Hook personalizado para acceder al contexto de usuario
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
@@ -55,4 +62,3 @@ export const useUser = (): UserContextType => {
   }
   return context;
 };
-
