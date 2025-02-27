@@ -3,11 +3,14 @@
 
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
+import { createAvatar } from '@dicebear/core';
+import { lorelei } from '@dicebear/collection';
 
 const Card = () => {
   // Obtiene el usuario y la función de logout desde el contexto
   const { user, logoutUser } = useUser();
   const router = useRouter(); // Hook de Next.js para redirección
+  
 
   // Función que maneja el logout
   const handleLogout = () => {
@@ -22,7 +25,7 @@ const Card = () => {
         <div className="mb-6">
           <div className="flex justify-center">
             <img
-              src={user?.avatar || "/default-avatar.png"}
+              src={user?.avatar || "https://api.dicebear.com/9.x/pixel-art/svg"}
               alt="Avatar"
               className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
             />

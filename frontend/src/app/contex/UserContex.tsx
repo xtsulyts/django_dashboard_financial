@@ -1,7 +1,9 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import md5 from "md5";
+import { createAvatar } from '@dicebear/core';
+import { lorelei } from '@dicebear/collection';
+//import md5 from "md5";
 
 
 // Definir la estructura de los datos del usuario
@@ -35,10 +37,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   // En loginUser, asegurarse de almacenar el avatar
 const loginUser = (userData: User) => {
-  const avatar = userData.avatar || "https://www.gravatar.com/avatar/default";
+  //const avatar = userData.avatar || "https://www.gravatar.com/avatar/default";
+  const avatar = userData.avatar || "https://api.dicebear.com/9.x/pixel-art/svg";
+  // const avatar = createAvatar(lorelei, {
+  //   seed: 'John Doe',
+    // ... other options
+  //});
+  //const svg = avatar.toString();
   const userWithAvatar = { ...userData, avatar };
   setUser(userWithAvatar);
-  localStorage.setItem("user", JSON.stringify(userWithAvatar));
+  // localStorage.setItem("user", JSON.stringify(userWithAvatar));
 };
 
   // Función para cerrar sesión
