@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 
 
 class custom_user(AbstractUser):
@@ -76,3 +77,35 @@ class custom_user(AbstractUser):
         del usuario en el panel de administración o en consultas de base de datos.
         """
         return self.username
+
+
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre de la categoría")
+    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción (opcional)")
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = "Categoría"
+        verbose_name_plural = "Categorías"
+
+class Transaccion(models.Model):
+    TIPO_CHOICES = [
+        ('INGRESO', 'Ingreso'),
+        ('GASTO', 'Gasto'),
+    ]
+
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="transacciones")
+    monto = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
+    fecha = models.DateField(verbose_name="Fecha de la transacción")
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría")
+    descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name="Tipo de transacción")
+
+    def __str__(self):
+        return f"{self.tipo} - {self.monto} ({self.fecha})"
+
+    class Meta:
+        verbose_name = "Transacción"
+        verbose_name_plural = "Transacciones"

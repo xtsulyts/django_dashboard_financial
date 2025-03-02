@@ -3,8 +3,7 @@
 
 import Footer from "../component/Footer";
 import Header from "../component/Header";
-import Login from "../component/Login";
-
+import AuthComponent from "../component/Auth";
 
 
 export default function Inicio() {
@@ -12,7 +11,7 @@ export default function Inicio() {
     return (
       <>
         <Header/>
-        <Login/>
+        <AuthComponent/>
         <Footer/>
   
       </>

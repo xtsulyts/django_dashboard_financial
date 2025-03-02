@@ -13,6 +13,9 @@ from .forms import register_user_form
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework import viewsets
+from .models import Categoria, Transaccion
+from .serializer_ import CategoriaSerializer, TransaccionSerializer
 
 @csrf_exempt
 def index(request):
@@ -127,6 +130,22 @@ def user_profile(request):
                          #"password:": request.user.password
                          })
 
+
+
+class CategoriaViewSet(viewsets.ModelViewSet):
+    queryset = Categoria.objects.all()
+    serializer_class = CategoriaSerializer
+
+class TransaccionViewSet(viewsets.ModelViewSet):
+    serializer_class = TransaccionSerializer
+
+    def get_queryset(self):
+        # Solo devuelve las transacciones del usuario logueado
+        return Transaccion.objects.filter(usuario=self.request.user)
+
+    def perform_create(self, serializer):
+        # Asigna el usuario logueado a la transacción al crearla
+        serializer.save(usuario=self.request.user)
 
 
 

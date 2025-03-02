@@ -1,8 +1,9 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { createAvatar } from '@dicebear/core';
-import { pixelArt } from '@dicebear/collection';
+// import { createAvatar } from '@dicebear/core';
+// import { pixelArt } from '@dicebear/collection';
+// import { identicon } from '@dicebear/collection';
 
 // Definir la estructura de los datos del usuario
 interface User {
@@ -14,7 +15,7 @@ interface User {
 
 // Definir la estructura del contexto
 interface UserContextType {
-  user: User | null;
+  userrr: User | null;
   loginUser: (userData: User) => void;
   logoutUser: () => void;
 }
@@ -33,14 +34,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Generar el avatar con DiceBear
-  const generateAvatar = (username: string): string => {
-    return `https://api.dicebear.com/9.x/pixel-art/svg?seed=${username}`;
-  };
+
 
   // En loginUser, asegurarse de almacenar el avatar
   const loginUser = (userData: User) => {
-    const avatar = userData.avatar|| `https://api.dicebear.com/9.x/pixel-art/svg?seed=${userData.user}`;
+    const avatar = userData.avatar|| `https://api.dicebear.com/9.x/shapes/svg?seed=${userData.user}`;
     const userWithAvatar = { ...userData, avatar };
     setUser(userWithAvatar);
     localStorage.setItem("user", JSON.stringify(userWithAvatar));
@@ -50,6 +48,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const logoutUser = () => {
     setUser(null); // Elimina el usuario del estado
     localStorage.removeItem("user"); // Elimina el usuario del almacenamiento local
+    //eliminar todos los ítems almacenados en localStorage
+    localStorage.clear()
   };
 
   return (

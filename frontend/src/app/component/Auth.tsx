@@ -66,7 +66,7 @@ const AuthComponent = () => {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800">Your Financial</h1>
       </div>
-  
+
       {/* Logo */}
       <div className="mb-8">
         <img
@@ -75,7 +75,7 @@ const AuthComponent = () => {
           className="w-32 h-32 mx-auto"
         />
       </div>
-  
+
       {/* Contenedor de las opciones de login o registro */}
       {!showForm && (
         <div className="flex flex-col gap-6 w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
@@ -93,17 +93,17 @@ const AuthComponent = () => {
           </button>
         </div>
       )}
-  
+
       {/* Renderizado condicional para login y registro */}
       {showForm === "login" && <Login />}
-  
+
       {showForm === "signup" && (
         <form
           onSubmit={handleRegister}
           className="flex flex-col items-center w-full max-w-sm bg-white p-8 rounded-lg shadow-md gap-6"
         >
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Registro de Usuario</h2>
-  
+
           {/* Campos del formulario */}
           {[
             { label: "Nombre de Usuario", value: username, setValue: setUsername, error: errors.username },
@@ -123,7 +123,7 @@ const AuthComponent = () => {
               {error && <p className="text-red-500 text-xs">{error}</p>}
             </div>
           ))}
-  
+
           {/* Botones del formulario */}
           <button
             type="submit"
@@ -131,7 +131,7 @@ const AuthComponent = () => {
           >
             Registrarse
           </button>
-  
+
           <button
             onClick={handleExit}
             className="bg-red-500 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-red-600 transition duration-300 mt-4"
@@ -140,17 +140,16 @@ const AuthComponent = () => {
           </button>
         </form>
       )}
-  
-      {/* Footer en la parte inferior */}
-      <div className="mt-auto w-full bg-gray-800 text-white py-4">
-        <Footer />
-      </div>
+
+
     </div>
   );
-  
+
 
 
 };
 
 export default AuthComponent;
+
+
 

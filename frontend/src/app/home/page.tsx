@@ -1,8 +1,8 @@
 "use client";
 
-import Card from "../component/Card";
+import CardUsuario from "../component/CardUsuario";
 import Footer from "../component/Footer";
-import Header from "../component/header";
+import Header from "../component/Header";
 
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
     return (
       <>
         <Header/>
-        <Card/>
+        <CardUsuario/>
         <Footer/>
   
       </>
