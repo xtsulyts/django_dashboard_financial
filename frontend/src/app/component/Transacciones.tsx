@@ -8,7 +8,7 @@ import { useUser } from '../contex/UserContex'; // Importa el contexto del usuar
 
 
 
-const Transacciones = () => {
+const TransaccionesComponent = () => {
 
   // Obtén las funciones y el estado del contexto de transacciones
   const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactions();
@@ -75,4 +75,4 @@ const Transacciones = () => {
   );
 };
 
-export default Transacciones;
+export default TransaccionesComponent;
