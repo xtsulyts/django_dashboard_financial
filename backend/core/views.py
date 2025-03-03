@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
 from .models import Categoria, Transaccion
-from .serializer_ import CategoriaSerializer, TransaccionSerializer
+from .serializer_ import CategoriaSerializer, TransaccionSerializer, CustomUser
 
 @csrf_exempt
 def index(request):
@@ -110,7 +110,7 @@ def login_user(request):
                 access_token = str(refresh.access_token)
                 
                 return JsonResponse({
-                    "message": "Login exitoso desde login_user back:",
+                    "message": f"Login exitoso desde URL/login_user back django:8000 usuario: {user.username}",
                     "access_token": access_token,
                     "refresh_token": str(refresh)  # El refresh token también se envía
                 })
@@ -126,7 +126,7 @@ def login_user(request):
 @permission_classes([IsAuthenticated])
 def user_profile(request):
     return JsonResponse({"user": request.user.username,
-                         #"email": request.user.email,
+                         "id": request.user.id,
                          #"password:": request.user.password
                          })
 
@@ -136,16 +136,21 @@ class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
+
 class TransaccionViewSet(viewsets.ModelViewSet):
     serializer_class = TransaccionSerializer
+    permission_classes = [IsAuthenticated]  # Asegura que solo usuarios autenticados accedan
 
     def get_queryset(self):
-        # Solo devuelve las transacciones del usuario logueado
+        # Solo devuelve las transacciones del usuario autenticado
         return Transaccion.objects.filter(usuario=self.request.user)
 
     def perform_create(self, serializer):
-        # Asigna el usuario logueado a la transacción al crearla
-        serializer.save(usuario=self.request.user)
+        # Verifica si el usuario está autenticado antes de asignarlo
+        if self.request.user and self.request.user.is_authenticated:
+            serializer.save(usuario=self.request.user)
+        else:
+            raise ValueError("El usuario no está autenticado.")
 
 
 

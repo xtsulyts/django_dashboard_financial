@@ -1,12 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-// import { createAvatar } from '@dicebear/core';
-// import { pixelArt } from '@dicebear/collection';
-// import { identicon } from '@dicebear/collection';
 
 // Definir la estructura de los datos del usuario
 interface User {
+  id: number;
   username: string;
   email: string;
   role: "admin" | "user";
@@ -15,7 +13,7 @@ interface User {
 
 // Definir la estructura del contexto
 interface UserContextType {
-  userrr: User | null;
+  user: User | null;
   loginUser: (userData: User) => void;
   logoutUser: () => void;
 }
@@ -40,8 +38,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const loginUser = (userData: User) => {
     const avatar = userData.avatar|| `https://api.dicebear.com/9.x/shapes/svg?seed=${userData.user}`;
     const userWithAvatar = { ...userData, avatar };
+    console.log("userData me devuelve el id del usuario",userData.id)
     setUser(userWithAvatar);
     localStorage.setItem("user", JSON.stringify(userWithAvatar));
+    console.log(localStorage.getItem("user"))
   };
 
   // Función para cerrar sesión

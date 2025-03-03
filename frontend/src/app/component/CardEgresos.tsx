@@ -1,17 +1,18 @@
-"use client";
+import React from 'react';
+import { Transaction } from '../../types/transaction';
 
-const CardEgresos = () => {
-    //const [ ingresos, setIngresos] = UseIngresos();
+type TransactionCardProps = {
+  transaction: Transaction;
+};
 
-    
-return (
-    <div className="flex justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
-         <h1>TUS EGRESOS SON:</h1>
-      </div>
+const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
+  return (
+    <div className="p-4 border rounded shadow">
+      <h3>{transaction.descripcion}</h3>
+      <p>Monto: ${transaction.monto}</p>
+      <p>Categoría: {transaction.categoria?.nombre}</p>
     </div>
   );
+};
 
-}
-
-  export default CardEgresos ;
+export default TransactionCard;

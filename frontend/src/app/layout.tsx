@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "./contex/UserContex";
 import Layout from "./component/layout";
+import { TransactionProvider } from "./contex/TransactionContex";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <TransactionProvider>
     <UserProvider>
       <html lang="en">
       <body
@@ -38,5 +40,6 @@ export default function RootLayout({
       </body>
     </html>
     </UserProvider>
+    </TransactionProvider>
   );
 }

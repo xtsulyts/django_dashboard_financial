@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
-import Footer from "../component/Footer";
+
 
 function Login() {
   const { loginUser } = useUser();
@@ -23,7 +23,9 @@ function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        
       });
+      
 
       if (!response.ok) {
         throw new Error("Credenciales inválidas o error del servidor.");
@@ -32,6 +34,8 @@ function Login() {
       const { access_token, message } = await response.json(); // Extraer el access_token de la respuesta
       console.log("Token de acceso:", access_token);
       console.log(message)
+      
+
 
       // Obtener los datos del usuario
       const profileResponse = await fetch("http://localhost:8000/user_profile/", {
@@ -43,10 +47,12 @@ function Login() {
 
       if (!profileResponse.ok) {
         throw new Error("Error al obtener los datos del usuario.");
+ 
       }
+      alert("Login exitoso!!")
 
       const userData = await profileResponse.json(); // Obtener los datos del usuario
-      console.log("Datos desde user_profile back:", userData);
+      console.log("Datos que devuelve URL/user_profile backend django:", userData);
 
       // Actualizar el estado del usuario antes de redirigir
       loginUser(userData);
@@ -70,19 +76,23 @@ function Login() {
         <h1 className="text-4xl font-bold text-gray-800">Your Financial</h1>
       </div>
   
-      {/* Logo */}
-      <div className="mb-8">
-        <img
-          src="/pie-chart.svg" // Asegúrate de tener el logo en la carpeta "public"
-          alt="Logo"
-          className="w-32 h-32 mx-auto"
-        />
-      </div>
+
       <div>
       <form
         onSubmit={handleLogin}
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
       >
+               {/* Logo */}
+       <div className="mb-8">
+        <video
+          src="/LogoYourFinancial.webm"
+          autoPlay
+          loop
+          muted
+          className="w-130 h-50 mx-auto"
+        />
+      </div>
+      
         <h1 className="text-xl font-bold text-center">Inicia Sesión</h1>
   
         <input

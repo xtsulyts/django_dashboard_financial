@@ -67,26 +67,32 @@ const AuthComponent = () => {
         <h1 className="text-4xl font-bold text-gray-800">Your Financial</h1>
       </div>
 
-      {/* Logo */}
-      <div className="mb-8">
-        <img
-          src="/pie-chart.svg" // Asegúrate de tener el logo en la carpeta "public"
-          alt="Logo"
-          className="w-32 h-32 mx-auto"
-        />
-      </div>
+      
+
 
       {/* Contenedor de las opciones de login o registro */}
       {!showForm && (
         <div className="flex flex-col gap-6 w-full max-w-sm bg-white p-6 rounded-lg shadow-lg">
+
+         {/* Logo */}
+      <div className="mb-8">
+        <video
+          src="/LogoYourFinancial.webm"
+          autoPlay
+          loop
+          muted
+          className="w-130 h-50 mx-auto"
+        />
+      </div>
+
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded w-full font-semibold hover:bg-blue-600 transition duration-300"
+            className="bg-blue-500 text-white px-4 py-2 rounded-full w-full font-semibold hover:bg-blue-600 transition duration-300"
             onClick={() => setShowForm("signup")}
           >
             Regístrate
           </button>
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded w-full font-semibold hover:bg-green-600 transition duration-300"
+            className="bg-green-500 text-white px-4 py-2 rounded-full w-full font-semibold hover:bg-green-600 transition duration-300"
             onClick={() => router.push("./login")}
           >
             Iniciar sesión
@@ -127,7 +133,7 @@ const AuthComponent = () => {
           {/* Botones del formulario */}
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-blue-700 transition duration-300"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full font-semibold hover:bg-blue-700 transition duration-300"
           >
             Registrarse
           </button>
