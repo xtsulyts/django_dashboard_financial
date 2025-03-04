@@ -7,13 +7,13 @@ import Login from "../component/Login";
 
 
 
-export default function Inicio() {
+export default function Resgiter() {
   
     return (
       <>
-      
+        <Header/>
         <Login/>
-     
+        <Footer/>
   
       </>
     );

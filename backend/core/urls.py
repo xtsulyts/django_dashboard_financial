@@ -1,14 +1,17 @@
-from django.urls import path
-#from  core import views 
-# from .views import  acercade, contacto, modulo, acercade, index, nosotros,login, paciente, TurnosListViews
-# from django.contrib.auth import views as auth_views
-# from django.contrib.auth.decorators import login_required
-# from django.contrib.auth import views as auth_views
-# from django.contrib.auth.views import LogoutView
-# #from  Farmacia import views
-from .views import  login_user, index
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import  login_user, index, user_profile, CategoriaViewSet, TransaccionViewSet, totales_usuario
+
+router = DefaultRouter()
+router.register(r'categorias', CategoriaViewSet, basename='categoria')
+router.register(r'transacciones', TransaccionViewSet, basename='transaccion')
+
 
 urlpatterns = [
     path("", index, name="index"),
-    path("login_user/", login_user, name="login_user"),  
+    path("login_user/", login_user, name="login_user"), 
+    path("user_profile/", user_profile, name="user_profile"),
+    path('api/', include(router.urls)),
+    path("totales_usuario/", totales_usuario, name="totales_usuario" )
+   
    ]

@@ -1,0 +1,25 @@
+[debug] [2025-02-28T23:01:30.356Z] ----------------------------------------------------------------------
+[debug] [2025-02-28T23:01:30.358Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-02-28T23:01:30.359Z] CLI Version:   13.32.0
+[debug] [2025-02-28T23:01:30.359Z] Platform:      win32
+[debug] [2025-02-28T23:01:30.359Z] Node Version:  v20.18.3
+[debug] [2025-02-28T23:01:30.359Z] Time:          Fri Feb 28 2025 20:01:30 GMT-0300 (hora estándar de Argentina)
+[debug] [2025-02-28T23:01:30.359Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-28T23:01:30.365Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-28T23:01:30.365Z] > authorizing via signed-in user (531xtsulyts@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\leaning\AppDjango\django_dashboard_financial\frontend
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+

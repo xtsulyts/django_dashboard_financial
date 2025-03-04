@@ -1,16 +1,20 @@
+
+
 "use client";
 
-import CardUsuario from "../component/CardUsuario";
+
 import Footer from "../component/Footer";
 import Header from "../component/Header";
+import TransaccionesComponent from "../component/Transacciones";
 
 
-export default function Home() {
+
+export default function Transacciones() {
   
     return (
       <>
         <Header/>
-        <CardUsuario/>
+        <TransaccionesComponent/>
         <Footer/>
   
       </>
