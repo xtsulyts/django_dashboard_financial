@@ -59,18 +59,7 @@ const TransaccionesComponent = () => {
         onDelete={selectedTransaction ? handleDelete : undefined} // Pasa la función para eliminar (si hay una transacción seleccionada)
       />
       {/* Lista de transacciones con opciones para editar/eliminar */}
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center"> 
-        <h2>Lista de Transacciones</h2>
-        <ul>
-          {transactions.map((transaction) => (
-            <li key={transaction.id}>
-              <span>{transaction.descripcion} - ${transaction.monto}</span>
-              <button onClick={() => setSelectedTransaction(transaction)}>Editar</button>
-              <button onClick={() => handleDelete(transaction.id)}>Eliminar</button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      
     </div>
   );
 };

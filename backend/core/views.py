@@ -14,8 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
-from .models import Categoria, Transaccion
-from .serializer_ import CategoriaSerializer, TransaccionSerializer, CustomUser
+from .models import Categoria, Transaccion, models
+from .serializer_ import CategoriaSerializer, TransaccionSerializer, custom_user
 
 @csrf_exempt
 def index(request):
@@ -155,3 +155,23 @@ class TransaccionViewSet(viewsets.ModelViewSet):
 
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def totales_usuario(request):
+    # Obtener el usuario logueado
+    usuario = request.user
+
+    # Filtrar transacciones del usuario
+    transacciones = Transaccion.objects.filter(usuario=usuario)
+
+    # Calcular totales
+    total_ingresos = transacciones.filter(tipo='INGRESO').aggregate(total=models.Sum('monto'))['total'] or 0
+    total_gastos = transacciones.filter(tipo='GASTO').aggregate(total=models.Sum('monto'))['total'] or 0
+    saldo_total = total_ingresos - total_gastos
+
+    # Devolver los totales en formato JSON
+    return JsonResponse({
+        'total_ingresos': total_ingresos,
+        'total_gastos': total_gastos,
+        'saldo_total': saldo_total,
+    })
