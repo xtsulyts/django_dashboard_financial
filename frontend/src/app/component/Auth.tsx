@@ -10,7 +10,10 @@ import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import React from "react";
 
+
+
 const AuthComponent = () => {
+  const router = useRouter();
   const [showForm, setShowForm] = useState<string | null>(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -36,6 +39,7 @@ const AuthComponent = () => {
       if (response.status === 201) {
         alert("Usuario creado con éxito");
         setShowForm(null);
+        router.push("./home");
       }
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
@@ -148,7 +152,8 @@ const AuthComponent = () => {
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
                   Iniciar Sesión
                 </h2>
-                <Login />
+                <Login></Login>
+                
               </>
             )}
 

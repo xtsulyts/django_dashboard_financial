@@ -81,6 +81,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Permitir solicitudes desde tu frontend
 ]
 
+# Configurar orígenes de confianza para solicitudes CSRF
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # Next.js en desarrollo
+    "https://tudominio.com",  # Producción (ajústalo cuando despliegues)
+]
+
 
 ROOT_URLCONF = 'dashboard_financial_app.urls'
 

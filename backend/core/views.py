@@ -14,8 +14,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
-from .models import Categoria, Transaccion, models
-from .serializer_ import CategoriaSerializer, TransaccionSerializer, custom_user
+from .models import Categoria, Transaccion, models, custom_user
+from .serializer_ import CategoriaSerializer, TransaccionSerializer, CustomUser
+from rest_framework.views import APIView
+
 
 @csrf_exempt
 def index(request):
@@ -74,7 +76,7 @@ def index(request):
             """
             user = form.save()
             login(request, user) 
-            return JsonResponse({'message': 'Usuario registrado exitosamente'}, status=201)
+            return JsonResponse({'message': 'Usuario registrado exitosamente'},status=201)
         else:
             """ 
             Si el formulario no es válido, devolver los errores de validación.
@@ -125,28 +127,105 @@ def login_user(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-    return JsonResponse({"user": request.user.username,
-                         "id": request.user.id,
-                         #"password:": request.user.password
-                         })
+    """
+    Endpoint para obtener el perfil del usuario autenticado.
+
+    Este endpoint permite a los usuarios autenticados obtener información sobre su perfil, 
+    incluyendo su nombre de usuario y su ID.
+
+    Requisitos:
+    - El usuario debe estar autenticado mediante un `access_token`.
+    - La autenticación se maneja a través de `IsAuthenticated`, lo que significa que se requiere 
+      un token válido para acceder a este recurso.
+
+    Parámetros:
+    - request (HttpRequest): La solicitud HTTP recibida.
+
+    Retorno:
+    - JsonResponse: Un diccionario con los datos del usuario autenticado:
+        {
+            "user": "nombre_de_usuario",
+            "id": 123
+        }
+    """
+    return JsonResponse({
+        "user": request.user.username,
+        "id": request.user.id,
+        # "password:": request.user.password  # Comentado por seguridad
+    })
 
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
-    queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer
+    """
+    ViewSet para gestionar las categorías.
 
+    Este ViewSet permite realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar)
+    sobre las categorías almacenadas en la base de datos.
+
+    Atributos:
+    - queryset: Obtiene todas las categorías registradas.
+    - serializer_class: Usa `CategoriaSerializer` para serializar/deserializar los datos.
+
+    Métodos heredados de `ModelViewSet`:
+    - list(): Obtiene todas las categorías.
+    - retrieve(): Obtiene una categoría específica.
+    - create(): Crea una nueva categoría.
+    - update(): Actualiza una categoría existente.
+    - destroy(): Elimina una categoría.
+    """
+    # Obtiene todas las categorías de la base de datos
+    queryset = Categoria.objects.all() 
+
+    # Especifica el serializador que se usará para convertir los datos de la categoría
+    serializer_class = CategoriaSerializer 
 
 class TransaccionViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar las transacciones de los usuarios autenticados.
+
+    Este ViewSet permite a los usuarios autenticados realizar operaciones CRUD
+    sobre sus transacciones personales. No permite acceder a transacciones de otros usuarios.
+
+    Atributos:
+    - serializer_class: Usa `TransaccionSerializer` para serializar/deserializar los datos.
+    - permission_classes: Restringe el acceso solo a usuarios autenticados (`IsAuthenticated`).
+
+    Métodos:
+    - get_queryset(): Devuelve solo las transacciones del usuario autenticado.
+    - perform_create(): Asigna automáticamente la transacción al usuario autenticado al crearla.
+    """
+    # Define el serializador que se usará para las transacciones
     serializer_class = TransaccionSerializer
-    permission_classes = [IsAuthenticated]  # Asegura que solo usuarios autenticados accedan
+
+    # Asegura que solo usuarios autenticados accedan
+    permission_classes = [IsAuthenticated]  
 
     def get_queryset(self):
-        # Solo devuelve las transacciones del usuario autenticado
+        """
+        Filtra las transacciones para que cada usuario solo vea las suyas.
+
+        Retorna:
+        - QuerySet con todas las transacciones pertenecientes al usuario autenticado.
+        """
+        # Filtra las transacciones para devolver solo las del usuario autenticado
         return Transaccion.objects.filter(usuario=self.request.user)
 
+
     def perform_create(self, serializer):
-        # Verifica si el usuario está autenticado antes de asignarlo
+        """
+        Asigna automáticamente la transacción al usuario autenticado al guardarla.
+
+        - Si el usuario está autenticado, se asigna `self.request.user` como el propietario de la transacción.
+        - Si el usuario no está autenticado, lanza un error.
+
+        Parámetros:
+        - serializer (TransaccionSerializer): Datos serializados de la transacción.
+
+        Excepciones:
+        - ValueError: Se lanza si el usuario no está autenticado.
+        """
+        # Asigna automáticamente la transacción al usuario autenticado al guardarla
         if self.request.user and self.request.user.is_authenticated:
             serializer.save(usuario=self.request.user)
         else:
@@ -158,6 +237,26 @@ class TransaccionViewSet(viewsets.ModelViewSet):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def totales_usuario(request):
+    """
+    Endpoint para obtener los totales de ingresos, gastos y el saldo total del usuario autenticado.
+
+    Este endpoint filtra todas las transacciones del usuario autenticado, separa los ingresos y gastos, 
+    calcula sus totales y devuelve el saldo final.
+
+    Requisitos:
+    - El usuario debe estar autenticado mediante un `access_token`.
+
+    Parámetros:
+    - request (HttpRequest): La solicitud HTTP recibida.
+
+    Retorno:
+    - JsonResponse: Un diccionario con los totales de ingresos, gastos y el saldo total:
+        {
+            "total_ingresos": 1000.00,
+            "total_gastos": 500.00,
+            "saldo_total": 500.00
+        }
+    """
     # Obtener el usuario logueado
     usuario = request.user
 
@@ -175,3 +274,6 @@ def totales_usuario(request):
         'total_gastos': total_gastos,
         'saldo_total': saldo_total,
     })
+
+
+

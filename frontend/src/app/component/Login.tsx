@@ -5,12 +5,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 
+
 function Login() {
   const { loginUser } = useUser(); // Obtén la función loginUser del contexto
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const { user } = useUser();
 
   const handleLogin = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -21,11 +23,12 @@ function Login() {
       const userData = await loginUser(email, password);
 
       // Si el login es exitoso, loginUser devuelve los datos del usuario
-      console.log("Datos que devuelve URL/user_profile backend django:", userData);
-      alert("Login exitoso!!");
+      console.log("Datos que devuelve URL/user_profile backend django:", user);
+      //alert("Login exitoso!!");
 
       // Redirigir al usuario a la página de inicio
       router.push("./home");
+      console.log("Datos que devuelve URL/user_profile backend django:", user);
     } catch (err: any) {
       setError(err.message); // Manejar errores
     }
@@ -73,6 +76,14 @@ function Login() {
           >
             Iniciar Sesión
           </button>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+          >
+            Iniciar Sesión
+          </button>
+
+          
 
           {/* <button
             onClick={handleExit} // Asigna la función handleLogout al botón

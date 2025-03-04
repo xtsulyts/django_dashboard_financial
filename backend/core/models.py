@@ -80,25 +80,76 @@ class custom_user(AbstractUser):
 
 
 class Categoria(models.Model):
+    """
+    Modelo para representar una categoría en el sistema.
+
+    Este modelo define las categorías que pueden ser utilizadas para organizar 
+    transacciones financieras u otros elementos del sistema.
+
+    Atributos:
+    - nombre (CharField): Nombre único de la categoría, con un límite de 100 caracteres.
+    - descripcion (TextField): Descripción opcional de la categoría.
+
+    Métodos:
+    - __str__(): Devuelve el nombre de la categoría como representación en cadena.
+
+    Meta:
+    - verbose_name: Define un nombre amigable para la categoría en el panel de administración.
+    - verbose_name_plural: Define el nombre en plural para la categoría en el panel de administración.
+    """
+    # Campo para el nombre de la categoría (único y con un máximo de 100 caracteres)
     nombre = models.CharField(max_length=100, unique=True, verbose_name="Nombre de la categoría")
+    # Campo opcional para la descripción de la categoría
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción (opcional)")
 
     def __str__(self):
+        """ Representación en cadena del objeto, devuelve el nombre de la categoría. """
         return self.nombre
 
     class Meta:
+        # Nombre singular y plural para el modelo en la interfaz de administración de Django
         verbose_name = "Categoría"
         verbose_name_plural = "Categorías"
 
 class Transaccion(models.Model):
+    """
+    Modelo para representar una transacción financiera de un usuario.
+
+    Este modelo almacena los ingresos y gastos de los usuarios, permitiendo categorizarlos
+    y registrar detalles como monto, fecha y descripción.
+
+    Atributos:
+    - usuario (ForeignKey): Relación con el usuario que realizó la transacción.
+    - monto (DecimalField): Monto de la transacción con hasta 10 dígitos y 2 decimales.
+    - fecha (DateField): Fecha en que se realizó la transacción.
+    - categoria (ForeignKey): Relación con una categoría (opcional).
+    - descripcion (TextField): Descripción opcional de la transacción.
+    - tipo (CharField): Tipo de transacción, puede ser "INGRESO" o "GASTO".
+
+    Métodos:
+    - __str__(): Devuelve una representación en cadena de la transacción.
+
+    Meta:
+    - verbose_name: Nombre amigable para la transacción en la administración de Django.
+    - verbose_name_plural: Nombre en plural para la transacción en la administración de Django.
+    """
+    # Opciones para el tipo de transacción
     TIPO_CHOICES = [
         ('INGRESO', 'Ingreso'),
         ('GASTO', 'Gasto'),
     ]
 
+    # Relación con el usuario que realizó la transacción
+
+    # Usa el modelo de usuario de Django. Si el usuario se elimina, sus transacciones también, nombre relacionado para acceder a las transacciones del usuario
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="transacciones")
     monto = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
     fecha = models.DateField(verbose_name="Fecha de la transacción")
+
+    """
+    Relación con el modelo Categoria, si la categoría se borra, la transacción sigue existiendo.
+    Permite valores nulos en la base de datos, permite que el campo quede vacío en formularios
+    """
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría")
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name="Tipo de transacción")
