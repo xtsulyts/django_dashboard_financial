@@ -3,6 +3,7 @@
 
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
+import FinanzasChart from "./FinanzasGraf";
 
 const CardUsuario = () => {
   // Obtiene el usuario y la función de logout desde el contexto
@@ -64,33 +65,32 @@ const CardUsuario = () => {
           <p><strong>Total Ingresos:</strong> ${totalIngresos.toLocaleString()}</p>
           <p><strong>Total Gastos:</strong> ${totalGastos.toLocaleString()}</p>
           <p><strong>Saldo Total:</strong> ${saldoTotal.toLocaleString()}</p>
+
+          <FinanzasChart />
         </div>
 
+
         {user && (
+          <div className="space-y-4">
+            <button
+              onClick={handleIngresos}
+              className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
+            >
+              Agregar Transacción
+            </button>
 
-          <button
-            onClick={handleIngresos}
-            className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300"
-          >
-            Agregar Transaccion
-          </button>
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
         )}
-      </div>
 
-      {/* CardIngresos */}
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
-        <h1></h1>
-        <button
-          onClick={handleLogout}
-          className="w-full bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-300"
-        >
-          Cerrar Sesion
-        </button>
       </div>
 
 
-
-      <h1>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consequuntur ipsa, neque vitae iste veniam facilis nisi voluptatum, cumque nihil laborum autem dignissimos nesciunt nobis. Temporibus praesentium commodi animi assumenda modi.</h1>
     </div>
   );
 };

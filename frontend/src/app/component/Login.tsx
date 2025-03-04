@@ -36,7 +36,7 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 min-h-screen bg-gray-100">
+    <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full relative">
       {/* Título principal */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800">Your Financial</h1>
@@ -47,16 +47,7 @@ function Login() {
           onSubmit={handleLogin}
           className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
         >
-          {/* Logo */}
-          <div className="mb-8">
-            <video
-              src="/LogoYourFinancial.webm"
-              autoPlay
-              loop
-              muted
-              className="w-130 h-50 mx-auto"
-            />
-          </div>
+          
 
           <h1 className="text-xl font-bold text-center">Inicia Sesión</h1>
 
@@ -83,12 +74,12 @@ function Login() {
             Iniciar Sesión
           </button>
 
-          <button
+          {/* <button
             onClick={handleExit} // Asigna la función handleLogout al botón
             className="bg-red-500 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-red-600 transition duration-300 mt-4"
           >
             Volver
-          </button>
+          </button> */}
 
           {error && <p className="text-red-500 text-center mt-2">{error}</p>}
         </form>

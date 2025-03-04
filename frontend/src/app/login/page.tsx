@@ -11,9 +11,9 @@ export default function Inicio() {
   
     return (
       <>
-        <Header/>
+      
         <Login/>
-        <Footer/>
+     
   
       </>
     );
