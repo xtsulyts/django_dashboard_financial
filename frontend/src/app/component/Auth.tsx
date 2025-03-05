@@ -4,13 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Login from "../login/page";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination, Autoplay } from "swiper/modules";
 import React from "react";
-
-
 
 const AuthComponent = () => {
   const router = useRouter();
@@ -51,66 +45,35 @@ const AuthComponent = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen bg-gray-100">
+    <div
+      className="relative flex flex-col items-center
+       justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
+    >
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center p-6 bg-white shadow-md">
-        <h1 className="text-3xl font-bold text-gray-800">Your Financial</h1>
-        <div className="flex gap-4">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition duration-300"
-            onClick={() => setShowForm("signup")}
-          >
-            Regístrate
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-green-600 transition duration-300"
-            onClick={() => setShowForm("login")}
-          >
-            Iniciar sesión
-          </button>
-        </div>
-      </div>
+      
+      <h2 className="absolute top-40 left-38 text-6xl font-bold text-gray-800">
+  Your Financial
+</h2>
 
-      {/* Hero con Carrusel */}
-      <div className="relative w-full max-w-4xl mt-10 z-0">
-        <Swiper
-          modules={[Pagination, Autoplay]}
-          spaceBetween={30}
-          slidesPerView={1}
-          autoplay={{ delay: 3000 }}
-          pagination={{ clickable: true }}
-          className="w-full h-60 md:h-80 rounded-lg shadow-lg"
-        >
-          {[
-            "Organiza tu presupuesto y toma el control total.",
-            "Sincroniza tus cuentas bancarias fácilmente.",
-            "Recibe reportes detallados de tus finanzas.",
-          ].map((text, index) => (
-            <SwiperSlide
-              key={index}
-              className="flex items-center justify-center bg-blue-500 text-white text-2xl font-semibold rounded-lg p-6"
-            >
-              {text}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+        <div className="absolute top-5 right-5 flex gap-4">
+  <button
+    className="bg-blue-500 text-white px-5 py-2.5 rounded-full font-semibold shadow-lg hover:bg-blue-600 hover:scale-105 transition-all duration-300"
+    onClick={() => setShowForm("signup")}
+  >
+    Regístrate
+  </button>
+  <button
+    className="bg-green-500 text-white px-5 py-2.5 rounded-full font-semibold shadow-lg hover:bg-green-600 hover:scale-105 transition-all duration-300"
+    onClick={() => setShowForm("login")}
+  >
+    Iniciar sesión
+  </button>
+</div>
 
-      {/* Beneficios */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-12 z-0">
-        {[
-          { title: "Presupuesto Inteligente", desc: "Asigna cada peso y mantén el control total." },
-          { title: "Sincronización Bancaria", desc: "Conéctate a tu banco y visualiza todos tus movimientos." },
-          { title: "Reportes Detallados", desc: "Gráficos interactivos para analizar tus finanzas." },
-        ].map((item, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-lg font-semibold text-gray-700">{item.title}</h3>
-            <p className="text-gray-600 mt-2">{item.desc}</p>
-          </div>
-        ))}
-      </div>
+      
 
-      {/* FORMULARIOS EN MODAL */}
+      {/* FORMULARIO */}
       {(showForm === "signup" || showForm === "login") && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full relative">
@@ -120,7 +83,7 @@ const AuthComponent = () => {
                   Registro de Usuario
                 </h2>
 
-                {[
+                {[  
                   { label: "Nombre de Usuario", value: username, setValue: setUsername, error: errors.username },
                   { label: "Correo Electrónico", value: email, setValue: setEmail, error: errors.email },
                   { label: "Contraseña", value: password, setValue: setPassword, error: errors.password1, type: "password" },
@@ -153,7 +116,6 @@ const AuthComponent = () => {
                   Iniciar Sesión
                 </h2>
                 <Login></Login>
-                
               </>
             )}
 
@@ -171,4 +133,3 @@ const AuthComponent = () => {
 };
 
 export default AuthComponent;
-  
