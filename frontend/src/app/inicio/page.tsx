@@ -3,7 +3,7 @@
 
 import Footer from "../component/Footer";
 import Header from "../component/Header";
-import AuthComponent from "../component/Auth";
+import AuthComponent  from  "../component/Auth";
 
 
 export default function Inicio() {
