@@ -27,7 +27,7 @@ const FinanzasChart = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+    <div className="max-w-md mx-autobg-white/30 p-6 rounded-lg shadow">
       <h2 className="text-xl font-bold text-center mb-4">Resumen Financiero</h2>
       <Bar data={data} options={options} />
     </div>

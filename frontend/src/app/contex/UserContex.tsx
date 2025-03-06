@@ -12,12 +12,13 @@ interface User {
 }
 
 // Definir la estructura del contexto
-interface UserContextType {
+interface UserContextType { 
   user: User | null;
   access_token: string | null;
   totalIngresos: number;
   totalGastos: number;
   saldoTotal: number;
+  isLoggedIn: boolean;
   loginUser: (email: string, password: string) => Promise<void>;
   logoutUser: () => void;
   fetchTotales: () => Promise<void>; // Nueva función para obtener los totales
@@ -27,6 +28,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [access_token, setAccessToken] = useState<string | null>(null);
   const [totalIngresos, setTotalIngresos] = useState<number>(0); // Estado para total de ingresos
@@ -96,6 +98,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
       throw error;
     }
+
+   
+      setIsLoggedIn(true);
+      console.log("Usuario logueado");
+    
   };
 
   // Función para obtener los totales desde el backend
@@ -139,11 +146,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setSaldoTotal(0);
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
+    setIsLoggedIn(false);
+    console.log("Usuario cerró sesión");
   };
+
 
   return (
     <UserContext.Provider
       value={{
+        isLoggedIn,
         user,
         access_token,
         totalIngresos,

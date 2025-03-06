@@ -4,6 +4,16 @@ export default function Header () {
         <header className="row-start-3 flex gap-6 flex-wrap items-center justify-center  bg-gray-800 text-white py-4">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="http://localhost:3000/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+
+          Home
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+            href="http://localhost:3000/transacciones"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -12,12 +22,12 @@ export default function Header () {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
+          href="http://localhost:3000/home"
           rel="noopener noreferrer"
         >
    
-          Categorias
+          Usuario
         </a>
         
       </header>
