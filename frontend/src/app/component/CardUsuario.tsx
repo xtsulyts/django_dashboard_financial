@@ -23,7 +23,8 @@ const CardUsuario = () => {
     console.log("Navegación exitosa"); // Manejo opcional de éxito
     //console.error("Error al navegar:", Error); // Manejo de errores
   };
-
+  
+  
   return (
 <div
   className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
@@ -35,7 +36,7 @@ const CardUsuario = () => {
       {/* Logo */}
       <div className="flex justify-center">
         <img
-          src={user?.avatar}
+          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user}`}
           alt="Avatar"
           className="w-40 h-40 rounded-full border-4 border-blue-100 shadow-sm"
         />
@@ -43,7 +44,7 @@ const CardUsuario = () => {
       <h2 className="text-2xl font-bold mt-4 text-gray-800">
         Bienvenido, {user?.user || "Invitado"}
       </h2>
-    </div>
+    </div>=
     <p className="text-gray-600 mb-8">
       {user
         ? "Gracias por ser parte de nuestra comunidad."

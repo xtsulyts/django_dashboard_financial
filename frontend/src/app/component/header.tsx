@@ -1,41 +1,45 @@
-export default function Header () {
-    return (
-        <>
-        <header className="row-start-3 flex gap-6 flex-wrap items-center justify-center  bg-gray-800 text-white py-4">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="http://localhost:3000/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
 
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "../contex/UserContex";
+
+
+
+export default function Header() {
+  const router = useRouter();
+
+
+
+
+  return (
+    <>
+      <header className="row-start-3 flex gap-6 flex-wrap items-center justify-center  bg-gray-800 text-white py-4">
+        <button
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          onClick={() => router.push("/")}
+        >
           Home
-        </a>
-        <a
+        </button>
+        <button
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="http://localhost:3000/transacciones"
-          target="_blank"
-          rel="noopener noreferrer"
+          onClick={() => router.push("/home")}
         >
-
-          Transacciones
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          target="_blank"
-          href="http://localhost:3000/home"
-          rel="noopener noreferrer"
-        >
-   
           Usuario
-        </a>
-        
+        </button>
+        <button
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          onClick={() => router.push("/transacciones")}
+        >
+          Transacciones
+        </button>
+       
       </header>
-        </>
-    );
- }
- 
- 
- 
- 
- 
+    </>
+  );
+}
+
+
+
+

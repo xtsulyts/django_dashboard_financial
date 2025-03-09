@@ -54,7 +54,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   // Provee el contexto con las transacciones y las funciones
   return (
     <TransactionContext.Provider
-      value={{ transactions, loadTransactions, addTransaction, updateTransaction, deleteTransaction }}
+      value={{ 
+        transactions, 
+        loadTransactions, 
+        addTransaction, 
+        updateTransaction, 
+        deleteTransaction }}
     >
       {children}
     </TransactionContext.Provider>

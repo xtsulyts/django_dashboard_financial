@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import  login_user, index, user_profile, CategoriaViewSet, TransaccionViewSet, totales_usuario
-
+from rest_framework.documentation import include_docs_urls
 router = DefaultRouter()
 router.register(r'categorias', CategoriaViewSet, basename='categoria')
 router.register(r'transacciones', TransaccionViewSet, basename='transaccion')
@@ -12,6 +12,7 @@ urlpatterns = [
     path("login_user/", login_user, name="login_user"), 
     path("user_profile/", user_profile, name="user_profile"),
     path('api/', include(router.urls)),
-    path("totales_usuario/", totales_usuario, name="totales_usuario" )
+    path("totales_usuario/", totales_usuario, name="totales_usuario" ),
+    path("docs/", include_docs_urls(title="Dashboard Financial API"))
    
    ]
