@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import Login from "../login/page";
 import React from "react";
 import FinanzasChart from "./FinanzasGraf";
-import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
-
+import { useUser } from "../contex/UserContex"; 
 
 const AuthComponent = () => {
+  // Hooks para acceder a datos del usuario y enrutamiento
   const { totalIngresos, totalGastos, saldoTotal, user, logoutUser } = useUser();
   const router = useRouter();
+  // Estados para gestionar el formulario y errores
   const [showForm, setShowForm] = useState<string | null>(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -19,13 +20,14 @@ const AuthComponent = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
+  // Función para manejar el registro
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden");
       return;
     }
-
+    // Solicitud HTTP al servidor
     try {
       const response = await axios.post("http://localhost:8000/", {
         username,
@@ -33,18 +35,19 @@ const AuthComponent = () => {
         password1: password,
         password2: confirmPassword,
       });
-
+      // Manejo de respuesta exitosa
       if (response.status === 201) {
         alert("Usuario creado con éxito");
-        setShowForm(null);
-        router.push("./");
+        setShowForm(null); // Oculta el formulario
+        router.push("./"); // Redirige al usuario
 
       }
     } catch (error: any) {
+      // Manejo de errores
       if (error.response && error.response.data.errors) {
-        setErrors(error.response.data.errors);
+        setErrors(error.response.data.errors);   // Almacena errores del servidor
       } else {
-        alert("Error en el registro. Revisa los datos.");
+        alert("Error en el registro. Revisa los datos."); // Alerta genérica
       }
     }
   };

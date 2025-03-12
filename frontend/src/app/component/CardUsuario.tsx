@@ -4,6 +4,7 @@
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
 import FinanzasChart from "./FinanzasGraf";
+import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 
 const CardUsuario = () => {
   // Obtiene el usuario y la función de logout desde el contexto
@@ -23,7 +24,32 @@ const CardUsuario = () => {
     console.log("Navegación exitosa"); // Manejo opcional de éxito
     //console.error("Error al navegar:", Error); // Manejo de errores
   };
-  
+
+  async function fetchTransacciones(access_token: string) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/transacciones/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${access_token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Transacciones recibidas:", data);
+        return data;
+    } catch (error) {
+        console.error("Error al obtener transacciones:", error);
+        return null;
+    }
+}
+
+
+
   
   return (
 <div
@@ -75,6 +101,8 @@ const CardUsuario = () => {
         </button>
       </div>
     )}
+  </div>
+  <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full my-8">
   </div>
 </div>
   );

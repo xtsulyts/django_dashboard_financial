@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex'; // Importar el hook useUser
-import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService'; // Importar las funciones de la API
+import { createTransaction, getTransactions, updateTransaction, deleteTransaction } from '../services/transactionService'; // Importar las funciones de la API
 
 type Transaction = {
   id?: number;

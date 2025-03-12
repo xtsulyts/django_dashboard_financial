@@ -34,7 +34,12 @@ export default function Header() {
         >
           Transacciones
         </button>
-       
+        <button
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          onClick={() => router.push("/movimientos")}
+        >
+          Movimientos
+        </button>
       </header>
     </>
   );
