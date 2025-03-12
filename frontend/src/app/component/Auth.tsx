@@ -4,15 +4,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Login from "../login/page";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination, Autoplay } from "swiper/modules";
 import React from "react";
-
+import FinanzasChart from "./FinanzasGraf";
+import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 
 
 const AuthComponent = () => {
+  const { totalIngresos, totalGastos, saldoTotal, user, logoutUser } = useUser();
   const router = useRouter();
   const [showForm, setShowForm] = useState<string | null>(null);
   const [username, setUsername] = useState("");
@@ -50,70 +48,79 @@ const AuthComponent = () => {
     }
   };
 
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    logoutUser(); // Llama a la función de logout del contexto
+    console.log("Usuario cerró sesión");
+  };
+
+
   return (
-    <div className="relative flex flex-col items-center min-h-screen bg-gray-100">
+    <div
+      className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
+    >
       {/* Navbar */}
-      <div className="w-full flex justify-between items-center p-6 bg-white shadow-md">
-        <h1 className="text-3xl font-bold text-gray-800">Your Financial</h1>
-        <div className="flex gap-4">
+
+      <div className="relative min-h-screen flex items-center justify-center">
+        {/* Fondo (opcional, si quieres que el fondo sea una imagen o tenga un color) */}
+        <div className="absolute inset-0 bg-[url('/ruta/a/tu/imagen.jpg')] bg-cover bg-center blur-sm"></div>
+
+        {/* Card transparente con fondo difuminado */}
+        <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
+          {/* Título "Your Financial" */}
+          <h2 className="text-6xl font-bold text-gray-800 mb-8">
+            Tus Finanzas
+          </h2>
+
+          <strong className="text-lg text-gray-700">Así están tus consumos:</strong>
+          <span className="text-blue-600 font-semibold text-xl">{user?.user}</span>
+
+
+
+          {/* Contenido de la card */}
+          <div className="space-y-4">
+            {/* Gráfico */}
+            <FinanzasChart />
+
+            {/* Totales */}
+            <p className="text-lg">
+              <strong>Total Ingresos:</strong> ${totalIngresos.toLocaleString()}
+            </p>
+            <p className="text-lg">
+              <strong>Total Gastos:</strong> ${totalGastos.toLocaleString()}
+            </p>
+            <p className="text-lg">
+              <strong>Saldo Total:</strong> ${saldoTotal.toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute top-5 right-5 flex gap-4">
+        {!user && ( // Solo mostrar "Regístrate" si no hay usuario logueado
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition duration-300"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
             onClick={() => setShowForm("signup")}
           >
             Regístrate
           </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-green-600 transition duration-300"
-            onClick={() => setShowForm("login")}
-          >
-            Iniciar sesión
-          </button>
-        </div>
-      </div>
-
-      {/* Hero con Carrusel */}
-      <div className="relative w-full max-w-4xl mt-10 z-0">
-        <Swiper
-          modules={[Pagination, Autoplay]}
-          spaceBetween={30}
-          slidesPerView={1}
-          autoplay={{ delay: 3000 }}
-          pagination={{ clickable: true }}
-          className="w-full h-60 md:h-80 rounded-lg shadow-lg"
+        )}
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+          onClick={user ? handleLogout : () => setShowForm("login")} // Cambiar función según el estado del usuario
         >
-          {[
-            "Organiza tu presupuesto y toma el control total.",
-            "Sincroniza tus cuentas bancarias fácilmente.",
-            "Recibe reportes detallados de tus finanzas.",
-          ].map((text, index) => (
-            <SwiperSlide
-              key={index}
-              className="flex items-center justify-center bg-blue-500 text-white text-2xl font-semibold rounded-lg p-6"
-            >
-              {text}
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          {user ? "Cerrar sesión" : "Iniciar sesión"}
+        </button>
+
       </div>
 
-      {/* Beneficios */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mt-12 z-0">
-        {[
-          { title: "Presupuesto Inteligente", desc: "Asigna cada peso y mantén el control total." },
-          { title: "Sincronización Bancaria", desc: "Conéctate a tu banco y visualiza todos tus movimientos." },
-          { title: "Reportes Detallados", desc: "Gráficos interactivos para analizar tus finanzas." },
-        ].map((item, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-lg font-semibold text-gray-700">{item.title}</h3>
-            <p className="text-gray-600 mt-2">{item.desc}</p>
-          </div>
-        ))}
-      </div>
 
-      {/* FORMULARIOS EN MODAL */}
+
+      {/* FORMULARIO */}
       {(showForm === "signup" || showForm === "login") && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
-          <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full relative">
+          <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
             {showForm === "signup" ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
@@ -138,6 +145,7 @@ const AuthComponent = () => {
                     {error && <p className="text-red-500 text-xs">{error}</p>}
                   </div>
                 ))}
+                
 
                 <button
                   type="submit"
@@ -146,23 +154,21 @@ const AuthComponent = () => {
                 >
                   Registrarse
                 </button>
-              </>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                  Iniciar Sesión
-                </h2>
-                <Login></Login>
-                
-              </>
-            )}
-
-            <button
+                <button
               onClick={() => setShowForm(null)}
               className="bg-red-500 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-red-600 transition duration-300 mt-4"
             >
               Volver
             </button>
+              </>
+            ) : (
+              <>
+
+                <Login></Login>
+              </>
+            )}
+
+            
           </div>
         </div>
       )}
@@ -171,4 +177,3 @@ const AuthComponent = () => {
 };
 
 export default AuthComponent;
-  
