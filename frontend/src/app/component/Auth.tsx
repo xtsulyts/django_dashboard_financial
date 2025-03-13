@@ -74,13 +74,7 @@ const AuthComponent = () => {
         {/* Card transparente con fondo difuminado */}
         <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
          {/* Logo */}
-      <div className="flex justify-center mb-6">
-        <img
-          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=`}
-          alt="Avatar"
-          className="w-40 h-40 rounded-full border-4 border-blue-100 shadow-sm"
-        />
-      </div>
+      
           {/* Título "Your Financial" */}
           <h2 className="text-6xl font-bold text-gray-800 mb-8">
             Tus Finanzas
