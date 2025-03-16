@@ -1,4 +1,12 @@
+<<<<<<< HEAD
+# Ignorar todos los archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+
+=======
 # Ignorar archivos compilados de Python
 **/__pycache__/
 **/*.pyc
 **/*.pyo
+>>>>>>> origin/windows

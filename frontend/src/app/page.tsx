@@ -1,16 +1,21 @@
-import Image from "next/image";
-import Footer from "./component/Footer";
-import Login from "./login/page";
-import Header from "./component/header";
-import AuthComponent from "./register_user/page";
+
+//import AuthComponent from "./register_user/page";
+import { UserProvider } from "./contex/UserContex";
+import { TransactionProvider  } from "./contex/TransactionContex";
+import Inicio from "./inicio/page";
 
 
-export default function Home() {
+export default function App() {
   
   return (
     <>
-      
-      <AuthComponent/>
+    
+      <UserProvider>
+       
+         <Inicio/>
+        
+      </UserProvider>
+    
     
     </>
   );

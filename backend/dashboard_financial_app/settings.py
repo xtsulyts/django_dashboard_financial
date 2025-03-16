@@ -62,13 +62,29 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # O usa permisos más restrictivos según necesites
+    ],
 }
+
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Permitir solicitudes desde tu frontend
+]
+
+# Configurar orígenes de confianza para solicitudes CSRF
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # Next.js en desarrollo
+    "https://tudominio.com",  # Producción (ajústalo cuando despliegues)
 ]
 
 
@@ -106,7 +122,7 @@ WSGI_APPLICATION = 'dashboard_financial_app.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dashboard_financial_db",
+        "NAME": "dash_board_financial_db",
         "USER": "postgres",
         "PASSWORD": "avmayo852",
         "HOST": "127.0.0.1",

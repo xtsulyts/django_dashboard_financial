@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from "./contex/UserContex";
+import Layout from "./component/layout";
+import { TransactionProvider } from "./contex/TransactionContex";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,18 +20,26 @@ export const metadata: Metadata = {
   description: "Aplicacion de visualizacion de costos",
 };
 
+// interface RootLayoutProps {
+//   children: React.ReactNode; // Tipo para children
+// }
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <TransactionProvider>
+    <UserProvider>
+      <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
     </html>
+    </UserProvider>
+    </TransactionProvider>
   );
 }
