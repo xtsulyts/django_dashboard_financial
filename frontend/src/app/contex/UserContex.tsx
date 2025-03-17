@@ -35,22 +35,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [totalGastos, setTotalGastos] = useState<number>(0); // Estado para total de gastos
   const [saldoTotal, setSaldoTotal] = useState<number>(0); // Estado para saldo total
 
-  // Cargar el usuario desde el localStorage al iniciar la aplicación
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("access_token");
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setAccessToken(storedToken);
-    }
-  }, []);
-
-  // Llamar a fetchTotales cuando access_token cambia
-  useEffect(() => {
-    if (access_token) {
-      fetchTotales();
-    }
-  }, [access_token]);
 
   // Función para manejar el login
   const loginUser = async (email: string, password: string) => {
@@ -70,8 +54,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const { access_token, message, refresh_token } = await loginResponse.json();
       setAccessToken(access_token);
       localStorage.setItem("access_token", access_token);
-      // localStorage.setItem("messege", message);
-      // localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("messege", message);
+      //localStorage.setItem("refresh_token", refresh_token);
 
       // Obtener perfil de usuario
       const profileResponse = await fetch("http://localhost:8000/user_profile/", {
@@ -82,16 +66,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!profileResponse.ok) {
         throw new Error("Error al obtener los datos del usuario.");
       }
-
+    
       const userData = await profileResponse.json();
-      const avatar = userData.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${userData.username}`;
+      const avatar = userData.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${userData.user}`;
       const userWithAvatar = { ...userData, avatar };
 
       setUser(userWithAvatar);
       localStorage.setItem("user", JSON.stringify(userWithAvatar));
 
       // Redirigir al usuario a la página de inicio
-      window.location.href = "/home";
+      //window.location.href = "/home";
 
      
     } catch (error) {
@@ -124,6 +108,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         } else {
           throw new Error("Error al obtener los totales.");
         }
+        
       }
       console.log("Login exitoso:", user);
 
@@ -135,7 +120,26 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error fetching totales:", error);
       throw error;
     }
+    
   };
+
+    // Cargar el usuario desde el localStorage al iniciar la aplicación
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("access_token");
+      if (storedUser && storedToken) {
+        setUser(JSON.parse(storedUser));
+        setAccessToken(storedToken);
+      }
+    }, []);
+  
+    // Llamar a fetchTotales cuando access_token cambia
+    useEffect(() => {
+      if (access_token) {
+        fetchTotales();
+      }
+    }, [access_token]);
+  
 
   // Función para cerrar sesión
   const logoutUser = () => {
@@ -146,6 +150,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setSaldoTotal(0);
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
+    localStorage.removeItem("messege")
     setIsLoggedIn(false);
     console.log("Usuario cerró sesión");
   };
