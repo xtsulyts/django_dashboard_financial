@@ -24,3 +24,4 @@ urlpatterns = [
     path('', include("core.urls")),
     #path("", include("django_nextjs.urls")),
 ]
+
