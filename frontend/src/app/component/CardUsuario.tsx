@@ -27,7 +27,7 @@ const CardUsuario = () => {
 
   async function fetchTransacciones(access_token: string) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/transacciones/', {
+        const response = await fetch('http://127.0.0.1:8000/api/transacciones/', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${access_token}`,
@@ -70,7 +70,7 @@ const CardUsuario = () => {
       <h2 className="text-2xl font-bold mt-4 text-gray-800">
         Bienvenido, {user?.user || "Invitado"}
       </h2>
-    </div>=
+    </div>
     <p className="text-gray-600 mb-8">
       {user
         ? "Gracias por ser parte de nuestra comunidad."

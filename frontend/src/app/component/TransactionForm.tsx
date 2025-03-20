@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex'; // Importar el hook useUser
 import { createTransaction, getTransactions, updateTransaction, deleteTransaction } from '../services/transactionService'; // Importar las funciones de la API
+import { useRouter } from 'next/navigation';
 
 type Transaction = {
   id?: number;
@@ -37,7 +38,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     tipo: transaction?.tipo || 'GASTO',
     categoria: transaction?.categoria || undefined,
     usuario: user?.id, // Usamos el ID del usuario
+
   });
+
+  const router = useRouter()
   const [categorias, setCategorias] = useState<Categoria[]>([]); // Estado para almacenar las categorías
   const [error, setError] = useState<string | null>(null); // Estado para manejar errores
 
@@ -80,6 +84,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       });
     }
   }, [transaction, user]);
+ 
+
 
   // Manejar cambios en los campos del formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -113,11 +119,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       // Llamar a la función de éxito si está definida
       if (onSubmitSuccess) {
         onSubmitSuccess();
+       // router.push("./movimientos"); // Redirige al usuario
       }
     } catch (err) {
       setError(err.message || 'Error al guardar la transacción.');
     }
+    router.push("./movimientos"); // Redirige al usuario
+
   };
+  
 
   // Manejar la eliminación de la transacción
   const handleDelete = async () => {

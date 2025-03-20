@@ -13,14 +13,14 @@ interface Transaccion {
 }
 
 const categorias: { [key: number]: string } = {
-    1: "Comida",
-    2: "Transporte",
-    3: "Entretenimiento",
-    4: "Educación",
-    5: "Salud",
-    6: "Ropa",
-    7: "Cine",
+    1: "Salario",
+    2: "Otros ingresos ",
+    3: "Entreteniiento",
+    4: "Salud",
+    5: "Transporte",
+    6: "Servicios",   
 };
+
 const TransaccionesListComponent = () => {
     const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
     const [loading, setLoading] = useState(true);
@@ -57,8 +57,8 @@ const TransaccionesListComponent = () => {
         fetchTransacciones();
     }, [access_token]);
 
-    if (loading) return <p>Cargando transacciones...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    //if (loading) return <h1>Tienes que estar logeado para poder ver movimientos...</h1>;
+    //if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
         <div

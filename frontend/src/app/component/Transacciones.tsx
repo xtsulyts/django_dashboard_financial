@@ -5,11 +5,12 @@ import TransactionForm from '../component/TransactionForm'; // Importa el compon
 import { useTransactions } from '../contex/TransactionContex'; // Importa el contexto de transacciones
 import { Transaction } from '../../types/transaction'; // Importa el tipo de transacción
 import { useUser } from '../contex/UserContex'; // Importa el contexto del usuario
-
+import { useRouter } from "next/navigation"
 
 
 const TransaccionesComponent = () => {
 
+  const router = useRouter()
   // Obtén las funciones y el estado del contexto de transacciones
   const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactions();
 
@@ -32,6 +33,7 @@ const TransaccionesComponent = () => {
       usuario: user.id, // Incluye el ID del usuario
     };
     console.log("desde page transaccion",user.id)
+    
 
     if (selectedTransaction) {
       // Si hay una transacción seleccionada, edítala
@@ -41,6 +43,8 @@ const TransaccionesComponent = () => {
       addTransaction(transactionWithUser);
     }
     setSelectedTransaction(null); // Limpia la selección después de guardar
+    router.push("./movimientos"); // Redirige al usuario
+
   };
 
   // Función para manejar la eliminación de una transacción
