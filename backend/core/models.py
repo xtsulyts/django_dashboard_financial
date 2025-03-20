@@ -160,3 +160,5 @@ class Transaccion(models.Model):
     class Meta:
         verbose_name = "Transacción"
         verbose_name_plural = "Transacciones"
+
+

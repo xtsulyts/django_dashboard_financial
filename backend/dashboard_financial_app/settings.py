@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     "rest_framework",
     "rest_framework_simplejwt",
+    'coreapi',
     'core',
     
 ]
@@ -53,12 +54,14 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
+    #'django.milldeleware.common.CommonMiddlewere'
 ]
 
 REST_FRAMEWORK = {
@@ -69,11 +72,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # O usa permisos más restrictivos según necesites
+        'rest_framework.permissions.AllowAny',
+           'rest_framework.permissions.IsAuthenticated',   # O usa permisos más restrictivos según necesites
     ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 
@@ -122,7 +128,7 @@ WSGI_APPLICATION = 'dashboard_financial_app.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dash_board_financial_db",
+        "NAME": "dashboard_financial_db",
         "USER": "postgres",
         "PASSWORD": "avmayo852",
         "HOST": "127.0.0.1",

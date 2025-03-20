@@ -13,9 +13,9 @@ from .forms import register_user_form
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from .models import Categoria, Transaccion, models, custom_user
-from .serializer_ import CategoriaSerializer, TransaccionSerializer, CustomUser
+from .serializer_ import CategoriaSerializer, TransaccionSerializer, TransaccionListSerializer
 from rest_framework.views import APIView
 
 
@@ -276,4 +276,52 @@ def totales_usuario(request):
     })
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def listado_transacciones(request):
+    """
+    Endpoint para obtener el listado de transacciones del usuario autenticado.
 
+    Este endpoint filtra todas las transacciones del usuario autenticado, separa los ingresos y gastos, 
+    calcula sus totales y devuelve el saldo final.
+
+    Requisitos:
+    - El usuario debe estar autenticado mediante un `access_token`.
+
+    Parámetros:
+    - request (HttpRequest): La solicitud HTTP recibida.
+
+    Retorno:
+    - JsonResponse: Un diccionario con los totales de ingresos, gastos y el saldo total:
+        {
+            "total_ingresos": ...,
+           
+        }
+    """
+    # Obtener el usuario logueado
+    usuario = request.user
+
+    # Filtrar transacciones del usuario
+    transacciones = Transaccion.objects.filter(usuario=usuario)
+
+    # obtener transacciones 
+    transacciones_listado = transacciones.filter(categoria='categoria').aggregate(monto=models('monto'), tipo=models('tipo'), fecha=models('fecha'), descripcio=models('descriocion'))['transaccion']
+    
+
+    # Devolver los totales en formato JSON
+    return JsonResponse({
+        'listado_transaccines': transacciones_listado,
+        
+        
+    })
+
+
+class TransaccionListView(generics.ListAPIView):
+    serializer_class = TransaccionListSerializer
+    permission_classes = [IsAuthenticated]  # Solo usuarios autenticados pueden acceder
+
+    def get_queryset(self):
+        """
+        Filtra las transacciones solo del usuario autenticado.
+        """
+        return Transaccion.objects.filter(usuario=self.request.user).select_related("categoria", "usuario") 

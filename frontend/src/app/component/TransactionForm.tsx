@@ -4,7 +4,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex'; // Importar el hook useUser
-import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService'; // Importar las funciones de la API
+import { createTransaction, getTransactions, updateTransaction, deleteTransaction } from '../services/transactionService'; // Importar las funciones de la API
+import { useRouter } from 'next/navigation';
 
 type Transaction = {
   id?: number;
@@ -37,7 +38,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     tipo: transaction?.tipo || 'GASTO',
     categoria: transaction?.categoria || undefined,
     usuario: user?.id, // Usamos el ID del usuario
+
   });
+
+  const router = useRouter()
   const [categorias, setCategorias] = useState<Categoria[]>([]); // Estado para almacenar las categorías
   const [error, setError] = useState<string | null>(null); // Estado para manejar errores
 
@@ -80,6 +84,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       });
     }
   }, [transaction, user]);
+ 
+
 
   // Manejar cambios en los campos del formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -113,11 +119,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       // Llamar a la función de éxito si está definida
       if (onSubmitSuccess) {
         onSubmitSuccess();
+       // router.push("./movimientos"); // Redirige al usuario
       }
     } catch (err) {
       setError(err.message || 'Error al guardar la transacción.');
     }
+    router.push("./movimientos"); // Redirige al usuario
+
   };
+  
 
   // Manejar la eliminación de la transacción
   const handleDelete = async () => {
@@ -136,22 +146,33 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
   };
 
   return (
-    <div className="flex flex-col items-center p-8 min-h-screen bg-gray-100">
+    <div
+      className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
+    >
+     
+      {/* Navbar */}
+
+      <div className="relative min-h-screen flex items-center justify-center">
+      
+      {/* Formulario */}
+      <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full my-8">
+      <div className="mb-6">
       {/* Logo */}
-      <div className="mb-8">
-        <video
-          src="/Main Scene.webm"
-          autoPlay
-          loop
-          muted
-          className="w-130 h-100 mx-auto"
+      <div className="flex justify-center">
+        <img
+          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user}`}
+          alt="Avatar"
+          className="w-40 h-40 rounded-full border-4 border-blue-100 shadow-sm"
         />
       </div>
-
-      {/* Formulario */}
+      <h2 className="text-2xl font-bold mt-4 text-gray-800">
+         {user?.user || "Invitado"}
+      </h2>
+    </div>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center w-full max-w-sm bg-white p-8 rounded-lg shadow-md gap-6"
+        
       >
         {/* Campos del formulario */}
         {[
@@ -160,7 +181,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
           { label: "Descripción (opcional)", value: formData.descripcion, name: "descripcion", type: "textarea" },
         ].map(({ label, value, name, type }) => (
           <div className="w-full" key={name}>
-            <label className="text-sm font-medium text-gray-700">{label}</label>
+            <label className="text-sm font-medium   text-gray-700">{label}</label>
             {type === "textarea" ? (
               <textarea
                 name={name}
@@ -203,7 +224,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
             name="categoria"
             value={formData.categoria || ""}
             onChange={handleChange}
-            className="border p-3 w-full rounded-md border-gray-300 shadow-sm"
+            className="border p-3 w-full rounded-md border-gray-300 shadow-sm mb-5"
           >
             <option value="">Selecciona una categoría</option>
             {categorias
@@ -244,10 +265,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
       </form>
     </div>
+    </div>
+    </div>
   );
 };
 
 export default TransactionForm;
+
+
 
 
 
