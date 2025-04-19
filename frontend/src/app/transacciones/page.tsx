@@ -4,7 +4,7 @@
 
 
 import Footer from "../component/Footer";
-import Header from "../component/Header";
+import Nav from "../component/Nav";
 import TransaccionesComponent from "../component/Transacciones";
 
 
@@ -13,7 +13,7 @@ export default function Transacciones() {
   
     return (
       <>
-        <Header/>
+        <Nav/>
         <TransaccionesComponent/>
         <Footer/>
   

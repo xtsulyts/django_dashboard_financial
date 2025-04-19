@@ -4,8 +4,8 @@
 
 
 import Footer from "../component/Footer";
-import Header from "../component/Header";
-import TransaccionesListComponent from "../component/ListaTransacciones";
+import Nav from "../component/Nav";
+import TransaccionesListComponent from "../component/TransaccionesListComponent ";
 
 
 
@@ -14,7 +14,7 @@ export default function Transacciones() {
   
     return (
       <>
-        <Header/>
+        <Nav/>
         <TransaccionesListComponent/>
         <Footer/>
   

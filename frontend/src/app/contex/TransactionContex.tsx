@@ -8,6 +8,7 @@ import {
   deleteTransaction as deleteTransactionService,
 } from '../services/transactionService'; // Importa los servicios necesarios
 import { Transaction } from '../../types/transaction'; // Importa el tipo de transacción
+import { access } from 'fs';
 
 // Define el tipo para el contexto de transacciones
 type TransactionContextType = {

@@ -24,7 +24,7 @@ function Login() {
 
 
       // Redirigir al usuario a la página de inicio
-      router.push("./home");
+      router.push("./usuario");
 
     } catch (err: any) {
       setError(err.message); // Manejar errores
