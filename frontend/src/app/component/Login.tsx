@@ -4,9 +4,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
-
+import Nav from "./Nav";
 
 function Login() {
+  
   const { loginUser, user } = useUser(); // Obtén la función loginUser del contexto
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ function Login() {
 
 
     <div>
+    
       <form
         onSubmit={handleLogin} 
       >
@@ -64,6 +66,7 @@ function Login() {
         >
           Iniciar Sesión
         </button>
+        
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
       </form>
     </div>
