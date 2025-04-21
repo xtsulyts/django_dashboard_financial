@@ -24,31 +24,41 @@ function Login() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      // Envía el token de Google a tu backend
-      const response = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: credentialResponse.credential })
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Asume que tu backend devuelve los datos del usuario
-        // y que tu contexto puede manejar este login
-        await loginUser(data.user.email, '', true); // Añade parámetro para login social
-        router.push("./usuario");
-      } else {
-        throw new Error(data.message || 'Error en autenticación con Google');
-      }
-    } catch (err: any) {
-      setError(err.message);
-    }
+  interface GoogleCredentialResponse {
+    credential?: string;
+    // Otros campos si los usas (ej: clientId)
+  }
+  
+  const handleGoogleSuccess = ({ credential }: GoogleCredentialResponse) => {
+    // Redirige directamente a la URL de Google OAuth de allauth (método GET)
+    window.location.href = 'http://127.0.0.1:8000/accounts/google/login/';
   };
+
+  // const handleGoogleSuccess = async (credentialResponse: any) => {
+  //   try {
+  //     // Envía el token de Google a tu backend
+  //     const response = await fetch('http://127.0.0.1:8000/accounts/google/login/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ token: credentialResponse.credential })
+  //     });
+
+  //     const data = await response.json();
+      
+  //     if (response.ok) {
+  //       // Asume que tu backend devuelve los datos del usuario
+  //       // y que tu contexto puede manejar este login
+  //       await loginUser(data.user.email, '', true); // Añade parámetro para login social
+  //       router.push("./usuario");
+  //     } else {
+  //       throw new Error(data.message || 'Error en autenticación con Google');
+  //     }
+  //   } catch (err: any) {
+  //     setError(err.message);
+  //   }
+  // };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -89,7 +99,7 @@ function Login() {
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
 
-      <GoogleOAuthProvider clientId="TU_CLIENT_ID_GOOGLE.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="604889819950-iuq2vp36a76d92rc9k1agqro945rshg9.apps.googleusercontent.com">
         <div className="flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}

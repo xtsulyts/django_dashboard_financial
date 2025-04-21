@@ -294,7 +294,7 @@ def google_auth(request):
             user_data = google_response.json()
             
             # Verifica que el token sea para TU aplicación
-            if user_data.get('aud') != 'TU_CLIENT_ID_GOOGLE':  # Reemplaza con tu ID real
+            if user_data.get('aud') != '604889819950-iuq2vp36a76d92rc9k1agqro945rshg9.apps.googleusercontent.com':  # Reemplaza con tu ID real
                 return JsonResponse({'status': 'error', 'message': 'Token inválido'}, status=400)
                 
             # Autentica o crea el usuario (ejemplo básico)

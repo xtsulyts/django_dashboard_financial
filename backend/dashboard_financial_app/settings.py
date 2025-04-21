@@ -110,7 +110,7 @@ REST_FRAMEWORK = {
 
 
 
-SITE_ID = 1  # Esto referencia al "Site" que crearemos en la base de datos
+SITE_ID = 6 # Esto referencia al "Site" que crearemos en la base de datos
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -161,7 +161,7 @@ WSGI_APPLICATION = 'dashboard_financial_app.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
+#1153175707 santiago gin enebro
 DATABASES = {
     "default": {
         "ENGINE": os.getenv("DB_ENGINE"),
@@ -175,15 +175,23 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'core.custom_user'
 
+# settings.py
+SESSION_COOKIE_SAMESITE = 'Lax'  # o 'None' si usas HTTPS
+SESSION_COOKIE_SECURE = False    # True en producción (HTTPS)
+SESSION_COOKIE_DOMAIN = 'localhost'  # Dominio compartido (front/back)
+
 #ACCOUNT_LOGIN_METHODS = ["email"]    # Login solo con email
 #ACCOUNT_SIGNUP_FIELDS = ["username"]  # Registro pide username → ¡Error!
-LOGIN_REDIRECT_URL = "http://localhost:3000/user_profile"
+#LOGIN_REDIRECT_URL = "http://localhost:3000/user_profile"
 # Para manejar JWT con autenticación social (si usas tokens en vez de cookies)
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Simplifica el flujo
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Opcional: si no quieres doble verificación
 ROOT_URLCONF = 'dashboard_financial_app.urls'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+# settings.py
+LOGIN_REDIRECT_URL = 'http://localhost:3000/'  # Redirige al front
 
 AUTH_PASSWORD_VALIDATORS = [
     {
