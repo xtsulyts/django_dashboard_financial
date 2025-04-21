@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils import timezone
 from django.http import JsonResponse
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import custom_user
 from .forms import register_user_form
@@ -20,6 +20,9 @@ from rest_framework.views import APIView
 from django.shortcuts import redirect
 from allauth.socialaccount.views import SignupView
 from django.contrib.auth.backends import ModelBackend
+import requests
+from django.contrib.auth.models import User
+
 @csrf_exempt
 def index(request):
     if request.method == 'POST':
@@ -47,37 +50,26 @@ def index(request):
 @csrf_exempt
 def login_user(request):
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            email = data.get("email")
-            password = data.get("password")
+        data = json.loads(request.body)
+        email = data.get("email")
+        password = data.get("password")
 
-            # Autentica usando el EMAIL (no username)
-            user = authenticate(
-                request, 
-                email=email, 
-                password=password,
-                backend="django.contrib.auth.backends.ModelBackend"
-            )
-
-            if user is not None:
-                if not user.has_usable_password():
-                    return JsonResponse({"error": "Usa Google para iniciar sesión"}, status=401)
+        user = custom_user.objects.filter(email=email).first()
+        if user:
+            authenticated_user = authenticate(username=user.username, password=password)
+            if authenticated_user is not None:
+                # Generar los tokens JWT
+                refresh = RefreshToken.for_user(authenticated_user)
+                access_token = str(refresh.access_token)
                 
-                refresh = RefreshToken.for_user(user)
                 return JsonResponse({
-                    "access_token": str(refresh.access_token),
-                    "refresh_token": str(refresh),
-                    "user_email": user.email  # Envía email, no username
+                    "message": f"Login exitoso desde URL/login_user back django:8000 usuario: {user.username}",
+                    "access_token": access_token,
+                    "refresh_token": str(refresh)  # El refresh token también se envía
                 })
-            else:
-                return JsonResponse({"error": "Credenciales inválidas"}, status=401)
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "JSON inválido"}, status=400)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-    
+
+        return JsonResponse({"error": "Credenciales inválidas"}, status=401)
+
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
 @api_view(["GET"])
@@ -112,19 +104,7 @@ def user_profile(request):
 
 
 
-class CustomGoogleCallback(SignupView):
-    def form_valid(self, form):
-        # Llama al método original de allauth para autenticar al usuario
-        response = super().form_valid(form)
-        
-        # Genera los tokens JWT para el usuario autenticado
-        user = self.user
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        
-        # Redirige al frontend con el token en la URL
-        redirect_url = f"http://localhost:3000/auth/google/callback?token={access_token}"
-        return redirect(redirect_url)
+
 
 class CategoriaViewSet(viewsets.ModelViewSet):
     """
@@ -295,3 +275,40 @@ class TransaccionListView(generics.ListAPIView):
         Filtra las transacciones solo del usuario autenticado.
         """
         return Transaccion.objects.filter(usuario=self.request.user).select_related("categoria", "usuario") 
+    
+
+# views.py
+import requests  # ¡Añade esto al inicio!
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+def google_auth(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        
+        try:
+            google_response = requests.get(
+                f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+            )
+            user_data = google_response.json()
+            
+            # Verifica que el token sea para TU aplicación
+            if user_data.get('aud') != 'TU_CLIENT_ID_GOOGLE':  # Reemplaza con tu ID real
+                return JsonResponse({'status': 'error', 'message': 'Token inválido'}, status=400)
+                
+            # Autentica o crea el usuario (ejemplo básico)
+            user, created = User.objects.get_or_create(
+                email=user_data['email'],
+                defaults={'username': user_data['email']}
+            )
+            
+            return JsonResponse({
+                'status': 'success',
+                'user': {'email': user.email}
+            })
+            
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

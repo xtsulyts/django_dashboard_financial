@@ -52,6 +52,10 @@ INSTALLED_APPS = [
     
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    # Otros orígenes si los necesitas
+]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
@@ -60,6 +64,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+# settings.py
+CSRF_USE_SESSIONS = False  # Usar cookies en lugar de sesiones (valor por defecto)
+CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript lea la cookie
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -112,8 +119,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret': os.getenv("GOOGLE_SECRET"),
             'key': os.getenv("GOOGLE_KEY")
         },
-        'SCOPE': os.getenv("GOOGLE_SCOPE").split(','),  # Convierte el string en lista
-        'AUTH_PARAMS': {'access_type': os.getenv("GOOGLE_AUTH_ACCESS_TYPE")}
+        # 'SCOPE': os.getenv("GOOGLE_SCOPE").split(','),  # Convierte el string en lista
+        # 'AUTH_PARAMS': {'access_type': os.getenv("GOOGLE_AUTH_ACCESS_TYPE")}
     }
 }
 
