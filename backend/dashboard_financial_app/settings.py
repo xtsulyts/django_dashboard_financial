@@ -110,7 +110,11 @@ REST_FRAMEWORK = {
 
 
 
-SITE_ID = 6 # Esto referencia al "Site" que crearemos en la base de datos
+SITE_ID = 7        # Esto referencia al "Site" que crearemos en la base de datos
+
+
+
+
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -124,7 +128,17 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Para usuarios tradicionales
@@ -153,14 +167,7 @@ WSGI_APPLICATION = 'dashboard_financial_app.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 #1153175707 santiago gin enebro
 DATABASES = {
     "default": {
@@ -175,23 +182,37 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'core.custom_user'
 
+
+# Configuración básica de Allauth
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Desactiva verificación de email
+
+
 # settings.py
 SESSION_COOKIE_SAMESITE = 'Lax'  # o 'None' si usas HTTPS
-SESSION_COOKIE_SECURE = False    # True en producción (HTTPS)
-SESSION_COOKIE_DOMAIN = 'localhost'  # Dominio compartido (front/back)
+#SESSION_COOKIE_SECURE = False    # True en producción (HTTPS)
+#SESSION_COOKIE_DOMAIN = 'localhost'  # Dominio compartido (front/back)
 
 #ACCOUNT_LOGIN_METHODS = ["email"]    # Login solo con email
 #ACCOUNT_SIGNUP_FIELDS = ["username"]  # Registro pide username → ¡Error!
 #LOGIN_REDIRECT_URL = "http://localhost:3000/user_profile"
 # Para manejar JWT con autenticación social (si usas tokens en vez de cookies)
-SOCIALACCOUNT_LOGIN_ON_GET = True  # Simplifica el flujo
+#SOCIALACCOUNT_LOGIN_ON_GET = True  # Simplifica el flujo
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Opcional: si no quieres doble verificación
+SOCIALACCOUNT_EMAIL_REQUIRED = False
 ROOT_URLCONF = 'dashboard_financial_app.urls'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 # settings.py
-LOGIN_REDIRECT_URL = 'http://localhost:3000/'  # Redirige al front
+
+# Configuración específica para Google OAuth
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'  # Ignora verificación en redes sociales
+SOCIALACCOUNT_EMAIL_REQUIRED = False  # No obliga a pedir email
+SOCIALACCOUNT_QUERY_EMAIL = True  # Opcional: solicita email si no está incluido
+
+LOGIN_REDIRECT_URL = 'http://localhost:3000/usuario/'  # Redirige al front
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

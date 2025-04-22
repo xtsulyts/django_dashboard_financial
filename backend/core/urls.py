@@ -19,6 +19,6 @@ urlpatterns = [
     #path('accounts/google/login/callback/', CustomGoogleCallback.as_view(), name='google_callback'),
     path("docs/", include_docs_urls(title="Dashboard Financial API")),
     #path('auth/google/', google_auth, name='google-auth')
-    path('accounts/', include('allauth.urls')),
+    path('accounts/google/login/', include('allauth.urls')),
    
    ]
