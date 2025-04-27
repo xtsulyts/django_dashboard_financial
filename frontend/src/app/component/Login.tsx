@@ -89,7 +89,7 @@ function Login() {
         <div className="flex-grow border-t border-gray-300"></div>
       </div>
 
-      <GoogleOAuthProvider clientId="TU_CLIENT_ID_GOOGLE.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="243480656213-08rdonp2jjmc5ocv8i9uh84vuthui9up.apps.googleusercontent.com">
         <div className="flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}

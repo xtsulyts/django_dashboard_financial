@@ -110,7 +110,7 @@ REST_FRAMEWORK = {
 
 
 
-SITE_ID = 1  # Esto referencia al "Site" que crearemos en la base de datos
+SITE_ID = 8  # Esto referencia al "Site" que crearemos en la base de datos
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
