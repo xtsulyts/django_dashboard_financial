@@ -7,6 +7,7 @@ import Login from "../login/page";
 import React from "react";
 import FinanzasChart from "./FinanzasGraf";
 import { useUser } from "../contex/UserContex";
+import  Nav from "./Nav"
 
 const AuthComponent = () => {
   // Hooks para acceder a datos del usuario y enrutamiento
@@ -62,10 +63,12 @@ const AuthComponent = () => {
   };
 
   return (
+    
     <div
       className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
     >
+      
       {/* Navbar */}
 
       <div className="relative min-h-screen flex items-center justify-center">
@@ -154,7 +157,9 @@ const AuthComponent = () => {
       {/* FORMULARIO */}
       {(showForm === "signup" || showForm === "login") && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
+          
           <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
+          <Nav/>  
             {showForm === "signup" ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">

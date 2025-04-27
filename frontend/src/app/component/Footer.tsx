@@ -86,7 +86,7 @@ const Footer = () => {
       {/* Copyright */}
       <div className="bg-gray-50 dark:bg-gray-900 py-4">
         <div className="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
-          © {new Date().getFullYear()} E-Commerce. Todos los derechos reservados.
+          © {new Date().getFullYear()} Tus Finanzas. Todos los derechos reservados.
         </div>
       </div>
     </footer>

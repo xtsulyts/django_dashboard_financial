@@ -13,10 +13,10 @@ class CustomUserAdmin(admin.ModelAdmin):
     """
 
     # Campos que se mostrarán en la lista de usuarios
-    list_display = ('username', 'email', 'user', 'is_staff', 'is_active')
+    list_display = ('username', 'email', 'is_staff', 'is_active')
     
     # Campos por los que se puede buscar
-    search_fields = ('username', 'email', 'user')
+    search_fields = ('username', 'email')
     
     # Filtros laterales
     list_filter = ('is_staff', 'is_active', 'groups')
@@ -33,7 +33,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'user', 'password1', 'password2', 'is_staff', 'is_active'),
+            'fields': ('username', 'email', 'password1', 'password2', 'is_staff', 'is_active'),
         }),
     )
 

@@ -55,7 +55,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(access_token);
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("messege", message);
-      //localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("refresh_token", refresh_token);
 
       // Obtener perfil de usuario
       const profileResponse = await fetch("http://localhost:8000/user_profile/", {
