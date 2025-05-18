@@ -30,7 +30,7 @@ export default function Nav() {
           onClick={() => router.push('/')}
         >
           <FaShopify className="text-yellow-500 text-2xl" />
-          <h1 className="text-xl font-bold text-white">TUS FINANZAS</h1>
+       
         </div>
 
         {/* Menú para pantallas grandes (md en adelante) */}

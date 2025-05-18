@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'coreapi',
     'django.contrib.sites',
     'allauth',
-    'allauth.account',
+    # 'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.google',
     'core',
     
 ]
