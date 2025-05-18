@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils import timezone
 from django.http import JsonResponse
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import custom_user
 from .forms import register_user_form
@@ -17,85 +17,36 @@ from rest_framework import viewsets, generics
 from .models import Categoria, Transaccion, models, custom_user
 from .serializer_ import CategoriaSerializer, TransaccionSerializer, TransaccionListSerializer
 from rest_framework.views import APIView
-
+from django.shortcuts import redirect
+from allauth.socialaccount.views import SignupView
+from django.contrib.auth.backends import ModelBackend
+import requests
+from django.contrib.auth.models import User
 
 @csrf_exempt
 def index(request):
-    """
-    Maneja las solicitudes de registro de usuario desde un frontend en React.
-
-    Esta función procesa solicitudes POST para registrar un nuevo usuario. 
-    Espera recibir datos en formato JSON con los siguientes campos:
-    
-    - 'username': Nombre de usuario deseado para la nueva cuenta.
-    - 'email': Dirección de correo electrónico del usuario.
-    - 'password1': Contraseña elegida.
-    - 'password2': Confirmación de la contraseña.
-
-    Pasos:
-    1. Extraer y analizar los datos JSON del cuerpo de la solicitud.
-    2. Validar los datos utilizando `register_user_form`.
-    3. Si el formulario es válido, crear un nuevo usuario y autenticarlo automáticamente.
-    4. Devolver un mensaje de éxito con estado 201.
-    5. Si la validación falla, devolver los errores del formulario con estado 400.
-    6. Si el método de la solicitud no es POST, devolver un error 405.
-
-    Retorna:
-        JsonResponse: Una respuesta JSON indicando éxito o detalles de error.
-    """
     if request.method == 'POST':
-    
         try:
             data = json.loads(request.body)
         except json.JSONDecodeError:
             return JsonResponse({'error': 'JSON inválido'}, status=400)
 
-        """ 
-        Crear una instancia del formulario con los datos JSON analizados.
-
-        `register_user_form` es una clase de formulario de Django diseñada para 
-        validar los datos de registro del usuario. Verifica:
-        - Si el nombre de usuario es único.
-        - Si el correo electrónico tiene un formato válido.
-        - Si las contraseñas coinciden y cumplen con los requisitos de seguridad.
-        
-        Si los datos proporcionados no cumplen con los criterios de validación, 
-        `form.is_valid()` devolverá False y los errores se enviarán de vuelta 
-        al frontend.
-        """
         form = register_user_form(data)
         
         if form.is_valid():
-            """ 
-            Si los datos del formulario son válidos, crear un nuevo usuario y autenticarlo.
-
-            - `form.save()` crea y almacena el nuevo usuario en la base de datos.
-            - `login(request, user)` inicia sesión automáticamente después del registro.
-            
-            La respuesta enviada confirma el registro exitoso.
-            """
             user = form.save()
-            login(request, user) 
-            return JsonResponse({'message': 'Usuario registrado exitosamente'},status=201)
+            
+            # ¡Agrega esta línea crítica!
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            
+            login(request, user)  # Ahora funciona
+            return JsonResponse({'message': 'Usuario registrado exitosamente'}, status=201)
         else:
-            """ 
-            Si el formulario no es válido, devolver los errores de validación.
-
-            La respuesta incluirá mensajes de error detallados desde el formulario 
-            para que el frontend pueda mostrar los avisos adecuados al usuario.
-            """
             return JsonResponse({'errors': form.errors}, status=400)
 
-    """ 
-    Si el método de la solicitud no es POST, devolver una respuesta 405 (Método no permitido).
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-    Esto evita que otros métodos HTTP interactúen con el endpoint de registro.
-    """
-    return JsonResponse({'error': 'Método no permitido. URL de inicio: /8000'}, status=405)
-
-
-
-
+# views.py (login_user)
 @csrf_exempt
 def login_user(request):
     if request.method == "POST":
@@ -120,9 +71,6 @@ def login_user(request):
         return JsonResponse({"error": "Credenciales inválidas"}, status=401)
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
-
-
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -153,6 +101,8 @@ def user_profile(request):
         "id": request.user.id,
         # "password:": request.user.password  # Comentado por seguridad
     })
+
+
 
 
 
@@ -325,3 +275,40 @@ class TransaccionListView(generics.ListAPIView):
         Filtra las transacciones solo del usuario autenticado.
         """
         return Transaccion.objects.filter(usuario=self.request.user).select_related("categoria", "usuario") 
+    
+
+# views.py
+import requests  # ¡Añade esto al inicio!
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+def google_auth(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        
+        try:
+            google_response = requests.get(
+                f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+            )
+            user_data = google_response.json()
+            
+            # Verifica que el token sea para TU aplicación
+            if user_data.get('aud') != 'TU_CLIENT_ID_GOOGLE':  # Reemplaza con tu ID real
+                return JsonResponse({'status': 'error', 'message': 'Token inválido'}, status=400)
+                
+            # Autentica o crea el usuario (ejemplo básico)
+            user, created = User.objects.get_or_create(
+                email=user_data['email'],
+                defaults={'username': user_data['email']}
+            )
+            
+            return JsonResponse({
+                'status': 'success',
+                'user': {'email': user.email}
+            })
+            
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

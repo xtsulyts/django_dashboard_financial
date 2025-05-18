@@ -212,8 +212,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
             className="border p-3 w-full rounded-md border-gray-300 shadow-sm"
             required
           >
-            <option value="INGRESO">Ingreso</option>
+           
             <option value="GASTO">Gasto</option>
+            <option value="INGRESO">Ingreso</option>
           </select>
         </div>
 

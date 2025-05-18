@@ -3,9 +3,8 @@
 "use client";
 
 
-import Footer from "../component/Footer";
-import Header from "../component/Header";
-import TransaccionesListComponent from "../component/ListaTransacciones";
+
+import TransaccionesListComponent from "../component/TransaccionesListComponent ";
 
 
 
@@ -14,9 +13,9 @@ export default function Transacciones() {
   
     return (
       <>
-        <Header/>
+     
         <TransaccionesListComponent/>
-        <Footer/>
+  
   
       </>
     );

@@ -27,7 +27,7 @@ class custom_user(AbstractUser):
     - `__str__()`: Retorna el nombre de usuario (`username`) como representación en texto del objeto.
     """
 
-    user = models.CharField(max_length=100, blank=True, null=True)
+    #user = models.CharField(max_length=100, blank=True, null=True)
     """ 
     Nombre personalizado del usuario (opcional).
     
@@ -36,7 +36,7 @@ class custom_user(AbstractUser):
     - `null=True`: Permite que el campo sea nulo en la base de datos.
     """
 
-    email = models.EmailField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=False)
     """ 
     Dirección de correo electrónico del usuario (opcional).
     

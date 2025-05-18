@@ -1,18 +1,16 @@
 "use client";
 
-
-import Footer from "../component/Footer";
-import Header from "../component/Header";
-import AuthComponent  from  "../component/Auth";
+import Inicio  from "../component/Inicio";
+//import Header from "../component/Header";
 
 
-export default function Inicio() {
+export default function InicioPages() {
   
     return (
       <>
-        <Header/>
-        <AuthComponent/>
-        <Footer/>
+     
+      <Inicio/>
+      
   
       </>
     );
