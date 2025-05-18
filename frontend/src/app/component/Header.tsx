@@ -1,4 +1,7 @@
+"use client"
+
 import { FaShopify } from "react-icons/fa";
+import { FcBullish, FcCurrencyExchange } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
@@ -12,9 +15,10 @@ const Header = () => {
           className="flex items-center space-x-2 cursor-pointer" 
           onClick={() => router.push('/usuario')}
         >
-          <FaShopify className="text-yellow-500 text-2xl dark:text-yellow-300" />
+          <FcBullish className="text-yellow-500 text-2xl dark:text-yellow-300" />
+          <FcCurrencyExchange/>
           <h1 className="text-xl font-bold text-gray-800 dark:text-white">
-            TUS FINANZAS
+            Tus Finanzas
           </h1>
         </div>
 

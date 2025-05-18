@@ -4,24 +4,42 @@
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
 import FinanzasChart from "./FinanzasGraf";
+import { useEffect, useState } from "react";
+import { setUncaughtExceptionCaptureCallback } from "process";
 
-const CardUsuario = () => {
-  // Obtiene el usuario y la función de logout desde el contexto
-  const { user, setUser } = useUser();
-  const router = useRouter(); // Hook de Next.js para redirección
-  const { totalIngresos, totalGastos, saldoTotal } = useUser();
+// Tipo para el usuario (ajusta según tu implementación real)
+type UserType = {
+  username: string;
+  // ... otras propiedades
+};
 
+//Define el tipo para las props
+interface CardUsuarioProps {
+  onUpdateUser?: (user: UserType) => void; // Prop opcional para actualizar usuario
+}
 
+const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
+  const [usuarioLogueado, setUsuarioLogueado] = useState<string>("");
+  const router = useRouter();
+  const { user, totalIngresos, totalGastos, saldoTotal } = useUser(); // Obtiene user del contexto
+
+  // Actualiza el estado local y notifica al padre cuando cambia el usuario
+  useEffect(() => {
+    if (user) {
+      setUsuarioLogueado(user.username);
+      
+      // Llama a la prop de actualización si existe
+      if (onUpdateUser) {
+        onUpdateUser(user);
+      }
+    }
+  }, [user, onUpdateUser]); // Se ejecuta cuando cambia user o la prop
 
   const handleIngresos = () => {
-    router.push("/transacciones") // Usa una ruta absoluta
-    console.log("Navegación exitosa"); // Manejo opcional de éxito
-    //console.error("Error al navegar:", Error); // Manejo de errores
+    router.push("/transacciones");
   };
 
 
-
-  
   return (
 <div
   className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
@@ -39,7 +57,7 @@ const CardUsuario = () => {
         />
       </div>
       <h2 className="text-2xl font-bold mt-4 text-gray-800">
-        Bienvenido, {user?.user || "Invitado"}
+        Bienvenido, {usuarioLogueado}
       </h2>
     </div>
     <p className="text-gray-600 mb-8">

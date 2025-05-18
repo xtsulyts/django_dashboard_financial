@@ -22,16 +22,16 @@ export default function Nav() {
   return (
     <>
 
-    <header className="bg-gray-800 text-white py-4 px-4">
+    <header className="bg-gray-800 text-white py-4 px-4 flex">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
-        {/* Logo y nombre */}
+        {/* Logo y nombre
         <div 
           className="flex items-center space-x-2 cursor-pointer" 
           onClick={() => router.push('/')}
         >
           <FaShopify className="text-yellow-500 text-2xl" />
           <h1 className="text-xl font-bold text-white">TUS FINANZAS</h1>
-        </div>
+        </div> */}
 
         {/* Menú para pantallas grandes (md en adelante) */}
         <nav className="hidden md:flex gap-6">

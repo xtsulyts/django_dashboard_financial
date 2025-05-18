@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
-function Login() {
+function LoginFormulario() {
   const { loginUser } = useUser();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -107,7 +107,7 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginFormulario;
 
 
 
