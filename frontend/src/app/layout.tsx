@@ -8,6 +8,7 @@ import Layout from "./component/layout";
 import { TransactionProvider } from "./contex/TransactionContex";
 import Header from "./component/Header";
 import Footer from "./component/Footer";
+import Nav from "./component/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header/>
+        <Nav/>
         {children}
         <Footer/>
       </body>

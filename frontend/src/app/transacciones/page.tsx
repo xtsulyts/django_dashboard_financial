@@ -13,9 +13,9 @@ export default function Transacciones() {
   
     return (
       <>
-        <Nav/>
+        
         <TransaccionesComponent/>
-        <Footer/>
+      
   
       </>
     );
