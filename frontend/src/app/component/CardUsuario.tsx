@@ -4,13 +4,14 @@
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
 import FinanzasChart from "./FinanzasGraf";
+import { useState, useEffect } from "react";
 
 const CardUsuario = () => {
   // Obtiene el usuario y la función de logout desde el contexto
-  const { user, setUser } = useUser();
   const router = useRouter(); // Hook de Next.js para redirección
-  const { totalIngresos, totalGastos, saldoTotal } = useUser();
-
+  const {  user, totalIngresos, totalGastos, saldoTotal } = useUser();
+  const [nombreUsuario, setNombreUsuario] = useState()
+const [error, setError] = useState()
 
 
   const handleIngresos = () => {
