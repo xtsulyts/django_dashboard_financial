@@ -44,7 +44,7 @@ const Header = () => {
                 className="flex items-center cursor-pointer group"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+                <h1 className="text-2xl  text-gray-800 dark:text-white flex items-center">
                   Bienvenido,{" "}
                   <img
                     src={user.avatar || "/default-avatar.png"}
@@ -80,8 +80,17 @@ const Header = () => {
               >
                 Iniciar Sesión
               </button>
+                  <div className="flex items-center space-x-4">
+              <button
+                onClick={() => router.push("/resgistro")}
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors"
+              >
+                Registrate
+              </button>
+            </div>
             </div>
           )}
+          
         </div>
       </div>
     </header>

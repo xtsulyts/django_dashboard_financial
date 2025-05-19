@@ -17,6 +17,7 @@ export default function Nav() {
     { label: "Transacciones", path: "/transacciones" },
     { label: "Movimientos", path: "/movimientos" },
   ];
+  
 
 
   return (

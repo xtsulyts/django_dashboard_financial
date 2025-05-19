@@ -160,15 +160,18 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       <div className="mb-6">
       {/* Logo */}
       <div className="flex justify-center">
-        <img
-          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user}`}
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+                  {" "}
+                   <img
+          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
           alt="Avatar"
-          className="w-40 h-40 rounded-full border-4 border-blue-100 shadow-sm"
+          className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
         />
-      </div>
-      <h2 className="text-2xl font-bold mt-4 text-gray-800">
-         {user?.user || "Invitado"}
-      </h2>
+                  <span className="text-gray-900 dark:text-yellow-400 group-hover:underline">
+                    {user?.user || "Invitado"}
+                  </span>
+                </h1>
+ 
     </div>
       <form
         onSubmit={handleSubmit}
@@ -176,7 +179,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       >
         {/* Campos del formulario */}
         {[
-          { label: "Monto", value: formData.monto, name: "monto", type: "number" },
+          { label: "Monto", value: formData.monto, name: "monto", type: "" },
           { label: "Fecha", value: formData.fecha, name: "fecha", type: "date" },
           { label: "Descripción (opcional)", value: formData.descripcion, name: "descripcion", type: "textarea" },
         ].map(({ label, value, name, type }) => (
@@ -265,6 +268,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
         {/* Mostrar errores */}
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
       </form>
+    </div>
     </div>
     </div>
     </div>

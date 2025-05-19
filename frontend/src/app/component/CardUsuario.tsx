@@ -4,14 +4,12 @@
 import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
 import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
 import FinanzasChart from "./FinanzasGraf";
-import { useState, useEffect } from "react";
+//import { useState } from "react";
 
 const CardUsuario = () => {
   // Obtiene el usuario y la función de logout desde el contexto
   const router = useRouter(); // Hook de Next.js para redirección
   const {  user, totalIngresos, totalGastos, saldoTotal } = useUser();
-  const [nombreUsuario, setNombreUsuario] = useState()
-const [error, setError] = useState()
 
 
   const handleIngresos = () => {
@@ -30,24 +28,18 @@ const [error, setError] = useState()
 >
   {/* CardUsuario */}
   <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full my-8"> {/* Agregar my-8 para margen superior e inferior */}
-    <div className="mb-6">
-      {/* Logo */}
-      <div className="flex justify-center">
-        <img
-          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.username}`}
+       <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+                  {" "}
+                   <img
+          src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
           alt="Avatar"
-          className="w-40 h-40 rounded-full border-4 border-blue-100 shadow-sm"
+          className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
         />
-      </div>
-      <h2 className="text-2xl font-bold mt-4 text-gray-800">
-        Bienvenido, {user?.user || "Invitado"}
-      </h2>
-    </div>
-    <p className="text-gray-600 mb-8">
-      {user
-        ? "Gracias por ser parte de nuestra comunidad."
-        : "Inicia sesión para acceder a más funcionalidades."}
-    </p>
+                  <span className="text-gray-900 dark:text-yellow-400 group-hover:underline">
+                    {user?.user || "Invitado"}
+                  </span>
+                </h1>
+ >
 
     {/* Resumen Financiero */}
     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-lg shadow-sm mb-8">
