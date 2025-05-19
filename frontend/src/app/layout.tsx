@@ -4,9 +4,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "./contex/UserContex";
-import Layout from "./component/layout";
-import { TransactionProvider } from "./contex/TransactionContex";
 import Header from "./component/Header";
+import { TransactionProvider } from "./contex/TransactionContex";
+<<<<<<< HEAD
+import Header from "./component/Header";
+=======
+>>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
 import Footer from "./component/Footer";
 import Nav from "./component/Nav";
 

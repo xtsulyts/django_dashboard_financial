@@ -41,7 +41,7 @@ function LoginFormulario() {
         // Asume que tu backend devuelve los datos del usuario
         // y que tu contexto puede manejar este login
         await loginUser(data.user.email, '', true); // Añade parámetro para login social
-        router.push("./usuario");
+        router.push("./");
       } else {
         throw new Error(data.message || 'Error en autenticación con Google');
       }
@@ -51,7 +51,7 @@ function LoginFormulario() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto  mt-10 mb-10 p-6 bg-white rounded-lg shadow-md">
       <form onSubmit={handleLogin}>
         <h1 className="text-xl font-bold text-center mb-6">Inicia Sesión</h1>
 

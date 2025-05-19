@@ -3,11 +3,10 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Login from "../login/page";
 import React from "react";
 import FinanzasChart from "./FinanzasGraf";
 import { useUser } from "../contex/UserContex";
-import  Nav from "./Nav"
+
 
 const AuthComponent = () => {
   // Hooks para acceder a datos del usuario y enrutamiento
@@ -55,12 +54,7 @@ const AuthComponent = () => {
    
   };
 
-  // Función para manejar el cierre de sesión
-  const handleLogout = () => {
-    logoutUser(); // Llama a la función de logout del contexto
 
-    console.log("Usuario cerró sesión", user);
-  };
 
   return (
     
@@ -119,47 +113,15 @@ const AuthComponent = () => {
             Regístrate
           </button>
         )}
-    <button
-  className={`
-    relative overflow-hidden
-    px-6 py-3 
-    rounded-lg 
-    font-bold 
-    text-white 
-    shadow-lg
-    transition-all 
-    duration-300
-    ${user 
-      ? "bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-red-500/30" 
-      : "bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-cyan-500/30"
-    }
-    hover:shadow-xl
-    hover:scale-105
-    active:scale-95
-    group
-  `}
-  onClick={user ? handleLogout : () => setShowForm("login")}
->
-  <span className="relative z-10">
-    {user ? "Cerrar sesión" : "Iniciar sesión"}
-  </span>
-  <span className={`
-    absolute inset-0 
-    bg-white 
-    opacity-0 
-    group-hover:opacity-10
-    transition-opacity
-    duration-300
-  `}></span>
-</button>
+
       </div>
 
       {/* FORMULARIO */}
-      {(showForm === "signup" || showForm === "login") && (
+      {(showForm === "signup") && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
           
           <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
-          <Nav/>  
+           
             {showForm === "signup" ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
@@ -227,7 +189,7 @@ const AuthComponent = () => {
               </>
             ) : (
               <>
-                <Login></Login>
+                
               </>
             )}
           </div>

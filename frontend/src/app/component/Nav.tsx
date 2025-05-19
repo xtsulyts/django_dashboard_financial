@@ -17,6 +17,7 @@ export default function Nav() {
     { label: "Transacciones", path: "/transacciones" },
     { label: "Movimientos", path: "/movimientos" },
   ];
+  
 
 
   return (
@@ -30,8 +31,13 @@ export default function Nav() {
           onClick={() => router.push('/')}
         >
           <FaShopify className="text-yellow-500 text-2xl" />
+<<<<<<< HEAD
           <h1 className="text-xl font-bold text-white">TUS FINANZAS</h1>
         </div> */}
+=======
+       
+        </div>
+>>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
 
         {/* Menú para pantallas grandes (md en adelante) */}
         <nav className="hidden md:flex gap-6">

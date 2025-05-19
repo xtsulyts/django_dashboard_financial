@@ -1,6 +1,7 @@
 "use client";
 
 import CardUsuario from "../component/CardUsuario";
+<<<<<<< HEAD
 import Footer from "../component/Footer";
 import Nav from "../component/Nav";
 //import Header from "../component/Header";
@@ -23,3 +24,13 @@ export default function Home() {
     );
   }
   
+=======
+
+export default function Home() {
+  return (
+    <>
+      <CardUsuario />
+    </>
+  );
+}
+>>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
