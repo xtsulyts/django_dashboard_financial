@@ -39,7 +39,7 @@ const CardUsuario = () => {
                     {user?.user || "Invitado"}
                   </span>
                 </h1>
- >
+ 
 
     {/* Resumen Financiero */}
     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-lg shadow-sm mb-8">
