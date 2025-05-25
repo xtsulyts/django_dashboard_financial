@@ -18,7 +18,7 @@ from .models import Categoria, Transaccion, models, custom_user
 from .serializer_ import CategoriaSerializer, TransaccionSerializer, TransaccionListSerializer
 from rest_framework.views import APIView
 from django.shortcuts import redirect
-from allauth.socialaccount.views import SignupView
+#from allauth.socialaccount.views import SignupView
 from django.contrib.auth.backends import ModelBackend
 import requests
 from django.contrib.auth.models import User
@@ -277,38 +277,34 @@ class TransaccionListView(generics.ListAPIView):
         return Transaccion.objects.filter(usuario=self.request.user).select_related("categoria", "usuario") 
     
 
-# views.py
-import requests  # ¡Añade esto al inicio!
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 
-@csrf_exempt
-def google_auth(request):
-    if request.method == 'POST':
-        token = request.POST.get('token')
+# @csrf_exempt
+# def google_auth(request):
+#     if request.method == 'POST':
+#         token = request.POST.get('token')
         
-        try:
-            google_response = requests.get(
-                f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
-            )
-            user_data = google_response.json()
+#         try:
+#             google_response = requests.get(
+#                 f'https://oauth2.googleapis.com/tokeninfo?id_token={token}'
+#             )
+#             user_data = google_response.json()
             
-            # Verifica que el token sea para TU aplicación
-            if user_data.get('aud') != 'TU_CLIENT_ID_GOOGLE':  # Reemplaza con tu ID real
-                return JsonResponse({'status': 'error', 'message': 'Token inválido'}, status=400)
+#             # Verifica que el token sea para TU aplicación
+#             if user_data.get('aud') != 'TU_CLIENT_ID_GOOGLE':  # Reemplaza con tu ID real
+#                 return JsonResponse({'status': 'error', 'message': 'Token inválido'}, status=400)
                 
-            # Autentica o crea el usuario (ejemplo básico)
-            user, created = User.objects.get_or_create(
-                email=user_data['email'],
-                defaults={'username': user_data['email']}
-            )
+#             # Autentica o crea el usuario (ejemplo básico)
+#             user, created = User.objects.get_or_create(
+#                 email=user_data['email'],
+#                 defaults={'username': user_data['email']}
+#             )
             
-            return JsonResponse({
-                'status': 'success',
-                'user': {'email': user.email}
-            })
+#             return JsonResponse({
+#                 'status': 'success',
+#                 'user': {'email': user.email}
+#             })
             
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+#         except Exception as e:
+#             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+#     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

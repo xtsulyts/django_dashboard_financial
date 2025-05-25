@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import  login_user, index, user_profile, CategoriaViewSet, TransaccionViewSet, totales_usuario, TransaccionListView, google_auth
+from .views import  login_user, index, user_profile, CategoriaViewSet, TransaccionViewSet, totales_usuario, TransaccionListView #google_auth
 from rest_framework.documentation import include_docs_urls
 
 
@@ -18,6 +18,6 @@ urlpatterns = [
     path('movimientos/', TransaccionListView.as_view(), name="movimientos"),
     #path('accounts/google/login/callback/', CustomGoogleCallback.as_view(), name='google_callback'),
     path("docs/", include_docs_urls(title="Dashboard Financial API")),
-    path('auth/google/', google_auth, name='google-auth')
+    #path('auth/google/', google_auth, name='google-auth')
    
    ]
