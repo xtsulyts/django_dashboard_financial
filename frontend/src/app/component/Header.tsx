@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 "use client"
 
 import { FaShopify } from "react-icons/fa";
 import { FcBullish, FcCurrencyExchange } from "react-icons/fc";
-=======
-"use client";
-
-import { FcBullish } from "react-icons/fc";
->>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 import { useState, useEffect, useRef } from "react";
@@ -38,14 +32,9 @@ const Header = () => {
           className="flex items-center space-x-2 cursor-pointer active:scale-95 hover:bg-yellow-500/10 px-3 py-1 rounded-full transition-all"
           onClick={() => router.push("/usuario")}
         >
-<<<<<<< HEAD
           <FcBullish className="text-yellow-500 text-2xl dark:text-yellow-300" />
           <FcCurrencyExchange/>
           <h1 className="text-xl font-bold text-gray-800 dark:text-white">
-=======
-          <FcBullish className="text-3xl text-yellow-500 dark:text-yellow-300" />
-          <h1 className="text-3xl font-bold text-white dark:text-white">
->>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
             Tus Finanzas
           </h1>
         </div>
