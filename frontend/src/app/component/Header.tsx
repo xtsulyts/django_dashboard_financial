@@ -95,7 +95,7 @@ const Header = () => {
               </button>
                   <div className="flex items-center space-x-4">
               <button
-                onClick={() => router.push("/resgistro")}
+                onClick={() => router.push("/registro")}
                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors"
               >
                 Registrate

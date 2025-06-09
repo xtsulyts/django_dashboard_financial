@@ -79,8 +79,12 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
                     {user?.user || "Invitado"}
                   </span>
                 </h1>
+<<<<<<< HEAD
  >
 >>>>>>> 8e30cb741938aff59055bbbe3ef82af3f82cab26
+=======
+ 
+>>>>>>> 9e0ebb3742bccd8601e5a493c163e8ba1394c706
 
     {/* Resumen Financiero */}
     <div className="bg-white/50 backdrop-blur-sm p-6 rounded-lg shadow-sm mb-8">
