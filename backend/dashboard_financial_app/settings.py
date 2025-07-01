@@ -112,17 +112,17 @@ REST_FRAMEWORK = {
 
 SITE_ID = 1  # Esto referencia al "Site" que crearemos en la base de datos
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': os.getenv("GOOGLE_CLIENT_ID"),
-            'secret': os.getenv("GOOGLE_SECRET"),
-            'key': os.getenv("GOOGLE_KEY")
-        },
-        # 'SCOPE': os.getenv("GOOGLE_SCOPE").split(','),  # Convierte el string en lista
-        # 'AUTH_PARAMS': {'access_type': os.getenv("GOOGLE_AUTH_ACCESS_TYPE")}
-    }
-}
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'APP': {
+#             'client_id': os.getenv("GOOGLE_CLIENT_ID"),
+#             'secret': os.getenv("GOOGLE_SECRET"),
+#             'key': os.getenv("GOOGLE_KEY")
+#         },
+#         # 'SCOPE': os.getenv("GOOGLE_SCOPE").split(','),  # Convierte el string en lista
+#         # 'AUTH_PARAMS': {'access_type': os.getenv("GOOGLE_AUTH_ACCESS_TYPE")}
+#     }
+# }
 
 
 
