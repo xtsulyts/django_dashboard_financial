@@ -12,7 +12,7 @@ const TransaccionesComponent = () => {
 
   const router = useRouter()
   // Obtén las funciones y el estado del contexto de transacciones
-  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactions();
+  const { addTransaction, updateTransaction, deleteTransaction } = useTransactions();
 
   // Obtén el usuario autenticado desde el contexto
   const { user } = useUser();
