@@ -29,7 +29,16 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'https://django-dashboard-financial.onrender.com', 
+    'localhost', 
+    '127.0.0.1',
+]
+
+# 4. Archivos estáticos (CSS, JS, imágenes)
+STATIC_URL = 'static/'
+# Render sirve los archivos estáticos desde un directorio llamado 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Application definition
