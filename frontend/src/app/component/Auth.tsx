@@ -10,12 +10,13 @@ const AuthComponent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
+    setErrors({});
     
     if (password !== confirmPassword) {
       setErrors({ confirmPassword: ["Las contraseñas no coinciden"] });
@@ -24,7 +25,7 @@ const AuthComponent = () => {
     }
     
     try {
-      const response = await axios.post("http://localhost:8000/", {
+      const response = await axios.post("https://django-dashboard-financial.onrender.com/", {
         username,
         email,
         password1: password,
@@ -35,8 +36,8 @@ const AuthComponent = () => {
         // Éxito - mostrar feedback y redirigir
         router.push("./login");
       }
-    } catch (error: any) {
-      if (error.response?.data?.errors) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       } else {
         setErrors({ general: ["Error en el registro. Revisa los datos."] });

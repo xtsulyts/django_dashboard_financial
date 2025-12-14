@@ -1,13 +1,5 @@
-
-
 "use client";
-
-
-
-import TransaccionesListComponent from "../component/TransaccionesListComponent ";
-
-
-
+import TransaccionesListComponent from "../component/TransaccionesListComponent";
 
 export default function MovimientosPages() {
   

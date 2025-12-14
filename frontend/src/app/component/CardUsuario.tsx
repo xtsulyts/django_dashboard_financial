@@ -27,12 +27,7 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
   // Actualiza el estado local y notifica al padre cuando cambia el usuario
   useEffect(() => {
     if (user) {
-      setUsuarioLogueado(user.username);
-      
-      // Llama a la prop de actualización si existe
-      if (onUpdateUser) {
-        onUpdateUser(user);
-      }
+      setUsuarioLogueado(user.user);
     }
   }, [user, onUpdateUser]); // Se ejecuta cuando cambia user o la prop
 

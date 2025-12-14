@@ -1,25 +1,26 @@
 "use client"
-
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 
 const Header = () => {
   const router = useRouter();
   const { user, logoutUser } = useUser();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null); // ← Añade el tipo
   
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => { // ← Añade : MouseEvent
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) { // ← Añade as Node
         setIsDropdownOpen(false);
       }
     };
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-800/50">
@@ -67,15 +68,15 @@ const Header = () => {
                   </div>
                   <div className="relative">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-transparent group-hover:border-amber-500/30 transition-all duration-300">
-                      <img
-                        src={user.avatar || "/default-avatar.png"}
-                        className="w-full h-full object-cover"
-                        alt={user.user}
-                        onError={(e) => {
-                          e.target.src = "/default-avatar.png";
-                        }}
-                      />
-                    </div>
+                    <img
+                      src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
+                      alt={user.user}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement; // ← Type assertion
+                        target.src = "/default-avatar.png";
+                      }}
+                    />
+                                        </div>
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-500 to-green-400 rounded-full flex items-center justify-center">
                       <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                     </div>
