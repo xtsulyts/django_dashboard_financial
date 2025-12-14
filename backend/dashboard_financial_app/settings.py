@@ -30,9 +30,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'https://django-dashboard-financial.onrender.com', 
-    'localhost', 
-    '127.0.0.1',
+    'https://django-dashboard-financial.onrender.com/', 
+    
 ]
 
 # 4. Archivos estáticos (CSS, JS, imágenes)
