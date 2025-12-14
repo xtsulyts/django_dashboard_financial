@@ -22,10 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h'
+#SECRET_KEY = 'django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -64,9 +66,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# settings.py
 CSRF_USE_SESSIONS = False  # Usar cookies en lugar de sesiones (valor por defecto)
-CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript lea la cookie
+##CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript lea la cookie
+CSRF_COOKIE_SECURE = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
