@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 import { useState, useEffect, useRef } from "react";
+import Image from 'next/image';
 
 const Header = () => {
   const router = useRouter();
@@ -68,15 +69,19 @@ const Header = () => {
                   </div>
                   <div className="relative">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-transparent group-hover:border-amber-500/30 transition-all duration-300">
-                    <img
-                      src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
-                      alt={user.user}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement; // ← Type assertion
-                        target.src = "/default-avatar.png";
-                      }}
-                    />
-                                        </div>
+                      <Image
+                        src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
+                        alt={user?.user || 'Usuario'}
+                        width={44}  // Para sm:w-11 (11 * 4 = 44px) - máximo en responsive
+                        height={44} // Para sm:h-11 (11 * 4 = 44px)
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover"
+                        unoptimized={true} // Para SVGs de Dicebear
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/default-avatar.png";
+                        }}
+                      />
+                    </div>
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-500 to-green-400 rounded-full flex items-center justify-center">
                       <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                     </div>
@@ -95,10 +100,12 @@ const Header = () => {
                     <div className="p-5 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200/50 dark:border-gray-700/50">
                       <div className="flex items-center space-x-4">
                         <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow">
-                          <img
-                            src={user.avatar || "/default-avatar.png"}
+                          <Image
+                            src={user?.avatar || "/default-avatar.png"}
+                            alt={user?.user || 'Usuario'}
+                            width={56}  // w-14 = 14 * 4 = 56px
+                            height={56} // h-14 = 14 * 4 = 56px
                             className="w-full h-full object-cover"
-                            alt={user.user}
                           />
                         </div>
                         <div className="flex-1 min-w-0">

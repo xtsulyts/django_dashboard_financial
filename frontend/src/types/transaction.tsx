@@ -1,4 +1,4 @@
-// src/app/types/index.ts
+// src/app/types/transaction.ts
 
 // Tipo para una categoría
 export type Category = {

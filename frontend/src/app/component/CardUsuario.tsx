@@ -1,10 +1,11 @@
-// Card.tsx
-"use client"; // Esto indica que el componente debe renderizarse en el cliente en Next.js
+// CardUsuario.tsx
+"use client";
 
-import { useUser } from "../contex/UserContex"; // Importa el hook personalizado para acceder al contexto de usuario
-import { useRouter } from "next/navigation"; // Importa useRouter para manejar redirecciones
+import { useUser } from "../contex/UserContex";
+import { useRouter } from "next/navigation";
 import FinanzasChart from "./FinanzasGraf";
 import { useEffect, useState } from "react";
+import Image from 'next/image'; // ← AÑADE ESTE IMPORT
 
 // Tipo para el usuario (ajusta según tu implementación real)
 type UserType = {
@@ -27,7 +28,7 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
   // Actualiza el estado local y notifica al padre cuando cambia el usuario
   useEffect(() => {
     if (user) {
-      setUsuarioLogueado(user.user);
+      setUsuarioLogueado(user.user || ""); // ← Añade || "" para seguridad
     }
   }, [user, onUpdateUser]); // Se ejecuta cuando cambia user o la prop
 
@@ -43,13 +44,17 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
       <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full my-8">
         {/* Avatar y bienvenida */}
         <div className="flex flex-col items-center">
-          <img
-            src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
+          {/* REEMPLAZA <img> por <Image /> */}
+          <Image
+            src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
             alt="Avatar"
+            width={80}  // w-20 = 20 * 4 = 80px
+            height={80} // h-20 = 20 * 4 = 80px
             className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
+            unoptimized={true} // ← IMPORTANTE para SVGs de Dicebear
           />
           <h2 className="text-2xl font-bold mt-4 text-gray-800">
-            Bienvenido, {usuarioLogueado}
+            Bienvenido, {usuarioLogueado || "Invitado"} {/* ← Añadí fallback */}
           </h2>
           <p className="text-gray-600 mb-8 mt-2">
             {user

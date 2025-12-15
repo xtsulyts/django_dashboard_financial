@@ -4,18 +4,21 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
-import { Transaction } from '@/types/transaction';
+import { Transaction as ApiTransaction, Category } from '@/types/transaction';
 
-
-
-type Categoria = {
-  id: number;
-  nombre: string;
+// 1. Tipo para el FORMULARIO 
+type TransactionFormData = {
+  id?: number;
+  monto: number;
+  fecha: string;
   descripcion?: string;
+  tipo: 'INGRESO' | 'GASTO';
+  categoriaId?: number; 
+  usuario?: number;    
 };
 
 type TransactionFormProps = {
-  transaction?: Transaction;
+  transaction?: TransactionFormData;  
   onSubmitSuccess?: () => void;
   onDeleteSuccess?: () => void;
 };
@@ -24,20 +27,22 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
   const { user, access_token } = useUser();
   const router = useRouter();
   
-  const [formData, setFormData] = useState<Transaction>({
+  // 3. Estado con TransactionFormData (no Transaction)
+  const [formData, setFormData] = useState<TransactionFormData>({
     monto: transaction?.monto || 0,
     fecha: transaction?.fecha || new Date().toISOString().split('T')[0],
     descripcion: transaction?.descripcion || '',
     tipo: transaction?.tipo || 'GASTO',
-    categoria: transaction?.categoria || undefined,
-    usuario: user?.id,
+    categoriaId: transaction?.categoriaId,  // ← Ya es opcional, sin || undefined
+    usuario: user?.id,  // ← user?.id es number | undefined, aceptado por TransactionFormData
   });
 
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [categorias, setCategorias] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCategorias, setIsLoadingCategorias] = useState(true);
 
+  // Cargar categorías
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -73,6 +78,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     }
   }, [access_token]);
 
+  // Actualizar formulario cuando cambia la transacción
   useEffect(() => {
     if (transaction) {
       setFormData({
@@ -80,20 +86,24 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
         fecha: transaction.fecha,
         descripcion: transaction.descripcion,
         tipo: transaction.tipo,
-        categoria: transaction.categoria,
+        categoriaId: transaction.categoriaId,  // ← Usa categoriaId
         usuario: user?.id,
       });
     }
   }, [transaction, user]);
 
+  // Manejar cambios en inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'monto' ? parseFloat(value) || 0 : value,
+      [name]: name === 'monto' ? parseFloat(value) || 0 : 
+              name === 'categoriaId' ? (value ? parseInt(value) : undefined) :  // ← Maneja categoriaId
+              value,
     }));
   };
 
+  // Enviar formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -105,11 +115,23 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       return;
     }
 
+    // Asegura que los campos obligatorios estén presentes
+    const apiData: Omit<ApiTransaction, 'id'> = {
+      monto: formData.monto, // ← Siempre tiene valor (0 por defecto)
+      fecha: formData.fecha, // ← Siempre tiene valor
+      tipo: formData.tipo,   // ← Siempre tiene valor ('GASTO' por defecto)
+      descripcion: formData.descripcion || '',
+      usuario: user.id,
+      categoria: formData.categoriaId 
+        ? { id: formData.categoriaId, nombre: '', descripcion: '' } as Category 
+        : { id: 0, nombre: 'Sin categoría', descripcion: '' } as Category
+    };
+
     try {
       if (transaction?.id) {
-        await updateTransaction(transaction.id, formData, access_token);
+        await updateTransaction(transaction.id, apiData, access_token);
       } else {
-        await createTransaction(formData, access_token);
+        await createTransaction(apiData, access_token);
       }
 
       if (onSubmitSuccess) {
@@ -127,6 +149,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     }
   };
 
+  // Eliminar transacción
   const handleDelete = async () => {
     if (transaction?.id && access_token) {
       try {
@@ -144,15 +167,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     }
   };
 
-  // Filtrar categorías según el tipo de transacción
+  // Filtrar categorías según tipo
   const categoriasFiltradas = categorias.filter((categoria) => {
     if (formData.tipo === 'INGRESO') {
-      // Para ingresos, solo mostrar categorías relacionadas con ingresos
       return categoria.nombre.toLowerCase().includes('salario') || 
              categoria.nombre.toLowerCase().includes('ingreso') ||
              categoria.nombre.toLowerCase().includes('ingresos');
     } else {
-      // Para gastos, excluir categorías de ingresos
       return !categoria.nombre.toLowerCase().includes('salario') && 
              !categoria.nombre.toLowerCase().includes('ingreso') &&
              !categoria.nombre.toLowerCase().includes('ingresos');
@@ -318,9 +339,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
                       Categoría
                     </span>
                   </label>
-                  <select
-                    name="categoria"
-                    value={formData.categoria || ""}
+                 <select
+                    name="categoriaId"  // ← name debe ser "categoriaId"
+                    value={formData.categoriaId || ""}  // ← value debe ser formData.categoriaId
                     onChange={handleChange}
                     disabled={isLoadingCategorias}
                     className="w-full px-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"

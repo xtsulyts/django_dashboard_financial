@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback  } from "react";
 
 // Definir la estructura de los datos del usuario
 interface User {
@@ -91,61 +91,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     
   };
 
-  // Función para obtener los totales desde el backend
-  const fetchTotales = async () => {
-    try {
-      if (!access_token) {
-        throw new Error("No hay token de acceso. Por favor, inicia sesión.");
-      }
 
-      //const response = await fetch("http://127.0.0.1:8000/totales_usuario/", {
-      const response = await fetch("https://django-dashboard-financial.onrender.com/totales_usuario/", {
-        headers: { Authorization: `Bearer ${access_token}` },
-      });
-      
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          logoutUser();
-          throw new Error("Token inválido o expirado. Por favor, inicia sesión nuevamente.");
-        } else {
-          throw new Error("Error al obtener los totales.");
-        }
-        
-      }
-      console.log("Login exitoso:", user);
-
-      const data = await response.json();
-      setTotalIngresos(data.total_ingresos);
-      setTotalGastos(data.total_gastos);
-      setSaldoTotal(data.saldo_total);
-    } catch (error) {
-      console.error("Error fetching totales:", error);
-      throw error;
-    }
-    
-  };
-
-    // Cargar el usuario desde el localStorage al iniciar la aplicación
-    useEffect(() => {
-      const storedUser = localStorage.getItem("user");
-      const storedToken = localStorage.getItem("access_token");
-      if (storedUser && storedToken) {
-        setUser(JSON.parse(storedUser));
-        setAccessToken(storedToken);
-      }
-    }, []);
-  
-    // Llamar a fetchTotales cuando access_token cambia
-    useEffect(() => {
-      if (access_token) {
-        fetchTotales();
-      }
-    }, [access_token, fetchTotales]);
-  
-
-  // Función para cerrar sesión
-  const logoutUser = () => {
+  const logoutUser = useCallback(() => {
     setUser(null);
     setAccessToken(null);
     setTotalIngresos(0);
@@ -153,10 +100,48 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setSaldoTotal(0);
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
-    localStorage.removeItem("messege")
+    localStorage.removeItem("messege");
     setIsLoggedIn(false);
     console.log("Usuario cerró sesión");
-  };
+  }, [setUser, setAccessToken, setTotalIngresos, setTotalGastos, setSaldoTotal, setIsLoggedIn]);
+
+
+
+const fetchTotales = useCallback(async () => {
+  try {
+    if (!access_token) {
+      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
+    }
+
+    const response = await fetch("https://django-dashboard-financial.onrender.com/totales_usuario/", {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    
+    if (!response.ok) {
+      if (response.status === 401) {
+        logoutUser();
+        throw new Error("Token inválido o expirado. Por favor, inicia sesión nuevamente.");
+      } else {
+        throw new Error("Error al obtener los totales.");
+      }
+    }
+
+    const data = await response.json();
+    setTotalIngresos(data.total_ingresos);
+    setTotalGastos(data.total_gastos);
+    setSaldoTotal(data.saldo_total);
+  } catch (error) {
+    console.error("Error fetching totales:", error);
+    throw error;
+  }
+}, [access_token, logoutUser, setTotalIngresos, setTotalGastos, setSaldoTotal]);
+
+// El useEffect de la línea 144 ya está correcto:
+useEffect(() => {
+  if (access_token) {
+    fetchTotales();
+  }
+}, [access_token, fetchTotales]);
 
 
   return (

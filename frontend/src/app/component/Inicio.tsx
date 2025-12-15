@@ -1,8 +1,8 @@
 "use client";
 
-//import React, { useState } from 'react'
 import FinanzasChart from "./FinanzasGraf";
 import { useUser } from "../contex/UserContex";
+import Image from 'next/image'
 
 
 const Inicio = () => {
@@ -25,17 +25,20 @@ const Inicio = () => {
             Tus Finanzas
           </h2>
 
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
-            {" "}
-            <img
-              src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user}`}
-              alt="Avatar"
-              className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
-            />
-            <span className="text-yellow-900 dark:text-yellow-400 group-hover:underline">
-             {user?.user || "Invitado"}
-            </span>
-          </h1>
+         <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+          {" "}
+          <Image
+            src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
+            alt="Avatar"
+            width={80}   // w-20 = 20 * 4 = 80px
+            height={80}  // h-20 = 20 * 4 = 80px
+            className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
+            unoptimized={true} // ← Para SVGs de Dicebear
+          />
+          <span className="text-yellow-900 dark:text-yellow-400 group-hover:underline ml-3"> {/* ← Añadí ml-3 para espaciado */}
+            {user?.user || "Invitado"}
+          </span>
+        </h1>
 
           {/* Contenido de la card */}
           <div className="space-y-4">

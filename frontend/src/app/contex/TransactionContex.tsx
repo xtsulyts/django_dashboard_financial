@@ -6,17 +6,16 @@ import {
   createTransaction as createTransactionService,
   updateTransaction as updateTransactionService,
   deleteTransaction as deleteTransactionService,
-} from '../services/transactionService'; // Importa los servicios necesarios
-import { Transaction } from '../../types/transaction'; // Importa el tipo de transacción
-//import { access } from 'fs';
+} from '../services/transactionService';
+import { Transaction } from '../../types/transaction';
 
 // Define el tipo para el contexto de transacciones
 type TransactionContextType = {
-  transactions: Transaction[]; // Lista de transacciones
-  loadTransactions: (userId: number) => Promise<void>; // Cargar transacciones
-  addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>; // Agregar una transacción
-  updateTransaction: (id: number, transaction: Partial<Transaction>) => Promise<void>; // Actualizar una transacción
-  deleteTransaction: (id: number) => Promise<void>; // Eliminar una transacción
+  transactions: Transaction[];
+  loadTransactions: (userId: number, access_token: string) => Promise<void>; // ← Recibe access_token
+  addTransaction: (transaction: Omit<Transaction, 'id'>, access_token: string) => Promise<void>; // ← Recibe access_token
+  updateTransaction: (id: number, transaction: Partial<Transaction>, access_token: string) => Promise<void>; // ← Recibe access_token
+  deleteTransaction: (id: number, access_token: string) => Promise<void>; // ← Recibe access_token
 };
 
 // Crea el contexto de transacciones
@@ -24,54 +23,74 @@ const TransactionContext = createContext<TransactionContextType | undefined>(und
 
 // Proveedor del contexto de transacciones
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]); // Estado para almacenar las transacciones
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  
+  // NOTA: NO usamos useUser() aquí para evitar dependencia circular
 
   // Función para cargar las transacciones del usuario
-  const loadTransactions = async (userId: number) => {
-    const data = await getTransactions(userId); // Llama al servicio para obtener las transacciones
-    setTransactions(data); // Actualiza el estado con las transacciones cargadas
+  const loadTransactions = async (userId: number, access_token: string) => {
+    // VALIDACIÓN: access_token no puede estar vacío
+    if (!access_token) {
+      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
+    }
+    
+    const data = await getTransactions(userId, access_token);
+    setTransactions(data);
   };
 
   // Función para agregar una nueva transacción
-  const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
-    const newTransaction = await createTransactionService(transaction); // Llama al servicio para crear la transacción
-    setTransactions((prev) => [...prev, newTransaction]); // Agrega la nueva transacción al estado
+  const addTransaction = async (transaction: Omit<Transaction, 'id'>, access_token: string) => {
+    if (!access_token) {
+      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
+    }
+    
+    const newTransaction = await createTransactionService(transaction, access_token);
+    setTransactions((prev) => [...prev, newTransaction]);
   };
 
   // Función para actualizar una transacción existente
-  const updateTransaction = async (id: number, transaction: Partial<Transaction>) => {
-    const updatedTransaction = await updateTransactionService(id, transaction); // Llama al servicio para actualizar la transacción
+  const updateTransaction = async (id: number, transaction: Partial<Transaction>, access_token: string) => {
+    if (!access_token) {
+      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
+    }
+    
+    const updatedTransaction = await updateTransactionService(id, transaction, access_token);
     setTransactions((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updatedTransaction } : t)) // Actualiza la transacción en el estado
+      prev.map((t) => (t.id === id ? { ...t, ...updatedTransaction } : t))
     );
   };
 
   // Función para eliminar una transacción
-  const deleteTransaction = async (id: number) => {
-    await deleteTransactionService(id); // Llama al servicio para eliminar la transacción
-    setTransactions((prev) => prev.filter((t) => t.id !== id)); // Elimina la transacción del estado
+  const deleteTransaction = async (id: number, access_token: string) => {
+    if (!access_token) {
+      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
+    }
+    
+    await deleteTransactionService(id, access_token);
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Provee el contexto con las transacciones y las funciones
+  // Retorna el provider con el contexto
   return (
     <TransactionContext.Provider
-      value={{ 
-        transactions, 
-        loadTransactions, 
-        addTransaction, 
-        updateTransaction, 
-        deleteTransaction }}
+      value={{
+        transactions,
+        loadTransactions,
+        addTransaction,
+        updateTransaction,
+        deleteTransaction,
+      }}
     >
       {children}
     </TransactionContext.Provider>
   );
 };
 
-// Hook personalizado para usar el contexto de transacciones
+// Hook para usar el contexto de transacciones
 export const useTransactions = () => {
   const context = useContext(TransactionContext);
   if (!context) {
-    throw new Error('useTransactions must be used within a TransactionProvider'); // Lanza un error si el hook se usa fuera del proveedor
+    throw new Error('useTransactions debe ser usado dentro de TransactionProvider');
   }
   return context;
 };
