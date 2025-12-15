@@ -1,5 +1,5 @@
 import axios from 'axios'; // o usar fetch
-import { Transaction } from '../../types/transaction'; // Define tus tipos en src/types/
+import { Transaction, TransactionInput } from '../../types/transaction'; // Define tus tipos en src/types/
 
 //const API_URL = 'http://127.0.0.1:8000/api'; // URL de tu backend
 const API_URL = 'https://django-dashboard-financial.onrender.com/api';
@@ -19,9 +19,8 @@ export const getTransactions = async (userId: number, access_token: string): Pro
   return response.data;
 };
 
-// Crear una nueva transacción
 export const createTransaction = async (
-  transaction: Omit<Transaction, 'id'>,
+  transaction: TransactionInput, 
   access_token: string
 ): Promise<Transaction> => {
   if (!access_token) {

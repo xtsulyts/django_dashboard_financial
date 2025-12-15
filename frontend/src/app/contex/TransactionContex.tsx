@@ -7,13 +7,13 @@ import {
   updateTransaction as updateTransactionService,
   deleteTransaction as deleteTransactionService,
 } from '../services/transactionService';
-import { Transaction } from '../../types/transaction';
+import { Transaction, TransactionInput } from '../../types/transaction';
 
 // Define el tipo para el contexto de transacciones
 type TransactionContextType = {
   transactions: Transaction[];
   loadTransactions: (userId: number, access_token: string) => Promise<void>; // ← Recibe access_token
-  addTransaction: (transaction: Omit<Transaction, 'id'>, access_token: string) => Promise<void>; // ← Recibe access_token
+  addTransaction: (transaction: TransactionInput, access_token: string) => Promise<void>;
   updateTransaction: (id: number, transaction: Partial<Transaction>, access_token: string) => Promise<void>; // ← Recibe access_token
   deleteTransaction: (id: number, access_token: string) => Promise<void>; // ← Recibe access_token
 };
@@ -39,7 +39,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Función para agregar una nueva transacción
-  const addTransaction = async (transaction: Omit<Transaction, 'id'>, access_token: string) => {
+ const addTransaction = async (transaction: TransactionInput, access_token: string) => {
     if (!access_token) {
       throw new Error("No hay token de acceso. Por favor, inicia sesión.");
     }

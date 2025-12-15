@@ -1,19 +1,28 @@
 // src/app/types/transaction.ts
 
-// Tipo para una categoría
 export type Category = {
     id: number;
     nombre: string;
-    descripcion?: string; // Opcional
-  };
-  
-  // Tipo para una transacción
-  export type Transaction = {
+    descripcion?: string;
+};
+
+// Tipo para CUANDO RECIBES datos (GET)
+export type Transaction = {
     id: number;
     monto: number;
-    fecha: string; // O puedes usar `Date` si manejas fechas como objetos
-    descripcion?: string; // Opcional
-    tipo: 'INGRESO' | 'GASTO'; // Solo puede ser "INGRESO" o "GASTO"
-    categoria: Category; // Relación con una categoría
-    usuario: number; // ID del usuario
-  };
+    fecha: string;
+    descripcion?: string;
+    tipo: 'INGRESO' | 'GASTO';
+    categoria: Category;  // Objeto completo
+    usuario: number;
+};
+
+// NUEVO: Tipo para CUANDO ENVÍAS datos (POST/PUT)
+export type TransactionInput = {
+    monto: number;
+    fecha: string;
+    descripcion?: string;
+    tipo: 'INGRESO' | 'GASTO';
+    categoria: number;  // Solo el ID
+    usuario: number;
+};
