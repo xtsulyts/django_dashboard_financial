@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
-import { Transaction as ApiTransaction, Category } from '@/types/transaction';
+import { Category, Transaction } from '@/types/transaction';
 
 // 1. Tipo para el FORMULARIO 
 type TransactionFormData = {
@@ -103,30 +103,28 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     }));
   };
 
-  // Enviar formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    if (!user || !access_token) {
-      setError('Usuario no autenticado. Por favor, inicia sesión.');
+    // Validación más robusta
+    if (!user || !access_token || !user.id) {
+      setError('Usuario no autenticado o datos incompletos. Por favor, inicia sesión.');
       setIsLoading(false);
       return;
     }
 
-    // Asegura que los campos obligatorios estén presentes
-    const apiData: Omit<ApiTransaction, 'id'> = {
-      monto: formData.monto, // ← Siempre tiene valor (0 por defecto)
-      fecha: formData.fecha, // ← Siempre tiene valor
-      tipo: formData.tipo,   // ← Siempre tiene valor ('GASTO' por defecto)
-      descripcion: formData.descripcion || '',
-      usuario: user.id,
-      categoria: formData.categoriaId 
-        ? { id: formData.categoriaId, nombre: '', descripcion: '' } as Category 
-        : { id: 0, nombre: 'Sin categoría', descripcion: '' } as Category
-    };
-
+  
+  const apiData = {
+    monto: formData.monto,
+    fecha: formData.fecha,
+    tipo: formData.tipo,
+    descripcion: formData.descripcion || '',
+    usuario: user.id,
+    categoria: formData.categoriaId || 1,
+  } as Omit<Transaction, 'id'> & { categoria: number };
+  
     try {
       if (transaction?.id) {
         await updateTransaction(transaction.id, apiData, access_token);
@@ -148,7 +146,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       setIsLoading(false);
     }
   };
-
   // Eliminar transacción
   const handleDelete = async () => {
     if (transaction?.id && access_token) {
