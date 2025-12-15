@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
-import { Category, TransactionInput } from '@/types/transaction';
+import { TransactionInput } from '@/types/transaction';
 
 // 1. Tipo para el FORMULARIO 
 type TransactionFormData = {
@@ -37,7 +37,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     usuario: user?.id,  // ← user?.id es number | undefined, aceptado por TransactionFormData
   });
 
-  const [categorias, setCategorias] = useState<Category[]>([]);
+  const [categorias, setCategorias] = useState<Array<{id: number, nombre: string, descripcion?: string}>>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCategorias, setIsLoadingCategorias] = useState(true);

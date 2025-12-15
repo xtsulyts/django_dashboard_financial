@@ -10,7 +10,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
     <div className="p-4 border rounded shadow">
       <h3>{transaction.descripcion}</h3>
       <p>Monto: ${transaction.monto}</p>
-      <p>Categoría: {transaction.categoria?.nombre}</p>
+      <p>Categoría: {transaction.categoria}</p>
     </div>
   );
 };
