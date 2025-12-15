@@ -120,7 +120,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       fecha: formData.fecha,
       tipo: formData.tipo,
       descripcion: formData.descripcion || '',
-      categoria: Number(formData.categoriaId) || 1, // ← Asegura que sea número
+      categoriaId: Number(formData.categoriaId) || 1, // ← Asegura que sea número
       usuario: user.id,
     };
 

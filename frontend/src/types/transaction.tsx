@@ -23,6 +23,6 @@ export type TransactionInput = {
     fecha: string;
     descripcion?: string;
     tipo: 'INGRESO' | 'GASTO';
-    categoria: number;  // Solo el ID
+    categoriaId: number;  // Solo el ID
     usuario: number;
 };
