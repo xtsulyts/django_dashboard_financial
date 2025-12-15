@@ -22,12 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h'
+#SECRET_KEY = 'django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-dashboard-financial.onrender.com']
+
+# 4. Archivos estáticos (CSS, JS, imágenes)
+STATIC_URL = 'static/'
+# Render sirve los archivos estáticos desde un directorio llamado 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Application definition
@@ -53,20 +60,21 @@ INSTALLED_APPS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-    # Otros orígenes si los necesitas
+    #'http://localhost:3000',
+    "https://django-dashboard-financial-r5limqw2z-xtsulyts-projects.vercel.app",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
-    "http://127.0.0.1:3000", # Permitir solicitudes desde tu frontend
+    "http://127.0.0.1:3000",
+    "https://django-dashboard-financial-r5limqw2z-xtsulyts-projects.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
-# settings.py
 CSRF_USE_SESSIONS = False  # Usar cookies en lugar de sesiones (valor por defecto)
-CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript lea la cookie
+##CSRF_COOKIE_HTTPONLY = False  # Permite que JavaScript lea la cookie
+CSRF_COOKIE_SECURE = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -110,7 +118,7 @@ REST_FRAMEWORK = {
 
 
 
-SITE_ID = 1  # Esto referencia al "Site" que crearemos en la base de datos
+SITE_ID = 2  # Esto referencia al "Site" que crearemos en la base de datos
 
 # SOCIALACCOUNT_PROVIDERS = {
 #     'google': {

@@ -3,198 +3,252 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
-import FinanzasChart from "./FinanzasGraf";
-import { useUser } from "../contex/UserContex";
-
 
 const AuthComponent = () => {
-  // Hooks para acceder a datos del usuario y enrutamiento
-  const { totalIngresos, totalGastos, saldoTotal, user, logoutUser } =
-    useUser();
   const router = useRouter();
-  // Estados para gestionar el formulario y errores
-  const [showForm, setShowForm] = useState<string | null>(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<any>({});
- 
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Función para manejar el registro
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
+    setErrors({});
+    
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      setErrors({ confirmPassword: ["Las contraseñas no coinciden"] });
+      setIsLoading(false);
       return;
     }
-    // Solicitud HTTP al servidor
+    
     try {
-      const response = await axios.post("http://localhost:8000/", {
+      const response = await axios.post("https://django-dashboard-financial.onrender.com/", {
         username,
         email,
         password1: password,
         password2: confirmPassword,
       });
-      // Manejo de respuesta exitosa
+      
       if (response.status === 201) {
-        alert("Usuario creado con éxito");
-        setShowForm(null); // Oculta el formulario
-        router.push("./"); // Redirige al usuario
+        // Éxito - mostrar feedback y redirigir
+        router.push("./login");
       }
-    } catch (error: any) {
-      // Manejo de errores
-      if (error.response && error.response.data.errors) {
-        setErrors(error.response.data.errors); // Almacena errores del servidor
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
       } else {
-        alert("Error en el registro. Revisa los datos."); // Alerta genérica
+        setErrors({ general: ["Error en el registro. Revisa los datos."] });
       }
+    } finally {
+      setIsLoading(false);
     }
-   
   };
 
-
-
   return (
-    
-    <div
-      className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
-    >
-      
-      {/* Navbar */}
-
-      <div className="relative min-h-screen flex items-center justify-center">
-        {/* Fondo (opcional, si quieres que el fondo sea una imagen o tenga un color) */}
-        <div className="absolute inset-0 bg-[url('/ruta/a/tu/imagen.jpg')] bg-cover bg-center blur-sm"></div>
-
-        {/* Card transparente con fondo difuminado */}
-        <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
-          {/* Logo */}
-
-          {/* Título "Your Financial" */}
-          <h2 className="text-6xl font-bold text-gray-800 mb-8">
-            Tus Finanzas
-          </h2>
-
-          <strong className="text-lg text-gray-700">
-            Así están tus consumos:
-          </strong>
-          <span className="text-blue-600 font-semibold text-xl">
-            {user?.user}
-          </span>
-
-          {/* Contenido de la card */}
-          <div className="space-y-4">
-            {/* Gráfico */}
-            <FinanzasChart />
-
-            {/* Totales */}
-            <p className="text-lg">
-              <strong>Total Ingresos:</strong> ${totalIngresos.toLocaleString()}
-            </p>
-            <p className="text-lg">
-              <strong>Total Gastos:</strong> ${totalGastos.toLocaleString()}
-            </p>
-            <p className="text-lg">
-              <strong>Saldo Total:</strong> ${saldoTotal.toLocaleString()}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        {/* Tarjeta con gradiente */}
+        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl overflow-hidden">
+          {/* Header con gradiente */}
+          <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl backdrop-blur-sm mb-4">
+              <span className="text-3xl">🔐</span>
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Crear Cuenta
+            </h1>
+            <p className="text-amber-100">
+              Únete y toma el control de tus finanzas
             </p>
           </div>
-        </div>
-      </div>
 
-      <div className="absolute top-5 right-5 flex gap-4">
-        {!user && ( // Solo mostrar "Regístrate" si no hay usuario logueado
-          <button
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-300 shadow-md hover:shadow-lg"
-            onClick={() => setShowForm("signup")}
-          >
-            Regístrate
-          </button>
-        )}
+          {/* Formulario */}
+          <form onSubmit={handleRegister} className="p-8">
+            {errors.general && (
+              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+                <p className="text-red-700 dark:text-red-400 text-sm font-medium">
+                  ⚠️ {errors.general[0]}
+                </p>
+              </div>
+            )}
 
-      </div>
-
-      {/* FORMULARIO */}
-      {(showForm === "signup") && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
-          
-          <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
-           
-            {showForm === "signup" ? (
-              <>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                  Registro de Usuario
-                </h2>
-
-                {[
-                  {
-                    label: "Nombre de Usuario",
-                    value: username,
-                    setValue: setUsername,
-                    error: errors.username,
-                  },
-                  {
-                    label: "Correo Electrónico",
-                    value: email,
-                    setValue: setEmail,
-                    error: errors.email,
-                  },
-                  {
-                    label: "Contraseña",
-                    value: password,
-                    setValue: setPassword,
-                    error: errors.password1,
-                    type: "password",
-                  },
-                  {
-                    label: "Confirmar Contraseña",
-                    value: confirmPassword,
-                    setValue: setConfirmPassword,
-                    error: errors.password2,
-                    type: "password",
-                  },
-                ].map(({ label, value, setValue, error, type = "text" }) => (
-                  <div className="w-full mb-4" key={label}>
-                    <label className="text-sm font-medium text-gray-700 mb-2">
-                      {label}
-                    </label>
+            <div className="space-y-6">
+              {[
+                {
+                  label: "Nombre de usuario",
+                  value: username,
+                  setValue: setUsername,
+                  error: errors.username,
+                  placeholder: "juanperez",
+                  icon: "👤",
+                  type: "text"
+                },
+                {
+                  label: "Correo electrónico",
+                  value: email,
+                  setValue: setEmail,
+                  error: errors.email,
+                  placeholder: "tu@email.com",
+                  icon: "📧",
+                  type: "email"
+                },
+                {
+                  label: "Contraseña",
+                  value: password,
+                  setValue: setPassword,
+                  error: errors.password1,
+                  placeholder: "••••••••",
+                  icon: "🔒",
+                  type: "password"
+                },
+                {
+                  label: "Confirmar contraseña",
+                  value: confirmPassword,
+                  setValue: setConfirmPassword,
+                  error: errors.confirmPassword || errors.password2,
+                  placeholder: "••••••••",
+                  icon: "✅",
+                  type: "password"
+                },
+              ].map((field, index) => (
+                <div key={index}>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {field.label}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      {field.icon}
+                    </div>
                     <input
-                      type={type}
-                      className={`border p-3 w-full rounded-md ${
-                        error ? "border-red-500" : "border-gray-300"
-                      }`}
-                      value={value}
-                      onChange={(e) => setValue(e.target.value)}
+                      type={field.type}
+                      value={field.value}
+                      onChange={(e) => field.setValue(e.target.value)}
+                      className={`w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-800 border ${
+                        field.error 
+                          ? "border-red-500 focus:border-red-500 ring-red-500/20" 
+                          : "border-gray-300 dark:border-gray-700 focus:border-amber-500"
+                      } rounded-xl focus:ring-4 focus:ring-amber-500/20 transition-all outline-none`}
+                      placeholder={field.placeholder}
                       required
                     />
-                    {error && <p className="text-red-500 text-xs">{error}</p>}
                   </div>
-                ))}
+                  {field.error && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                      <span className="mr-1">⚠️</span>
+                      {field.error[0]}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
 
+            {/* Términos y condiciones */}
+            <div className="mt-8 flex items-start space-x-3">
+              <input
+                type="checkbox"
+                id="terms"
+                className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+                required
+              />
+              <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-400">
+                Acepto los{' '}
+                <a href="#" className="text-amber-600 dark:text-amber-400 hover:underline font-medium">
+                  Términos de Servicio
+                </a>{' '}
+                y la{' '}
+                <a href="#" className="text-amber-600 dark:text-amber-400 hover:underline font-medium">
+                  Política de Privacidad
+                </a>
+              </label>
+            </div>
+
+            {/* Botón de registro */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full mt-8 py-4 px-6 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
+                isLoading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                  Creando cuenta...
+                </div>
+              ) : (
+                <>
+                  <span className="text-lg mr-2">🚀</span>
+                  Crear mi cuenta
+                </>
+              )}
+            </button>
+
+            {/* Enlace a login */}
+            <div className="mt-8 text-center">
+              <p className="text-gray-600 dark:text-gray-400">
+                ¿Ya tienes una cuenta?{' '}
                 <button
-                  type="submit"
-                  onClick={handleRegister}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full font-semibold hover:bg-blue-700 transition duration-300"
+                  type="button"
+                  onClick={() => router.push("/login")}
+                  className="text-amber-600 dark:text-amber-400 font-semibold hover:underline"
                 >
-                  Registrarse
+                  Inicia sesión aquí
                 </button>
-                <button
-                  onClick={() => setShowForm(null)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md w-full font-semibold hover:bg-red-600 transition duration-300 mt-4"
-                >
-                  Volver
-                </button>
-              </>
-            ) : (
-              <>
-                
-              </>
-            )}
+              </p>
+            </div>
+
+            {/* Separador */}
+            <div className="mt-8 flex items-center">
+              <div className="flex-1 border-t border-gray-300 dark:border-gray-700"></div>
+              <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">O continúa con</span>
+              <div className="flex-1 border-t border-gray-300 dark:border-gray-700"></div>
+            </div>
+
+            {/* Botones sociales */}
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                className="flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <span className="mr-2">🔵</span>
+                <span className="text-sm font-medium">Google</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center py-3 px-4 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <span className="mr-2">⚫</span>
+                <span className="text-sm font-medium">GitHub</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Footer de la tarjeta */}
+          <div className="bg-gray-50 dark:bg-gray-900/50 p-6 text-center border-t border-gray-200 dark:border-gray-800">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Al registrarte, aceptas nuestros términos y confirmas que has leído nuestra política de privacidad.
+              <br />
+              <span className="text-amber-600 dark:text-amber-400">•</span> Protegemos tus datos financieros
+            </p>
           </div>
         </div>
-      )}
+
+        {/* Enlace de ayuda */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => router.push("/")}
+            className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 transition-colors"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver al inicio
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

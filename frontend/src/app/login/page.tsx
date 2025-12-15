@@ -6,7 +6,7 @@ import Login from "../component/Login";
 
 
 
-export default function Inicio() {
+export default function LoginPages() {
   
     return (
       <>

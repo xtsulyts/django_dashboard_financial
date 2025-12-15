@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
+import type { CredentialResponse } from '@react-oauth/google';
 
 function GoogleSignInButton() {
-  const responseGoogle = (response) => {
+  const responseGoogle = (response: CredentialResponse) => {
     console.log("Credencial recibida:", response.credential);
     
     // Envía el token a tu backend Django
@@ -13,12 +13,12 @@ function GoogleSignInButton() {
       },
       body: JSON.stringify({ token: response.credential })
     })
-    .then(response => response.json())
-    .then(data => {
+    .then((fetchResponse: Response) => fetchResponse.json())
+    .then((data: unknown) => {
       console.log("Respuesta del backend:", data);
       // Manejar el login exitoso (guardar token, redirigir, etc.)
     })
-    .catch(error => {
+    .catch((error: Error) => {
       console.error("Error:", error);
     });
   };

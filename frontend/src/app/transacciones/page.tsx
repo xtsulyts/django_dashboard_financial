@@ -7,7 +7,7 @@ import TransaccionesComponent from "../component/Transacciones";
 
 
 
-export default function Transacciones() {
+export default function TransaccionesPages() {
   
     return (
       <>
