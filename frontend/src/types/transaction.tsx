@@ -1,4 +1,4 @@
-// src/app/types/transaction.ts
+//src/app/types/transaction.ts
 
 export type Category = {
     id: number;
@@ -6,7 +6,7 @@ export type Category = {
     descripcion?: string;
 };
 
-// Tipo para CUANDO RECIBES datos (GET)
+
 export type Transaction = {
     id: number;
     monto: number;
@@ -17,7 +17,7 @@ export type Transaction = {
     usuario: number;
 };
 
-// NUEVO: Tipo para CUANDO ENVÍAS datos (POST/PUT)
+
 export type TransactionInput = {
     monto: number;
     fecha: string;

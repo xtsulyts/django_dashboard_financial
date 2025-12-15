@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
-import { Category, Transaction } from '@/types/transaction';
+import { Category, TransactionInput } from '@/types/transaction';
 
 // 1. Tipo para el FORMULARIO 
 type TransactionFormData = {
@@ -103,28 +103,27 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError(null);
+  setIsLoading(true);
 
-    // Validación más robusta
-    if (!user || !access_token || !user.id) {
-      setError('Usuario no autenticado o datos incompletos. Por favor, inicia sesión.');
-      setIsLoading(false);
-      return;
-    }
+  if (!user || !access_token || !user.id) {
+    setError('Usuario no autenticado o datos incompletos. Por favor, inicia sesión.');
+    setIsLoading(false);
+    return;
+  }
 
-  
-  const apiData = {
-    monto: formData.monto,
-    fecha: formData.fecha,
-    tipo: formData.tipo,
-    descripcion: formData.descripcion || '',
-    usuario: user.id,
-    categoria: formData.categoriaId || 1,
-  } as Omit<Transaction, 'id'> & { categoria: number };
-  
+  // SOLUCIÓN: Usa el tipo correcto TransactionInput y convierte categoriaId a número
+    const apiData: TransactionInput = {
+      monto: formData.monto,
+      fecha: formData.fecha,
+      tipo: formData.tipo,
+      descripcion: formData.descripcion || '',
+      categoria: Number(formData.categoriaId) || 1, // ← Asegura que sea número
+      usuario: user.id,
+    };
+
     try {
       if (transaction?.id) {
         await updateTransaction(transaction.id, apiData, access_token);

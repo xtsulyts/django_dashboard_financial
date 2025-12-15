@@ -3,7 +3,7 @@ import { Transaction, TransactionInput } from '../../types/transaction'; // Defi
 
 //const API_URL = 'http://127.0.0.1:8000/api'; // URL de tu backend
 const API_URL = 'https://django-dashboard-financial.onrender.com/api';
-// Obtener todas las transacciones de un usuario
+
 export const getTransactions = async (userId: number, access_token: string): Promise<Transaction[]> => {
   if (!access_token) {
     throw new Error("No hay token de acceso. Por favor, inicia sesión.");
@@ -36,11 +36,11 @@ export const createTransaction = async (
   return response.data;
 };
 
-export const updateTransaction = async (
-  id: number,
-  transaction: Partial<Transaction>, // Permite actualizar solo algunos campos
-  access_token: string
-): Promise<Transaction> => {
+  export const updateTransaction = async (
+    id: number, 
+    transaction: Partial<TransactionInput>, // ← USA TransactionInput
+    access_token: string
+  ): Promise<Transaction> => {
   if (!access_token) {
     throw new Error("No hay token de acceso. Por favor, inicia sesión.");
   }

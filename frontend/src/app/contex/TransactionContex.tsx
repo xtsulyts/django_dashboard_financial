@@ -14,7 +14,7 @@ type TransactionContextType = {
   transactions: Transaction[];
   loadTransactions: (userId: number, access_token: string) => Promise<void>; // ← Recibe access_token
   addTransaction: (transaction: TransactionInput, access_token: string) => Promise<void>;
-  updateTransaction: (id: number, transaction: Partial<Transaction>, access_token: string) => Promise<void>; // ← Recibe access_token
+  updateTransaction: (id: number, transaction: Partial<TransactionInput>, access_token: string) => Promise<void>; // ← Recibe access_token
   deleteTransaction: (id: number, access_token: string) => Promise<void>; // ← Recibe access_token
 };
 
@@ -49,7 +49,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Función para actualizar una transacción existente
-  const updateTransaction = async (id: number, transaction: Partial<Transaction>, access_token: string) => {
+  const updateTransaction = async (id: number, transaction: Partial<TransactionInput>, access_token: string) => {
     if (!access_token) {
       throw new Error("No hay token de acceso. Por favor, inicia sesión.");
     }
