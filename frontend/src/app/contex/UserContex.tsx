@@ -39,8 +39,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   // Función para manejar el login
   const loginUser = async (email: string, password: string) => {
     try {
-      //const loginResponse = await fetch("http://localhost:8000/login_user/", {
-      const loginResponse = await fetch("https://django-dashboard-financial.onrender.com/login_user/", {
+      const loginResponse = await fetch("http://localhost:8000/login_user/", {
+      //const loginResponse = await fetch("https://django-dashboard-financial.onrender.com/login_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,8 +59,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("refresh_token", refresh_token);
 
       // Obtener perfil de usuario
-      //const profileResponse = await fetch("http://localhost:8000/user_profile/", {
-      const profileResponse = await fetch("https://django-dashboard-financial.onrender.com/user_profile/", {
+      const profileResponse = await fetch("http://localhost:8000/user_profile/", {
+      //const profileResponse = await fetch("https://django-dashboard-financial.onrender.com/user_profile/", {
         method: "GET",
         headers: { Authorization: `Bearer ${access_token}` },
       });

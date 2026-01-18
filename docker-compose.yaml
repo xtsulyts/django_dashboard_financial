@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_dashboard
+    environment:
+      POSTGRES_DB: dashboardfinancial_db
+      POSTGRES_USER: postgres          
+      POSTGRES_PASSWORD: 90sdearcade
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dashboardfinancial_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: django_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:90sdearcade@db:5432/dashboardfinancial_db
+      DB_NAME: dashboardfinancial_db
+      DB_USER: postgres
+      DB_PASSWORD: 90sdearcade
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend_static:/app/static
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: nextjs_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://backend:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  backend_static:
+  postgres_data:

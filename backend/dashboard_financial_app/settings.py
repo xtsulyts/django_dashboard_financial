@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 #DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ['django-dashboard-financial.onrender.com']
+ALLOWED_HOSTS = ['django-dashboard-financial.onrender.com', 'localhost', '127.0.0.1', '*']
 
 # 4. Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = 'static/'
@@ -51,23 +51,31 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     'coreapi',
     'django.contrib.sites',
-    'allauth',
+    #'allauth',
     # 'allauth.account',
-    'allauth.socialaccount',
+    #'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
     'core',
     
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    #'http://localhost:3000',
+    'http://localhost:3000',
     "https://django-dashboard-financial.vercel.app",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
     "http://127.0.0.1:3000",
+    "http://172.17.0.2:3000",
+    "http://172.17.0.3:3000",
+    "http://172.17.0.4:3000",
+    "http://172.17.0.5:3000",
+    "http://172.17.0.6:3000",
+    "http://172.17.0.7:3000",
+    "http://0.0.0.0",
     "https://django-dashboard-financial.vercel.app",
+    
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -92,9 +100,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-    
-    #'django.milldeleware.common.CommonMiddlewere'
+
 ]
 
 REST_FRAMEWORK = {
@@ -136,7 +142,7 @@ SITE_ID = 2  # Esto referencia al "Site" que crearemos en la base de datos
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Para usuarios tradicionales
-    'allauth.account.auth_backends.AuthenticationBackend',  # Para OAuth
+    #'allauth.account.auth_backends.AuthenticationBackend',  # Para OAuth
 ]
 
 
