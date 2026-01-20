@@ -6,7 +6,7 @@ services:
     container_name: postgres_dashboard
     environment:
       POSTGRES_DB: dashboardfinancial_db
-      POSTGRES_USER: postgres          
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 90sdearcade
     ports:
       - "5432:5432"
@@ -20,27 +20,38 @@ services:
     restart: unless-stopped
 
   backend:
-    build: ./backend
+    image: xtsulyts/django_docker_dashboard_financial_backend:latest # Usa tu imagen de Docker Hub
     container_name: django_backend
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:90sdearcade@db:5432/dashboardfinancial_db
+      # 1. Usa las variables individuales, NO DATABASE_URL
+      DB_ENGINE: django.db.backends.postgresql
       DB_NAME: dashboardfinancial_db
       DB_USER: postgres
       DB_PASSWORD: 90sdearcade
-      DB_HOST: 127.0.0.1
+      DB_HOST: db # ⬅️ CONECTA AL CONTENEDOR 'db', NO A localhost
       DB_PORT: 5432
+      # 2. La SECRET_KEY ahora es opcional. Si no se define, se generará automáticamente.
+      #    Puedes agregarla aquí manualmente si lo deseas:
+      # SECRET_KEY: 'django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h'
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./backend:/app
-      - backend_static:/app/static
+    # Volúmenes locales eliminados. La imagen debe contener el código y el script de entrada.
     restart: unless-stopped
+    # 3. Script de entrada que genera SECRET_KEY si no existe y ejecuta migraciones
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      if [ -z "$$SECRET_KEY" ]; then
+        export SECRET_KEY=$$(python -c "import secrets; print(secrets.token_urlsafe(50))")
+        echo "SECRET_KEY generada automáticamente."
+      fi
+      python manage.py migrate
+      python manage.py runserver 0.0.0.0:8000
 
   frontend:
-    build: ./frontend
+    image: xtsulyts/nextjs_docker_dashboard_financial_frontend:latest # Usa tu imagen de Docker Hub
     container_name: nextjs_frontend
     ports:
       - "3000:3000"
@@ -49,11 +60,7 @@ services:
       NEXT_PUBLIC_API_URL: http://localhost:8000
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     restart: unless-stopped
 
 volumes:
-  backend_static:
   postgres_data:
