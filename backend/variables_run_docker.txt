@@ -1,0 +1,36 @@
+##crear red para conectar el back con base de datos##
+docker network create dashboard-network
+
+##run contenedor red postgres a donde apuntara el backend##
+docker run -d \
+  --name postgres_dashboard \
+  --network dashboard-network \
+  -e POSTGRES_DB=dashboardfinancial_db \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=90sdearcade \
+  -p 5432:5432 \
+  postgres:15-alpine
+
+##run de contenedor backen django con variables de entorno##
+docker run -d --name django_backend --network dashboard-network -e SECRET_KEY='django-insecure-7@-w=*(z&$hx@(^$u=9l%#kcmt8r60f4zcl4#_9czye5(xjw)h' -e DB_ENGINE=django.db.backends.postgresql -e DB_NAME=dashboardfinancial_db -e DB_USER=postgres -e DB_PASSWORD=90sdearcade -e DB_HOST=postgres_dashboard -e DB_PORT=5432 -p 8000:8000 xtsulyts/django_docker_dashboard_financial_backend:latest
+
+##migraciones backend django##
+docker exec django_backend python manage.py migrate
+
+##run contenedor frontend##
+docker run -d \
+  --name nextjs_frontend \
+  --network dashboard-network \
+  -e API_URL=http://django_backend:8000 \
+  -e NEXT_PUBLIC_API_URL=http://localhost:8000 \
+  -p 3000:3000 \
+  xtsulyts/nextjs_docker_dashboard_financial_frontend:latest
+
+
+
+
+
+
+
+##run contenedor frontend##
+
