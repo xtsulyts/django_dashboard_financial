@@ -27,9 +27,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['django-dashboard-financial.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # 4. Archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = 'static/'
@@ -53,14 +53,14 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     # 'allauth.account',
-    'allauth.socialaccount',
+    #'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
     'core',
     
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    #'http://localhost:3000',
+    'http://localhost:3000',
     "https://django-dashboard-financial-r5limqw2z-xtsulyts-projects.vercel.app",
 ]
 
