@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback  } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 
 // Definir la estructura de los datos del usuario
 interface User {
@@ -12,7 +12,7 @@ interface User {
 }
 
 // Definir la estructura del contexto
-interface UserContextType { 
+interface UserContextType {
   user: User | null;
   access_token: string | null;
   totalIngresos: number;
@@ -28,19 +28,45 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [access_token, setAccessToken] = useState<string | null>(null);
-  const [totalIngresos, setTotalIngresos] = useState<number>(0); // Estado para total de ingresos
-  const [totalGastos, setTotalGastos] = useState<number>(0); // Estado para total de gastos
-  const [saldoTotal, setSaldoTotal] = useState<number>(0); // Estado para saldo total
+  // Inicializamos los estados leyendo de localStorage de forma síncrona.
+  // Esto asegura que al recargar la página, los datos persistan en el estado.
+  // Nota: Usamos funciones de inicialización para evitar ejecutar localStorage en cada render,
+  // y además verificamos que window exista (para evitar errores en SSR con Next.js).
 
+  // Estado del usuario: lo leemos desde localStorage si existe
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+    return null;
+  });
+
+  // Estado del token de acceso
+  const [access_token, setAccessToken] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('access_token');
+    }
+    return null;
+  });
+
+  // Estado de logged in: lo derivamos de la existencia del token (o del usuario)
+  // Pero como es un estado separado, lo inicializamos también desde localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('access_token');
+    }
+    return false;
+  });
+
+  const [totalIngresos, setTotalIngresos] = useState<number>(0);
+  const [totalGastos, setTotalGastos] = useState<number>(0);
+  const [saldoTotal, setSaldoTotal] = useState<number>(0);
 
   // Función para manejar el login
   const loginUser = async (email: string, password: string) => {
     try {
-      const loginResponse = await fetch("http://localhost:8000/login_user/", {
-      //const loginResponse = await fetch("https://django-dashboard-financial.onrender.com/login_user/", {
+      const loginResponse = await fetch("http://127.0.0.1:8000/login_user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +77,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!loginResponse.ok) {
         throw new Error("Credenciales inválidas o error del servidor.");
       }
-      
+
       const { access_token, message, refresh_token } = await loginResponse.json();
       setAccessToken(access_token);
       localStorage.setItem("access_token", access_token);
@@ -59,8 +85,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("refresh_token", refresh_token);
 
       // Obtener perfil de usuario
-      const profileResponse = await fetch("http://localhost:8000/user_profile/", {
-      //const profileResponse = await fetch("https://django-dashboard-financial.onrender.com/user_profile/", {
+      const profileResponse = await fetch("http://127.0.0.1:8000/user_profile/", {
         method: "GET",
         headers: { Authorization: `Bearer ${access_token}` },
       });
@@ -68,7 +93,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!profileResponse.ok) {
         throw new Error("Error al obtener los datos del usuario.");
       }
-    
+
       const userData = await profileResponse.json();
       const avatar = userData.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${userData.user}`;
       const userWithAvatar = { ...userData, avatar };
@@ -76,21 +101,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setUser(userWithAvatar);
       localStorage.setItem("user", JSON.stringify(userWithAvatar));
 
-      // Redirigir al usuario a la página de inicio
-      //window.location.href = "/home";
-
-     
+      // Actualizar estado de logged in
+      setIsLoggedIn(true);
+      console.log("Usuario logueado");
     } catch (error) {
       console.error(error);
       throw error;
     }
-
-   
-      setIsLoggedIn(true);
-      console.log("Usuario logueado");
-    
   };
-
 
   const logoutUser = useCallback(() => {
     setUser(null);
@@ -101,49 +119,55 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("access_token");
     localStorage.removeItem("messege");
+    localStorage.removeItem("refresh_token"); // También limpiamos refresh_token
     setIsLoggedIn(false);
     console.log("Usuario cerró sesión");
-  }, [setUser, setAccessToken, setTotalIngresos, setTotalGastos, setSaldoTotal, setIsLoggedIn]);
+  }, []); // Las dependencias son seguras porque los setters son estables
 
-
-
-const fetchTotales = useCallback(async () => {
-  try {
-    if (!access_token) {
-      throw new Error("No hay token de acceso. Por favor, inicia sesión.");
-    }
-
-    // const response = await fetch("https://django-dashboard-financial.onrender.com/totales_usuario/", {
-    const response = await fetch("http://localhost:8000/totales_usuario/", {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
-    
-    if (!response.ok) {
-      if (response.status === 401) {
-        logoutUser();
-        throw new Error("Token inválido o expirado. Por favor, inicia sesión nuevamente.");
-      } else {
-        throw new Error("Error al obtener los totales.");
+  const fetchTotales = useCallback(async () => {
+    try {
+      if (!access_token) {
+        throw new Error("No hay token de acceso. Por favor, inicia sesión.");
       }
+
+      const response = await fetch("http://127.0.0.1:8000/totales_usuario/", {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          logoutUser();
+          throw new Error("Token inválido o expirado. Por favor, inicia sesión nuevamente.");
+        } else {
+          throw new Error("Error al obtener los totales.");
+        }
+      }
+
+      const data = await response.json();
+      setTotalIngresos(data.total_ingresos);
+      setTotalGastos(data.total_gastos);
+      setSaldoTotal(data.saldo_total);
+    } catch (error) {
+      console.error("Error fetching totales:", error);
+      throw error;
     }
+  }, [access_token, logoutUser]);
 
-    const data = await response.json();
-    setTotalIngresos(data.total_ingresos);
-    setTotalGastos(data.total_gastos);
-    setSaldoTotal(data.saldo_total);
-  } catch (error) {
-    console.error("Error fetching totales:", error);
-    throw error;
-  }
-}, [access_token, logoutUser, setTotalIngresos, setTotalGastos, setSaldoTotal]);
+  // Efecto para cargar los totales cuando tengamos access_token (incluye la hidratación inicial)
+  useEffect(() => {
+    if (access_token) {
+      fetchTotales();
+    }
+  }, [access_token, fetchTotales]);
 
-// El useEffect de la línea 144 ya está correcto:
-useEffect(() => {
-  if (access_token) {
-    fetchTotales();
-  }
-}, [access_token, fetchTotales]);
-
+  // Opcional: Podríamos agregar un efecto para sincronizar isLoggedIn con user/token
+  // Pero ya lo manejamos en login y logout. Sin embargo, por si acaso, podemos hacer:
+  useEffect(() => {
+    // Si no hay token pero isLoggedIn es true, lo corregimos (esto podría ocurrir si se borra localStorage externamente)
+    if (!access_token && isLoggedIn) {
+      setIsLoggedIn(false);
+    }
+  }, [access_token, isLoggedIn]);
 
   return (
     <UserContext.Provider
@@ -172,13 +196,3 @@ export const useUser = (): UserContextType => {
   }
   return context;
 };
-
-
-
-
-
-
-
-
-
-

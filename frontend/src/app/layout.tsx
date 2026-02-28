@@ -34,8 +34,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <TransactionProvider>
+    
     <UserProvider>
+      <TransactionProvider>
       <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -46,7 +47,8 @@ export default function RootLayout({
         <Footer/>
       </body>
     </html>
-    </UserProvider>
     </TransactionProvider>
+    </UserProvider>
+    
   );
 }

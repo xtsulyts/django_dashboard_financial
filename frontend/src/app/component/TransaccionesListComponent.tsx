@@ -35,7 +35,7 @@ const TransaccionesListComponent = () => {
 
             try {
                 //const response = await fetch("https://django-dashboard-financial.onrender.com/api/transacciones/", {
-                const response = await fetch("127.0.0.1:8000/api/transacciones/", {
+                const response = await fetch("http://127.0.0.1:8000/api/transacciones/", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${access_token}`,

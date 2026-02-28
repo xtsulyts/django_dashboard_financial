@@ -48,7 +48,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
       try {
         setIsLoadingCategorias(true);
         //const response = await fetch('https://django-dashboard-financial.onrender.com/api/categorias/', {
-        const response = await fetch('127.0.0.1:8000/api/categorias/', {
+        const response = await fetch('http://127.0.0.1:8000/api/categorias/', {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -115,7 +115,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     return;
   }
 
-  // SOLUCIÓN: Usa el tipo correcto TransactionInput y convierte categoriaId a número
     const apiData: TransactionInput = {
       monto: formData.monto,
       fecha: formData.fecha,
