@@ -24,7 +24,7 @@ type TransactionFormProps = {
 };
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmitSuccess, onDeleteSuccess }) => {
-  const { user, access_token } = useUser();
+  const { user, access_token, fetchTotales } = useUser();
   const router = useRouter();
   
   // 3. Estado con TransactionFormData (no Transaction)
@@ -129,12 +129,15 @@ const handleSubmit = async (e: React.FormEvent) => {
         await updateTransaction(transaction.id, apiData, access_token);
       } else {
         await createTransaction(apiData, access_token);
+
       }
 
       if (onSubmitSuccess) {
         onSubmitSuccess();
+        //fetchTotales();
       }
       router.push("./movimientos");
+      fetchTotales();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

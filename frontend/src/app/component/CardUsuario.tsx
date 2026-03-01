@@ -12,7 +12,6 @@ type UserType = {
   username: string;
   avatar?: string;
   user?: string;
-  // ... otras propiedades
 };
 
 //Define el tipo para las props
@@ -44,7 +43,6 @@ const CardUsuario: React.FC<CardUsuarioProps> = ({ onUpdateUser }) => {
       <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full my-8">
         {/* Avatar y bienvenida */}
         <div className="flex flex-col items-center">
-          {/* REEMPLAZA <img> por <Image /> */}
           <Image
             src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
             alt="Avatar"

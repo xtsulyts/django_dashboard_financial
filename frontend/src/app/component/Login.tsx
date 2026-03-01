@@ -3,7 +3,6 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
-// Comentamos temporalmente Google para el despliegue
 // import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function LoginFormulario() {
@@ -13,7 +12,7 @@ function LoginFormulario() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // CORRECCIÓN 1: Tipo específico para el evento del formulario
+  // Tipo específico para el evento del formulario
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
@@ -22,7 +21,6 @@ function LoginFormulario() {
       await loginUser(email, password);
       router.push("./usuario");
     } catch (err: unknown) {
-      // CORRECCIÓN 2: Manejo seguro de errores
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -31,7 +29,7 @@ function LoginFormulario() {
     }
   };
 
-  
+  // Código comentado de Google (se mantiene igual)
   /*
   interface GoogleCredentialResponse {
     credential: string;
@@ -39,7 +37,6 @@ function LoginFormulario() {
 
   const handleGoogleSuccess = async (credentialResponse: GoogleCredentialResponse) => {
     try {
-      // Envía el token de Google a tu backend
       const response = await fetch('/api/auth/google', {
         method: 'POST',
         headers: {
@@ -51,7 +48,6 @@ function LoginFormulario() {
       const data = await response.json();
       
       if (response.ok) {
-        // Asume que tu backend devuelve los datos del usuario
         await loginUser(data.user.email, '', true);
         router.push("./");
       } else {
@@ -77,7 +73,7 @@ function LoginFormulario() {
       
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          {/* Tarjeta del formulario con tus estilos */}
+          {/* Tarjeta del formulario */}
           <div className="bg-gradient-to-br from-white/95 via-white/90 to-white/95 dark:from-gray-800/95 dark:via-gray-800/90 dark:to-gray-800/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/40 dark:border-gray-700/40">
             
             {/* Header con gradiente */}
@@ -112,17 +108,17 @@ function LoginFormulario() {
                   </span>
                 </label>
                 <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                    @
+                  </div>
                   <input
                     type="email"
                     placeholder="tucorreo@ejemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-300"
                     required
                   />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                    @
-                  </div>
                 </div>
               </div>
 
@@ -135,17 +131,17 @@ function LoginFormulario() {
                   </span>
                 </label>
                 <div className="relative">
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                    🔐
+                  </div>
                   <input
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-300"
                     required
                   />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                    🔐
-                  </div>
                 </div>
               </div>
 
@@ -167,7 +163,6 @@ function LoginFormulario() {
               {/* Sección de Google (comentada temporalmente) */}
               <div className="text-center text-gray-500 dark:text-gray-400 mb-4">
                 <p className="text-sm">
-                  {/* Google Login temporalmente deshabilitado para despliegue */}
                   Opciones sociales disponibles próximamente
                 </p>
               </div>
@@ -189,7 +184,7 @@ function LoginFormulario() {
               </GoogleOAuthProvider>
               */}
               
-              {/* Enlace de registro (si lo agregas luego) */}
+              {/* Enlace de registro */}
               <div className="text-center mt-6">
                 <p className="text-gray-600 dark:text-gray-300">
                   ¿No tienes cuenta?{" "}

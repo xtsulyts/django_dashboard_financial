@@ -25,7 +25,8 @@ const AuthComponent = () => {
     }
     
     try {
-      const response = await axios.post("https://django-dashboard-financial.onrender.com/", {
+      //const response = await axios.post("https://django-dashboard-financial.onrender.com/register/", { 
+      const response = await axios.post("http://127.0.0.1:8000/", {
         username,
         email,
         password1: password,
@@ -34,7 +35,7 @@ const AuthComponent = () => {
       
       if (response.status === 201) {
         // Éxito - mostrar feedback y redirigir
-        router.push("./login");
+        router.push("/login");
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.errors) {
@@ -42,6 +43,7 @@ const AuthComponent = () => {
       } else {
         setErrors({ general: ["Error en el registro. Revisa los datos."] });
       }
+      console.error("Error en registro:", error.response?.data); // Para depuración
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +84,7 @@ const AuthComponent = () => {
                   value: username,
                   setValue: setUsername,
                   error: errors.username,
-                  placeholder: "juanperez",
+                  placeholder: "tu nombre",
                   icon: "👤",
                   type: "text"
                 },
@@ -130,7 +132,7 @@ const AuthComponent = () => {
                         field.error 
                           ? "border-red-500 focus:border-red-500 ring-red-500/20" 
                           : "border-gray-300 dark:border-gray-700 focus:border-amber-500"
-                      } rounded-xl focus:ring-4 focus:ring-amber-500/20 transition-all outline-none`}
+                      } rounded-xl focus:ring-4 focus:ring-amber-500/20 transition-all outline-none text-gray-600 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500`}
                       placeholder={field.placeholder}
                       required
                     />

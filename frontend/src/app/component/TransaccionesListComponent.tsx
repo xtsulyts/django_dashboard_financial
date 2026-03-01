@@ -89,7 +89,7 @@ const TransaccionesListComponent = () => {
                                     <strong>Tipo:</strong> {transaccion.tipo} <br />
                                     <strong>Fecha:</strong> {transaccion.fecha} <br />
                                     <strong>Usuario:</strong> {transaccion.usuario} <br />
-                                    <strong>Categoría:</strong> {categorias[transaccion.categoria] || "Desconocida"}
+                                    
                                 </p>
                             </div>
                         ))}

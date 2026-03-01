@@ -9,11 +9,11 @@ const Header = () => {
   const router = useRouter();
   const { user, logoutUser } = useUser();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null); // ← Añade el tipo
+  const dropdownRef = useRef<HTMLDivElement>(null); 
   
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => { // ← Añade : MouseEvent
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) { // ← Añade as Node
+    const handleClickOutside = (event: MouseEvent) => { 
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) { 
         setIsDropdownOpen(false);
       }
     };
@@ -93,7 +93,7 @@ const Header = () => {
                   </div>
                 </button>
 
-                {/* Dropdown - Mejorado */}
+                {/* Dropdown */}
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-2xl shadow-xl ring-1 ring-black/10 dark:ring-white/10 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
                     {/* Header del dropdown */}
