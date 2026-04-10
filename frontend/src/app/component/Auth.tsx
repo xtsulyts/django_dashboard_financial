@@ -25,7 +25,7 @@ const AuthComponent = () => {
     }
     
     try {
-      const response = await axios.post("https://django-dashboard-financial.onrender.com/", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/`, {
         username,
         email,
         password1: password,

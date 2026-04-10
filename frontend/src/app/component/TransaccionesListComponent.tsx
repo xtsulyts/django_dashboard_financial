@@ -33,7 +33,7 @@ const TransaccionesListComponent = () => {
             if (!access_token) return;
 
             try {
-                const response = await fetch("https://django-dashboard-financial.onrender.com/api/transacciones/", {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transacciones/`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${access_token}`,

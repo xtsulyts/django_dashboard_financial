@@ -47,7 +47,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, onSubmit
     const fetchCategorias = async () => {
       try {
         setIsLoadingCategorias(true);
-        const response = await fetch('https://django-dashboard-financial.onrender.com/api/categorias/', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categorias/`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
