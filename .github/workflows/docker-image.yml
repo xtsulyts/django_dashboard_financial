@@ -27,4 +27,4 @@ jobs:
         context: ./backend
         file: ./backend/Dockerfile
         push: true
-        tags: xtsulyts/nextjs_docker_dashboard_financial_frontend:latest
+        tags: xtsulyts/django_docker_dashboard_financial_backend:latest
