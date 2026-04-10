@@ -24,7 +24,6 @@ const categorias: { [key: number]: string } = {
 
 const TransaccionesListComponent = () => {
     const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
-    // CORRECCIÓN: Marcamos como no usados intencionalmente
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { access_token } = useUser();
@@ -68,7 +67,6 @@ const TransaccionesListComponent = () => {
             <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-6xl w-full my-8">
                 <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">Mis Transacciones</h2>
 
-                {/* CORRECCIÓN: Mostramos estados de loading/error si quieres */}
                 {loading ? (
                     <p className="text-gray-600 text-center">Cargando transacciones...</p>
                 ) : error ? (
