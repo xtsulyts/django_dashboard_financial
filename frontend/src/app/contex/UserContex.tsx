@@ -66,7 +66,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   // Función para manejar el login
   const loginUser = async (email: string, password: string) => {
     try {
-      const loginResponse = await fetch("http://127.0.0.1:8000/login_user/", {
+      const loginResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login_user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("refresh_token", refresh_token);
 
       // Obtener perfil de usuario
-      const profileResponse = await fetch("http://127.0.0.1:8000/user_profile/", {
+      const profileResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user_profile/`, {
         method: "GET",
         headers: { Authorization: `Bearer ${access_token}` },
       });
@@ -130,7 +130,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("No hay token de acceso. Por favor, inicia sesión.");
       }
 
-      const response = await fetch("http://127.0.0.1:8000/totales_usuario/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/totales_usuario/`, {
         headers: { Authorization: `Bearer ${access_token}` },
       });
 

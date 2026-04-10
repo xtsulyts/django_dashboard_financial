@@ -1,10 +1,10 @@
 //src/app/types/transaction.ts
 
-export type Category = {
-    id: number;
-    nombre: string;
-    descripcion?: string;
-};
+// export type Category = {
+//     id: number;
+//     nombre: string;
+//     descripcion?: string;
+// };
 
 
 export type Transaction = {
@@ -13,7 +13,7 @@ export type Transaction = {
     fecha: string;
     descripcion?: string;
     tipo: 'INGRESO' | 'GASTO';
-    categoria: Category;  // Objeto completo
+    categoria: number;  // Objeto completo
     usuario: number;
 };
 
