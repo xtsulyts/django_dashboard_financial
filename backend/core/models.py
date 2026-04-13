@@ -37,6 +37,8 @@ class custom_user(AbstractUser):
     """
 
     email = models.EmailField(blank=True, null=False)
+    mp_access_token = models.TextField(null=True, blank=True)
+    mp_refresh_token = models.TextField(null=True, blank=True)
     """ 
     Dirección de correo electrónico del usuario (opcional).
     
@@ -153,6 +155,16 @@ class Transaccion(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría")
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción")
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name="Tipo de transacción")
+    fuente = models.CharField(
+        max_length=20,
+        default='manual',
+        choices=[('manual', 'Manual'), ('mercadopago', 'MercadoPago')],
+        verbose_name="Fuente"
+    )
+    mp_payment_id = models.CharField(
+        max_length=100, null=True, blank=True, unique=True,
+        verbose_name="ID de pago MercadoPago"
+    )
 
     def __str__(self):
         return f"{self.tipo} - {self.monto} ({self.fecha})"

@@ -114,12 +114,18 @@ const handleSubmit = async (e: React.FormEvent) => {
     return;
   }
 
+  if (!formData.categoriaId) {
+    setError('Por favor seleccioná una categoría.');
+    setIsLoading(false);
+    return;
+  }
+
     const apiData: TransactionInput = {
       monto: formData.monto,
       fecha: formData.fecha,
       tipo: formData.tipo,
       descripcion: formData.descripcion || '',
-      categoriaId: Number(formData.categoriaId) || 1, // ← Asegura que sea número
+      categoriaId: Number(formData.categoriaId),
       usuario: user.id,
     };
 
@@ -165,17 +171,13 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   };
 
-  // Filtrar categorías según tipo
+  // Categorías que pertenecen a INGRESO (el resto se considera GASTO)
+  const CATEGORIAS_INGRESO = ['sueldo', 'freeland'];
+
   const categoriasFiltradas = categorias.filter((categoria) => {
-    if (formData.tipo === 'INGRESO') {
-      return categoria.nombre.toLowerCase().includes('salario') || 
-             categoria.nombre.toLowerCase().includes('ingreso') ||
-             categoria.nombre.toLowerCase().includes('ingresos');
-    } else {
-      return !categoria.nombre.toLowerCase().includes('salario') && 
-             !categoria.nombre.toLowerCase().includes('ingreso') &&
-             !categoria.nombre.toLowerCase().includes('ingresos');
-    }
+    const nombreNorm = categoria.nombre.toLowerCase();
+    const esIngreso = CATEGORIAS_INGRESO.some((nombre) => nombreNorm === nombre);
+    return formData.tipo === 'INGRESO' ? esIngreso : !esIngreso;
   });
 
   return (
@@ -306,7 +308,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, tipo: 'INGRESO' }))}
+                      onClick={() => setFormData(prev => ({ ...prev, tipo: 'INGRESO', categoriaId: undefined }))}
                       className={`py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'INGRESO' 
                         ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300' 
                         : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300'
@@ -317,7 +319,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, tipo: 'GASTO' }))}
+                      onClick={() => setFormData(prev => ({ ...prev, tipo: 'GASTO', categoriaId: undefined }))}
                       className={`py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'GASTO' 
                         ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' 
                         : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-rose-300'

@@ -28,40 +28,24 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  // Inicializamos los estados leyendo de localStorage de forma síncrona.
-  // Esto asegura que al recargar la página, los datos persistan en el estado.
-  // Nota: Usamos funciones de inicialización para evitar ejecutar localStorage en cada render,
-  // y además verificamos que window exista (para evitar errores en SSR con Next.js).
-
-  // Estado del usuario: lo leemos desde localStorage si existe
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      return storedUser ? JSON.parse(storedUser) : null;
-    }
-    return null;
-  });
-
-  // Estado del token de acceso
-  const [access_token, setAccessToken] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('access_token');
-    }
-    return null;
-  });
-
-  // Estado de logged in: lo derivamos de la existencia del token (o del usuario)
-  // Pero como es un estado separado, lo inicializamos también desde localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return !!localStorage.getItem('access_token');
-    }
-    return false;
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [access_token, setAccessToken] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const [totalIngresos, setTotalIngresos] = useState<number>(0);
   const [totalGastos, setTotalGastos] = useState<number>(0);
   const [saldoTotal, setSaldoTotal] = useState<number>(0);
+
+  // Leer localStorage solo en el cliente, después de la hidratación
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('access_token');
+    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedToken) {
+      setAccessToken(storedToken);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   // Función para manejar el login
   const loginUser = async (email: string, password: string) => {
@@ -160,14 +144,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [access_token, fetchTotales]);
 
-  // Opcional: Podríamos agregar un efecto para sincronizar isLoggedIn con user/token
-  // Pero ya lo manejamos en login y logout. Sin embargo, por si acaso, podemos hacer:
-  useEffect(() => {
-    // Si no hay token pero isLoggedIn es true, lo corregimos (esto podría ocurrir si se borra localStorage externamente)
-    if (!access_token && isLoggedIn) {
-      setIsLoggedIn(false);
-    }
-  }, [access_token, isLoggedIn]);
 
   return (
     <UserContext.Provider

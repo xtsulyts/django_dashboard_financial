@@ -27,8 +27,11 @@ class TransaccionSerializer(serializers.ModelSerializer):
     
 
 class TransaccionListSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(source="categoria.nombre", read_only=True)
+    categoria_nombre = serializers.SerializerMethodField()
     usuario_username = serializers.CharField(source="usuario.username", read_only=True)
+
+    def get_categoria_nombre(self, obj):
+        return obj.categoria.nombre if obj.categoria else None
 
     class Meta:
         model = Transaccion

@@ -2,13 +2,12 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils import timezone
 from django.http import JsonResponse
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import os
 from .models import custom_user
 from .forms import register_user_form
 from django.contrib.auth import login, authenticate
-from django.http import JsonResponse
 from .forms import register_user_form
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -18,7 +17,6 @@ from .models import Categoria, Transaccion, models, custom_user
 from .serializer_ import CategoriaSerializer, TransaccionSerializer, TransaccionListSerializer
 from rest_framework.views import APIView
 from django.shortcuts import redirect
-#from allauth.socialaccount.views import SignupView
 from django.contrib.auth.backends import ModelBackend
 import requests
 from django.contrib.auth.models import User
@@ -266,6 +264,31 @@ def listado_transacciones(request):
     })
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def importar_transacciones(request):
+    transacciones_data = request.data.get('transacciones', [])
+    creadas = 0
+    errores = []
+
+    for item in transacciones_data:
+        serializer = TransaccionSerializer(data={
+            'monto': item.get('monto'),
+            'fecha': item.get('fecha'),
+            'tipo': item.get('tipo'),
+            'descripcion': item.get('descripcion', ''),
+            'categoria': item.get('categoriaId'),
+            'usuario': request.user.id,
+        })
+        if serializer.is_valid():
+            serializer.save(usuario=request.user)
+            creadas += 1
+        else:
+            errores.append({'fila': item, 'errores': serializer.errors})
+
+    return JsonResponse({'creadas': creadas, 'errores': errores}, status=201)
+
+
 class TransaccionListView(generics.ListAPIView):
     serializer_class = TransaccionListSerializer
     permission_classes = [IsAuthenticated]  # Solo usuarios autenticados pueden acceder
@@ -276,6 +299,163 @@ class TransaccionListView(generics.ListAPIView):
         """
         return Transaccion.objects.filter(usuario=self.request.user).select_related("categoria", "usuario") 
     
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def mp_status(request):
+    conectado = bool(request.user.mp_access_token) or bool(os.getenv('MP_ACCESS_TOKEN'))
+    return JsonResponse({'conectado': conectado})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def mp_oauth_init(request):
+    client_id = os.getenv('MP_CLIENT_ID')
+    redirect_uri = os.getenv('MP_REDIRECT_URI', 'http://localhost:8000/mp/callback/')
+    state = str(request.auth)  # JWT token — identifica al usuario en el callback
+
+    auth_url = (
+        f"https://auth.mercadopago.com.ar/authorization"
+        f"?client_id={client_id}"
+        f"&redirect_uri={redirect_uri}"
+        f"&response_type=code"
+        f"&platform_id=mp"
+        f"&state={state}"
+    )
+    return JsonResponse({'auth_url': auth_url})
+
+
+def mp_oauth_callback(request):
+    frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+    code = request.GET.get('code')
+    state = request.GET.get('state')
+
+    if not code:
+        return redirect(f"{frontend_url}/?mp_error=no_code")
+
+    # Identificar usuario desde el JWT en state
+    from rest_framework_simplejwt.tokens import AccessToken
+    from rest_framework_simplejwt.exceptions import TokenError
+    try:
+        decoded = AccessToken(state)
+        user = custom_user.objects.get(id=decoded['user_id'])
+    except (TokenError, custom_user.DoesNotExist, Exception):
+        return redirect(f"{frontend_url}/?mp_error=invalid_state")
+
+    # Intercambiar code por access_token
+    token_res = requests.post(
+        'https://api.mercadopago.com/oauth/token',
+        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        data={
+            'client_id': os.getenv('MP_CLIENT_ID'),
+            'client_secret': os.getenv('MP_CLIENT_SECRET'),
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': os.getenv('MP_REDIRECT_URI', 'http://localhost:8000/mp/callback/'),
+        },
+        timeout=10,
+    )
+
+    if token_res.status_code != 200:
+        return redirect(f"{frontend_url}/?mp_error=token_failed")
+
+    data = token_res.json()
+    user.mp_access_token = data.get('access_token')
+    user.mp_refresh_token = data.get('refresh_token', '')
+    user.save()
+
+    return redirect(f"{frontend_url}/?mp_connected=true")
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def mp_disconnect(request):
+    request.user.mp_access_token = None
+    request.user.mp_refresh_token = None
+    request.user.save()
+    return JsonResponse({'desconectado': True})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def mp_sync(request):
+    access_token = request.user.mp_access_token or os.getenv('MP_ACCESS_TOKEN')
+    if not access_token:
+        return JsonResponse({'error': 'MercadoPago no conectado'}, status=400)
+
+    fecha_desde = request.data.get('fecha_desde')
+    fecha_hasta = request.data.get('fecha_hasta')
+
+    if not fecha_desde or not fecha_hasta:
+        return JsonResponse({'error': 'Parámetros fecha_desde y fecha_hasta requeridos'}, status=400)
+
+    headers = {'Authorization': f'Bearer {access_token}'}
+    params = {
+        'begin_date': f'{fecha_desde}T00:00:00.000-03:00',
+        'end_date': f'{fecha_hasta}T23:59:59.000-03:00',
+        'range': 'date_created',
+        'sort': 'date_created',
+        'criteria': 'desc',
+        'limit': 100,
+    }
+
+    try:
+        response = requests.get(
+            'https://api.mercadopago.com/v1/payments/search',
+            headers=headers,
+            params=params,
+            timeout=10,
+        )
+    except requests.RequestException as e:
+        return JsonResponse({'error': f'Error de red: {str(e)}'}, status=502)
+
+    if response.status_code != 200:
+        return JsonResponse(
+            {'error': 'Error al consultar MercadoPago', 'detalle': response.text},
+            status=400
+        )
+
+    data = response.json()
+    mp_user_id = str(os.getenv('MP_USER_ID', ''))
+
+    creadas = 0
+    duplicadas = 0
+
+    for pago in data.get('results', []):
+        if pago.get('status') != 'approved':
+            continue
+
+        mp_id = str(pago['id'])
+
+        if Transaccion.objects.filter(mp_payment_id=mp_id).exists():
+            duplicadas += 1
+            continue
+
+        collector_id = str(pago.get('collector_id', ''))
+        tipo = 'INGRESO' if (not mp_user_id or collector_id == mp_user_id) else 'GASTO'
+
+        fecha_str = pago.get('date_approved') or pago.get('date_created', '')
+        fecha = fecha_str[:10]
+
+        descripcion = pago.get('description') or f'Pago MP #{mp_id}'
+
+        Transaccion.objects.create(
+            usuario=request.user,
+            monto=pago['transaction_amount'],
+            fecha=fecha,
+            tipo=tipo,
+            descripcion=descripcion,
+            fuente='mercadopago',
+            mp_payment_id=mp_id,
+        )
+        creadas += 1
+
+    return JsonResponse({
+        'creadas': creadas,
+        'duplicadas': duplicadas,
+        'total_mp': len(data.get('results', [])),
+    })
 
 
 # @csrf_exempt

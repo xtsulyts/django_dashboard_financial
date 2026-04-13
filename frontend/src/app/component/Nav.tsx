@@ -12,6 +12,7 @@ export default function Nav() {
     { label: "Dashboard", path: "/usuario", icon: "📊" },
     { label: "Transacciones", path: "/transacciones", icon: "💳" },
     { label: "Movimientos", path: "/movimientos", icon: "📈" },
+    { label: "Importar CSV", path: "/importar", icon: "📂" },
   ];
 
   return (
@@ -81,6 +82,7 @@ export default function Nav() {
                           {item.path === "/usuario" && "Resumen financiero"}
                           {item.path === "/transacciones" && "Agregar transacciones"}
                           {item.path === "/movimientos" && "Historial completo"}
+                        {item.path === "/importar" && "Subir extracto bancario"}
                         </div>
                       </div>
                       <svg className="w-5 h-5 text-gray-400 group-hover/mobile:text-amber-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">

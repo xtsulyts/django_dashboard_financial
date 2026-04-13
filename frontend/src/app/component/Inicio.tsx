@@ -1,13 +1,16 @@
 "use client";
 
 import FinanzasChart from "./FinanzasGraf";
+import FinanzasMensualChart from "./FinanzasMensualChart";
+import DonutCategoriasChart from "./DonutCategoriasChart";
+import MercadoPagoSync from "./MercadoPagoSync";
 import { useUser } from "../contex/UserContex";
 import Image from 'next/image'
 
 
 const Inicio = () => {
 
-  const { totalIngresos, totalGastos, saldoTotal, user } = useUser();
+  const { totalIngresos, totalGastos, saldoTotal, user, fetchTotales } = useUser();
 
   return (
     <>
@@ -41,20 +44,34 @@ const Inicio = () => {
         </h1>
 
           {/* Contenido de la card */}
-          <div className="space-y-4">
-            {/* Gráfico */}
+          <div className="space-y-6">
+            {/* Totales */}
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="bg-green-100/60 rounded-xl p-3">
+                <p className="text-sm text-gray-600">Ingresos</p>
+                <p className="text-lg font-bold text-green-700">${totalIngresos.toLocaleString()}</p>
+              </div>
+              <div className="bg-red-100/60 rounded-xl p-3">
+                <p className="text-sm text-gray-600">Gastos</p>
+                <p className="text-lg font-bold text-red-700">${totalGastos.toLocaleString()}</p>
+              </div>
+              <div className="bg-blue-100/60 rounded-xl p-3">
+                <p className="text-sm text-gray-600">Saldo</p>
+                <p className="text-lg font-bold text-blue-700">${saldoTotal.toLocaleString()}</p>
+              </div>
+            </div>
+
+            {/* Sync MercadoPago */}
+            <MercadoPagoSync onSynced={fetchTotales} />
+
+            {/* Gráfico de totales */}
             <FinanzasChart />
 
-            {/* Totales */}
-            <p className="text-lg">
-              <strong>Total Ingresos:</strong> ${totalIngresos.toLocaleString()}
-            </p>
-            <p className="text-lg">
-              <strong>Total Gastos:</strong> ${totalGastos.toLocaleString()}
-            </p>
-            <p className="text-lg">
-              <strong>Saldo Total:</strong> ${saldoTotal.toLocaleString()}
-            </p>
+            {/* Gráfico de evolución mensual */}
+            <FinanzasMensualChart />
+
+            {/* Donut por categoría */}
+            <DonutCategoriasChart />
           </div>
         </div>
       </div>
