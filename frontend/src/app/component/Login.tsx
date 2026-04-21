@@ -15,7 +15,6 @@ function LoginFormulario() {
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-
     try {
       await loginUser(email, password);
       router.push("./usuario");
@@ -29,9 +28,9 @@ function LoginFormulario() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-emerald-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
 
           {/* Header */}
           <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 p-8 text-center">
@@ -42,8 +41,8 @@ function LoginFormulario() {
           {/* Formulario */}
           <form onSubmit={handleLogin} className="p-6 md:p-8">
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <p className="text-red-700 font-medium flex items-center gap-2">
+              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+                <p className="text-red-700 dark:text-red-400 font-medium flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
                   {error}
                 </p>
@@ -52,14 +51,14 @@ function LoginFormulario() {
 
             {/* Email */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 <span className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
                   Correo Electrónico
                 </span>
               </label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -67,7 +66,7 @@ function LoginFormulario() {
                   placeholder="tucorreo@ejemplo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-300 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 placeholder:text-gray-400"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   required
                 />
               </div>
@@ -75,14 +74,14 @@ function LoginFormulario() {
 
             {/* Contraseña */}
             <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 <span className="flex items-center gap-2">
                   <Lock className="w-4 h-4" />
                   Contraseña
                 </span>
               </label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -90,7 +89,7 @@ function LoginFormulario() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-300 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 placeholder:text-gray-400"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all outline-none text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   required
                 />
               </div>
@@ -104,12 +103,12 @@ function LoginFormulario() {
             </button>
 
             <div className="text-center mt-6">
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 ¿No tienes cuenta?{" "}
                 <button
                   type="button"
                   onClick={() => router.push("/registro")}
-                  className="text-emerald-600 hover:underline font-medium"
+                  className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
                 >
                   Regístrate aquí
                 </button>
