@@ -6,6 +6,14 @@ import { PlusCircle, TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import FinanzasMensualChart from "./FinanzasMensualChart";
 import DonutCategoriasChart from "./DonutCategoriasChart";
 
+function formatCompact(value: number): string {
+  const abs = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  if (abs >= 1_000_000) return `${sign}$${(abs / 1_000_000).toFixed(abs % 1_000_000 === 0 ? 0 : 1)}M`;
+  if (abs >= 1_000) return `${sign}$${(abs / 1_000).toFixed(abs % 1_000 === 0 ? 0 : 1)}k`;
+  return `${sign}$${abs.toLocaleString()}`;
+}
+
 const CardUsuario: React.FC = () => {
   const router = useRouter();
   const { user, totalIngresos, totalGastos, saldoTotal } = useUser();
@@ -19,17 +27,26 @@ const CardUsuario: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 text-center">
             <TrendingUp className="w-5 h-5 text-emerald-500 mx-auto mb-2" />
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Ingresos</p>
-            <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono-nums">${totalIngresos.toLocaleString()}</p>
+            <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono-nums">
+              <span className="hidden sm:inline">${totalIngresos.toLocaleString()}</span>
+              <span className="sm:hidden">{formatCompact(totalIngresos)}</span>
+            </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 text-center">
             <TrendingDown className="w-5 h-5 text-rose-400 mx-auto mb-2" />
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gastos</p>
-            <p className="text-xl font-bold text-rose-500 dark:text-rose-400 font-mono-nums">${totalGastos.toLocaleString()}</p>
+            <p className="text-xl font-bold text-rose-500 dark:text-rose-400 font-mono-nums">
+              <span className="hidden sm:inline">${totalGastos.toLocaleString()}</span>
+              <span className="sm:hidden">{formatCompact(totalGastos)}</span>
+            </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 text-center">
             <Wallet className="w-5 h-5 text-slate-400 mx-auto mb-2" />
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Saldo</p>
-            <p className="text-xl font-bold text-slate-600 dark:text-slate-300 font-mono-nums">${saldoTotal.toLocaleString()}</p>
+            <p className="text-xl font-bold text-slate-600 dark:text-slate-300 font-mono-nums">
+              <span className="hidden sm:inline">${saldoTotal.toLocaleString()}</span>
+              <span className="sm:hidden">{formatCompact(saldoTotal)}</span>
+            </p>
           </div>
         </div>
 
