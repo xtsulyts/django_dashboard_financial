@@ -46,7 +46,7 @@ const Header = () => {
             </div>
             <div className="ml-3 flex flex-col items-start">
               <span className="font-bold text-gray-900 dark:text-white text-lg sm:text-xl tracking-tight">
-                Finanzas<span className="text-amber-600 dark:text-amber-500">Ctr</span>
+                Finanzas<span className="text-amber-600 dark:text-amber-500">Ctrl</span>
               </span>
               <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">
                 Control total de tu dinero
