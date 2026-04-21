@@ -100,7 +100,7 @@ const FinanzasMensualChart = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-600">
+      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-600 h-full flex items-center justify-center">
         Cargando evolución mensual...
       </div>
     );
@@ -108,7 +108,7 @@ const FinanzasMensualChart = () => {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-red-500">
+      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-red-500 h-full flex items-center justify-center">
         {error}
       </div>
     );
@@ -116,16 +116,18 @@ const FinanzasMensualChart = () => {
 
   if (meses.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-500">
+      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-500 h-full flex items-center justify-center">
         Sin transacciones para mostrar
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow">
-      <h2 className="text-xl font-bold text-center mb-4">Evolución mensual</h2>
-      <Bar data={data} options={options} />
+    <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow h-full flex flex-col">
+      <h2 className="text-base font-semibold text-gray-700 dark:text-gray-200 mb-5">Evolución mensual</h2>
+      <div className="relative flex-1 min-h-[200px]">
+        <Bar data={data} options={{ ...options, maintainAspectRatio: false }} />
+      </div>
     </div>
   );
 };

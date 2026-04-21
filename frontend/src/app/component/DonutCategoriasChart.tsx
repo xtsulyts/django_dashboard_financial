@@ -121,7 +121,7 @@ const DonutCategoriasChart = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-500">
+      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-500 h-full flex items-center justify-center">
         Cargando evolución...
       </div>
     );
@@ -129,14 +129,14 @@ const DonutCategoriasChart = () => {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-rose-500">
+      <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-rose-500 h-full flex items-center justify-center">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow">
+    <div className="bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow h-full flex flex-col">
       <h2 className="text-base font-semibold text-gray-700 dark:text-gray-200 mb-5">
         Evolución de ingresos y gastos
       </h2>
@@ -145,7 +145,9 @@ const DonutCategoriasChart = () => {
           No hay movimientos registrados
         </p>
       ) : (
-        <Line data={data} options={options} />
+        <div className="relative flex-1 min-h-[200px]">
+          <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
+        </div>
       )}
     </div>
   );
