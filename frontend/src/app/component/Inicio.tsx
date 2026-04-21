@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import MercadoPagoSync from "./MercadoPagoSync";
 import DolarWidget from "./DolarWidget";
 import { useUser } from "../contex/UserContex";
@@ -65,7 +66,9 @@ const Inicio = () => {
         {/* Grid inferior */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
-            <MercadoPagoSync onSynced={fetchTotales} />
+            <Suspense fallback={<div className="h-24 animate-pulse bg-gray-100 dark:bg-gray-700 rounded-xl" />}>
+              <MercadoPagoSync onSynced={fetchTotales} />
+            </Suspense>
           </div>
           <DolarWidget />
         </div>
