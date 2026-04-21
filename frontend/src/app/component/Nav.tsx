@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Home, LayoutDashboard, CreditCard, TrendingUp, FileText, HelpCircle } from "lucide-react";
+import { Home, LayoutDashboard, CreditCard, TrendingUp, FileText, HelpCircle, Menu, X } from "lucide-react";
 
 export default function Nav() {
   const router = useRouter();
@@ -37,14 +37,13 @@ export default function Nav() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-white dark:bg-gray-800 shadow-sm hover:shadow transition-all"
+            className="md:hidden flex items-center justify-center p-1.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-gray-700/60 transition-colors"
             aria-label="Toggle menu"
           >
-            <div className="relative w-5 h-5">
-              <span className={`absolute top-1 w-full h-0.5 bg-gray-600 dark:bg-gray-300 rounded-full transition-all ${isMenuOpen ? 'rotate-45 top-2' : ''}`}></span>
-              <span className={`absolute top-2 w-full h-0.5 bg-gray-600 dark:bg-gray-300 rounded-full transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`absolute top-3 w-full h-0.5 bg-gray-600 dark:bg-gray-300 rounded-full transition-all ${isMenuOpen ? '-rotate-45 top-2' : ''}`}></span>
-            </div>
+            {isMenuOpen
+              ? <X className="w-6 h-6" />
+              : <Menu className="w-6 h-6" />
+            }
           </button>
 
           {/* Mobile Menu Overlay */}
