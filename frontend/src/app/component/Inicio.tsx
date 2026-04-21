@@ -1,83 +1,78 @@
 "use client";
 
-import FinanzasChart from "./FinanzasGraf";
-import FinanzasMensualChart from "./FinanzasMensualChart";
-import DonutCategoriasChart from "./DonutCategoriasChart";
 import MercadoPagoSync from "./MercadoPagoSync";
+import DolarWidget from "./DolarWidget";
 import { useUser } from "../contex/UserContex";
-import Image from 'next/image'
+import Image from "next/image";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
+function saludo() {
+  const h = new Date().getHours();
+  if (h < 12) return "Buenos días";
+  if (h < 19) return "Buenas tardes";
+  return "Buenas noches";
+}
 
 const Inicio = () => {
-
   const { totalIngresos, totalGastos, saldoTotal, user, fetchTotales } = useUser();
 
   return (
-    <>
-      <div
-        className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
-        style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }} // Ruta de la imagen de fondo
-      >
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-10 px-4">
+      <div className="max-w-4xl mx-auto space-y-6">
 
-        {/* Card transparente con fondo difuminado */}
-        <div className="relative bg-white/30 backdrop-blur-md rounded-lg shadow-lg p-8 max-w-2xl w-full">
-          {/* Logo */}
-
-          {/* Título "Your Financial" */}
-          <h2 className="text-6xl  text-gray-800 mb-8">
-            Tus Finanzas
-          </h2>
-
-         <h1 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
-          {" "}
-          <Image
-            src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
-            alt="Avatar"
-            width={80}   // w-20 = 20 * 4 = 80px
-            height={80}  // h-20 = 20 * 4 = 80px
-            className="w-20 h-20 rounded-full border-4 border-blue-100 shadow-sm"
-            unoptimized={true} // ← Para SVGs de Dicebear
-          />
-          <span className="text-yellow-900 dark:text-yellow-400 group-hover:underline ml-3"> {/* ← Añadí ml-3 para espaciado */}
-            {user?.user || "Invitado"}
-          </span>
-        </h1>
-
-          {/* Contenido de la card */}
-          <div className="space-y-6">
-            {/* Totales */}
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="bg-green-100/60 rounded-xl p-3">
-                <p className="text-sm text-gray-600">Ingresos</p>
-                <p className="text-lg font-bold text-green-700">${totalIngresos.toLocaleString()}</p>
-              </div>
-              <div className="bg-red-100/60 rounded-xl p-3">
-                <p className="text-sm text-gray-600">Gastos</p>
-                <p className="text-lg font-bold text-red-700">${totalGastos.toLocaleString()}</p>
-              </div>
-              <div className="bg-blue-100/60 rounded-xl p-3">
-                <p className="text-sm text-gray-600">Saldo</p>
-                <p className="text-lg font-bold text-blue-700">${saldoTotal.toLocaleString()}</p>
+        {/* Hero: saludo + saldo */}
+        <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl p-8 text-white">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Image
+                src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || "default"}`}
+                alt="Avatar"
+                width={44}
+                height={44}
+                className="w-11 h-11 rounded-full border-2 border-white/40"
+                unoptimized
+              />
+              <div>
+                <p className="text-emerald-100 text-sm">{saludo()}</p>
+                <p className="font-semibold text-lg leading-tight">{user?.user || "Invitado"}</p>
               </div>
             </div>
+          </div>
 
-            {/* Sync MercadoPago */}
-            <MercadoPagoSync onSynced={fetchTotales} />
+          <p className="text-emerald-100 text-sm mb-1">Saldo disponible</p>
+          <p className="text-5xl font-bold font-mono-nums tracking-tight mb-6">
+            ${saldoTotal.toLocaleString()}
+          </p>
 
-            {/* Gráfico de totales */}
-            <FinanzasChart />
-
-            {/* Gráfico de evolución mensual */}
-            <FinanzasMensualChart />
-
-            {/* Donut por categoría */}
-            <DonutCategoriasChart />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white/15 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="w-4 h-4 text-emerald-200" />
+                <p className="text-emerald-100 text-xs">Ingresos</p>
+              </div>
+              <p className="text-xl font-bold font-mono-nums">${totalIngresos.toLocaleString()}</p>
+            </div>
+            <div className="bg-white/15 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingDown className="w-4 h-4 text-emerald-200" />
+                <p className="text-emerald-100 text-xs">Gastos</p>
+              </div>
+              <p className="text-xl font-bold font-mono-nums">${totalGastos.toLocaleString()}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-    </>
-  )
-}
+        {/* Grid inferior */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+            <MercadoPagoSync onSynced={fetchTotales} />
+          </div>
+          <DolarWidget />
+        </div>
+
+      </div>
+    </div>
+  );
+};
 
 export default Inicio;

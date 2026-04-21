@@ -2,17 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Home, LayoutDashboard, CreditCard, TrendingUp, FileText, HelpCircle } from "lucide-react";
 
 export default function Nav() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   const menuItems = [
-    { label: "Inicio", path: "/", icon: "🏠" },
-    { label: "Dashboard", path: "/usuario", icon: "📊" },
-    { label: "Transacciones", path: "/transacciones", icon: "💳" },
-    { label: "Movimientos", path: "/movimientos", icon: "📈" },
-    { label: "Importar CSV", path: "/importar", icon: "📂" },
+    { label: "Inicio", path: "/", icon: Home },
+    { label: "Dashboard", path: "/usuario", icon: LayoutDashboard },
+    { label: "Transacciones", path: "/transacciones", icon: CreditCard },
+    { label: "Movimientos", path: "/movimientos", icon: TrendingUp },
   ];
 
   return (
@@ -27,9 +27,7 @@ export default function Nav() {
                 onClick={() => router.push(item.path)}
                 className="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-xl hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm transition-all duration-200 group relative"
               >
-                <span className="mr-2.5 text-lg group-hover:scale-110 transition-transform">
-                  {item.icon}
-                </span>
+                <item.icon className="w-4 h-4 mr-2.5 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">{item.label}</span>
                 <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               </button>
@@ -71,7 +69,7 @@ export default function Nav() {
                       className="flex items-center w-full px-4 py-3.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group/mobile"
                     >
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center mr-3 group-hover/mobile:from-amber-50 group-hover/mobile:to-orange-50 dark:group-hover/mobile:from-amber-900/20 dark:group-hover/mobile:to-orange-900/20 transition-all">
-                        <span className="text-xl">{item.icon}</span>
+                        <item.icon className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover/mobile:text-amber-600 transition-colors" />
                       </div>
                       <div className="flex-1 text-left">
                         <div className="font-medium text-gray-900 dark:text-white">
@@ -82,7 +80,6 @@ export default function Nav() {
                           {item.path === "/usuario" && "Resumen financiero"}
                           {item.path === "/transacciones" && "Agregar transacciones"}
                           {item.path === "/movimientos" && "Historial completo"}
-                        {item.path === "/importar" && "Subir extracto bancario"}
                         </div>
                       </div>
                       <svg className="w-5 h-5 text-gray-400 group-hover/mobile:text-amber-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,16 +106,18 @@ export default function Nav() {
           <div className="hidden md:flex items-center space-x-3">
             <button
               onClick={() => router.push("/reportes")}
-              className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-colors"
+              className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-colors"
             >
-              📄 Reportes
+              <FileText className="w-4 h-4 mr-1.5" />
+              Reportes
             </button>
             <div className="w-px h-6 bg-gray-300 dark:bg-gray-700"></div>
             <button
               onClick={() => router.push("/ayuda")}
-              className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-colors"
+              className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-colors"
             >
-              ❓ Ayuda
+              <HelpCircle className="w-4 h-4 mr-1.5" />
+              Ayuda
             </button>
           </div>
         </div>

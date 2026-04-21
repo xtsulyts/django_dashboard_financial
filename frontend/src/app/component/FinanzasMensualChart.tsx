@@ -76,13 +76,13 @@ const FinanzasMensualChart = () => {
       {
         label: "Ingresos",
         data: meses.map((m) => mesesMap[m].ingresos),
-        backgroundColor: "#4CAF50",
+        backgroundColor: "#5a9e72",
         borderRadius: 6,
       },
       {
         label: "Gastos",
         data: meses.map((m) => mesesMap[m].gastos),
-        backgroundColor: "#F44336",
+        backgroundColor: "#c97a75",
         borderRadius: 6,
       },
     ],
@@ -100,7 +100,7 @@ const FinanzasMensualChart = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-2xl mx-auto bg-white/30 p-6 rounded-lg shadow text-center text-gray-600">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-600">
         Cargando evolución mensual...
       </div>
     );
@@ -108,7 +108,7 @@ const FinanzasMensualChart = () => {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto bg-white/30 p-6 rounded-lg shadow text-center text-red-500">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-red-500">
         {error}
       </div>
     );
@@ -116,14 +116,14 @@ const FinanzasMensualChart = () => {
 
   if (meses.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto bg-white/30 p-6 rounded-lg shadow text-center text-gray-500">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow text-center text-gray-500">
         Sin transacciones para mostrar
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white/30 p-6 rounded-lg shadow">
+    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-700/60 p-6 rounded-lg shadow">
       <h2 className="text-xl font-bold text-center mb-4">Evolución mensual</h2>
       <Bar data={data} options={options} />
     </div>

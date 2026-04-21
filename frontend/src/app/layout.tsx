@@ -1,22 +1,24 @@
 //"use client"
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "./contex/UserContex";
 import Header from "./component/Header";
 import { TransactionProvider } from "./contex/TransactionContex";
 import Footer from "./component/Footer";
 import Nav from "./component/Nav";
+import ThemeProvider from "./component/ThemeProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -37,14 +39,16 @@ export default function RootLayout({
     
     <UserProvider>
       <TransactionProvider>
-      <html lang="en">
+      <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${dmMono.variable} antialiased`}
       >
-        <Header/>
-        <Nav/>
-        {children}
-        <Footer/>
+        <ThemeProvider>
+          <Header/>
+          <Nav/>
+          {children}
+          <Footer/>
+        </ThemeProvider>
       </body>
     </html>
     </TransactionProvider>

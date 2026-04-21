@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { useUser } from "../contex/UserContex";
@@ -8,15 +7,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const FinanzasChart = () => {
   const { totalIngresos, totalGastos, saldoTotal } = useUser();
 
-  // Efecto que se ejecuta cuando cambian los totales
-  useEffect(() => {
-    // Aquí puedes poner cualquier lógica que necesites cuando los totales se actualicen
-    console.log("Los totales financieros han cambiado:", {
-      ingresos: totalIngresos,
-      gastos: totalGastos,
-      saldo: saldoTotal,
-    });
-  }, [totalIngresos, totalGastos, saldoTotal]);
 
   const data = {
     labels: ["Ingresos", "Gastos", "Saldo"],

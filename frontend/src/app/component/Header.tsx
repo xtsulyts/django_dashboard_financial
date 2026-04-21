@@ -4,12 +4,18 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../contex/UserContex";
 import { useState, useEffect, useRef } from "react";
 import Image from 'next/image';
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 
 const Header = () => {
   const router = useRouter();
   const { user, logoutUser } = useUser();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null); 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []); 
   
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => { 
@@ -47,6 +53,17 @@ const Header = () => {
               </span>
             </div>
           </button>
+
+          {/* Toggle dark/light */}
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Cambiar tema"
+            >
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          )}
 
           {/* Menú - Derecha */}
           <div className="flex items-center">
@@ -100,11 +117,12 @@ const Header = () => {
                       <div className="flex items-center space-x-4">
                         <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow">
                           <Image
-                            src={user?.avatar || "/default-avatar.png"}
+                            src={user?.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${user?.user || 'default'}`}
                             alt={user?.user || 'Usuario'}
-                            width={56}  // w-14 = 14 * 4 = 56px
-                            height={56} // h-14 = 14 * 4 = 56px
+                            width={56}
+                            height={56}
                             className="w-full h-full object-cover"
+                            unoptimized
                           />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -125,7 +143,7 @@ const Header = () => {
                     {/* Opciones del menú */}
                     <div className="p-2">
                       <Link
-                        href="/dashboard"
+                        href="/usuario"
                         className="flex items-center px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group/menu"
                         onClick={() => setIsDropdownOpen(false)}
                       >

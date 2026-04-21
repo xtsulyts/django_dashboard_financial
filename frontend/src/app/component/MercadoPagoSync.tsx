@@ -144,7 +144,7 @@ export default function MercadoPagoSync({ onSynced }: { onSynced?: () => void })
   }
 
   return (
-    <div className="bg-white/40 backdrop-blur-md rounded-xl p-4 space-y-3">
+    <div className="bg-white dark:bg-gray-700/60 rounded-xl p-4 space-y-3">
 
       {/* Header con estado */}
       <div className="flex items-center justify-between">
@@ -197,7 +197,7 @@ export default function MercadoPagoSync({ onSynced }: { onSynced?: () => void })
                 className={`text-xs px-3 py-1 rounded-full border transition-colors ${
                   periodo === p.value
                     ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white/60 text-gray-600 border-gray-300 hover:border-blue-400"
+                    : "bg-white dark:bg-gray-600 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-500 hover:border-blue-400"
                 }`}
               >
                 {p.label}
@@ -213,7 +213,7 @@ export default function MercadoPagoSync({ onSynced }: { onSynced?: () => void })
                 value={fechaDesde}
                 max={fechaHasta}
                 onChange={(e) => setFechaDesde(e.target.value)}
-                className="text-xs border border-gray-300 rounded px-2 py-1 bg-white/70"
+                className="text-xs border border-gray-300 dark:border-gray-500 rounded px-2 py-1 bg-white dark:bg-gray-600 dark:text-gray-200"
               />
               <span className="text-xs text-gray-500">→</span>
               <input
@@ -222,7 +222,7 @@ export default function MercadoPagoSync({ onSynced }: { onSynced?: () => void })
                 min={fechaDesde}
                 max={today()}
                 onChange={(e) => setFechaHasta(e.target.value)}
-                className="text-xs border border-gray-300 rounded px-2 py-1 bg-white/70"
+                className="text-xs border border-gray-300 dark:border-gray-500 rounded px-2 py-1 bg-white dark:bg-gray-600 dark:text-gray-200"
               />
             </div>
           )}

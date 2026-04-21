@@ -1,6 +1,7 @@
 "use client";
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
+import { DollarSign, Calendar, FileText, ArrowUpCircle, ArrowDownCircle, Tag, Save, Trash2, ArrowLeft, Sparkles, AlertTriangle } from 'lucide-react';
 import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
@@ -181,17 +182,10 @@ const handleSubmit = async (e: React.FormEvent) => {
   });
 
   return (
-    <div
-      className="relative min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/yourFinancialPhotoInicio.webp')" }}
-    >
-      {/* Overlay con opacidad */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/10 backdrop-blur-[1px]"></div>
-      
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl">
           {/* Tarjeta del formulario */}
-          <div className="bg-gradient-to-br from-white/95 via-white/90 to-white/95 dark:from-gray-800/95 dark:via-gray-800/90 dark:to-gray-800/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/40 dark:border-gray-700/40">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
             {/* Header con gradiente */}
             <div className="bg-gradient-to-r from-emerald-500/90 to-cyan-500/90 p-8">
               <div className="flex items-center justify-between">
@@ -226,7 +220,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               {error && (
                 <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
                   <p className="text-red-700 dark:text-red-400 font-medium flex items-center">
-                    <span className="mr-2">⚠️</span>
+                    <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0" />
                     {error}
                   </p>
                 </div>
@@ -237,7 +231,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     <span className="flex items-center">
-                      <span className="mr-2">💰</span>
+                      <DollarSign className="w-4 h-4 mr-2 text-gray-500" />
                       Monto
                     </span>
                   </label>
@@ -263,7 +257,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     <span className="flex items-center">
-                      <span className="mr-2">📅</span>
+                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
                       Fecha
                     </span>
                   </label>
@@ -282,7 +276,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   <span className="flex items-center">
-                    <span className="mr-2">📝</span>
+                    <FileText className="w-4 h-4 mr-2 text-gray-500" />
                     Descripción (opcional)
                   </span>
                 </label>
@@ -301,7 +295,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     <span className="flex items-center">
-                      <span className="mr-2">📊</span>
+                      <Tag className="w-4 h-4 mr-2 text-gray-500" />
                       Tipo de transacción
                     </span>
                   </label>
@@ -309,23 +303,23 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <button
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, tipo: 'INGRESO', categoriaId: undefined }))}
-                      className={`py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'INGRESO' 
-                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300' 
+                      className={`flex items-center justify-center py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'INGRESO'
+                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
                         : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300'
                       }`}
                     >
-                      <span className="text-lg mr-2">⬆️</span>
+                      <ArrowUpCircle className="w-5 h-5 mr-2" />
                       Ingreso
                     </button>
                     <button
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, tipo: 'GASTO', categoriaId: undefined }))}
-                      className={`py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'GASTO' 
-                        ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300' 
+                      className={`flex items-center justify-center py-3.5 rounded-xl border-2 transition-all font-medium ${formData.tipo === 'GASTO'
+                        ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300'
                         : 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-rose-300'
                       }`}
                     >
-                      <span className="text-lg mr-2">⬇️</span>
+                      <ArrowDownCircle className="w-5 h-5 mr-2" />
                       Gasto
                     </button>
                   </div>
@@ -335,7 +329,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     <span className="flex items-center">
-                      <span className="mr-2">🏷️</span>
+                      <Tag className="w-4 h-4 mr-2 text-gray-500" />
                       Categoría
                     </span>
                   </label>
@@ -382,12 +376,12 @@ const handleSubmit = async (e: React.FormEvent) => {
                       Procesando...
                     </div>
                   ) : (
-                    <>
-                      <span className="text-lg mr-2">
-                        {transaction ? '💾' : '✨'}
-                      </span>
-                      {transaction ? 'Guardar Cambios' : 'Crear Transacción'}
-                    </>
+                    <span className="flex items-center justify-center">
+                      {transaction
+                        ? <><Save className="w-5 h-5 mr-2" /> Guardar Cambios</>
+                        : <><Sparkles className="w-5 h-5 mr-2" /> Crear Transacción</>
+                      }
+                    </span>
                   )}
                 </button>
 
@@ -396,9 +390,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                     type="button"
                     onClick={handleDelete}
                     disabled={isLoadingCategorias}
-                    className={`w-full py-3.5 px-6 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${isLoadingCategorias ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    className={`flex items-center justify-center w-full py-3.5 px-6 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${isLoadingCategorias ? 'opacity-70 cursor-not-allowed' : ''}`}
                   >
-                    <span className="text-lg mr-2">🗑️</span>
+                    <Trash2 className="w-5 h-5 mr-2" />
                     Eliminar Transacción
                   </button>
                 )}
@@ -407,9 +401,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                   type="button"
                   onClick={() => router.push('/movimientos')}
                   disabled={isLoadingCategorias}
-                  className={`w-full py-3.5 px-6 border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold rounded-xl transition-colors ${isLoadingCategorias ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`flex items-center justify-center w-full py-3.5 px-6 border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold rounded-xl transition-colors ${isLoadingCategorias ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  <span className="mr-2">←</span>
+                  <ArrowLeft className="w-5 h-5 mr-2" />
                   Volver al historial
                 </button>
               </div>
@@ -430,16 +424,6 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
             </form>
           </div>
-
-          {/* Info adicional */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-white/90">
-              <span className="bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
-                💡 Tip: Mantén tus transacciones actualizadas para un mejor control
-              </span>
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
