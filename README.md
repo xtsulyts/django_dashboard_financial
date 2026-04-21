@@ -1,107 +1,93 @@
-# django_dashboard_financial
+# FinanzasPro — Dashboard Financiero Personal
 
-Este proyecto es una aplicación web para la gestión de finanzas personales. Permite a los usuarios registrar sus ingresos y gastos, visualizar su balance financiero y realizar análisis mediante gráficos interactivos. Los usuarios pueden gestionar sus transacciones, categorizarlas y exportar los datos a formatos CSV o Excel.
+Aplicación web para la gestión de finanzas personales. Permite registrar ingresos y gastos, visualizar el balance financiero con gráficos interactivos y sincronizar movimientos desde MercadoPago.
+
+🔗 **[Ver demo en producción](https://django-dashboard-financial.vercel.app/)**
+
+---
 
 ## Características
 
-- **Autenticación de usuarios**:
-  - Registro e inicio de sesión con JWT.
-  - Roles de usuario (Admin y Usuario).
-  
-- **Gestión de transacciones**:
-  - CRUD de ingresos y gastos.
-  - Categorización de las transacciones (comida, transporte, entretenimiento, etc.).
-  - Descripción opcional de cada transacción.
+- **Autenticación** — Registro e inicio de sesión con JWT
+- **Dashboard** — Gráfico de evolución mensual y líneas de ingresos/gastos
+- **Inicio** — Saldo, totales y cotización del dólar en tiempo real (Oficial, Blue, MEP)
+- **Transacciones** — Crear, editar y eliminar ingresos/gastos con categorías
+- **Movimientos** — Historial completo con vista de lista estilo extracto bancario
+- **MercadoPago Sync** — Importación automática de pagos desde la API de MP
+- **Dark/Light mode** — Toggle persistente con next-themes
+- **Perfil y Configuración** — Páginas de usuario
 
-- **Visualización interactiva**:
-  - Gráficos de barras o líneas mostrando los ingresos y gastos por mes.
-  - Gráfico de "Balance total" entre ingresos y gastos.
-  
-- **Filtros y búsqueda**:
-  - Filtros por fecha (última semana, mes, trimestre, etc.).
-  - Búsqueda de transacciones por descripción o categoría.
-  
-- **Exportación de datos**:
-  - Exporta tus transacciones a formatos CSV o Excel.
+## Stack
 
-## Tecnologías
+**Backend**
+- Django + Django REST Framework
+- PostgreSQL (Neon) en producción / SQLite en desarrollo
+- JWT con SimpleJWT
+- Docker — imagen publicada en Docker Hub
+- Deploy en Render
 
-- **Backend**:
-  - **Django** con **Django REST Framework**.
-  - Base de datos **PosgreSQL**.
+**Frontend**
+- Next.js 15 + React
+- Tailwind CSS
+- Chart.js (react-chartjs-2)
+- Lucide React
+- Inter + DM Mono (next/font)
+- Deploy en Vercel
 
-- **Frontend**:
-  - **React, Next.js**.
-  - **Tailwind CSS** 
+## Instalación local
 
-- **Autenticación**:
-  - JSON Web Tokens (JWT) para autenticación y autorización.
+### Backend
 
-- **Visualización**:
-  - Gráficos interactivos usando **Recharts** o **Chart.js**.
+```bash
+git clone https://github.com/xtsulyts/django_dashboard_financial
+cd django_dashboard_financial
 
-## Instalación
+python3 -m venv venv
+source venv/bin/activate
+pip install -r backend/requirements.txt
+```
 
-Sigue estos pasos para instalar y ejecutar el proyecto en tu entorno local.
+Crear `backend/.env`:
+```
+USE_SQLITE=true
+DJANGO_SECRET_KEY=tu_secret_key
+```
 
-### Backend (Django)
+```bash
+cd backend
+python manage.py migrate
+python manage.py runserver
+```
 
-1. Clona el repositorio.
+### Frontend
 
-2. Crea un entorno virtual e instala las dependencias de Python:
-   
-  python3 -m venv venv
-  source venv/bin/activate  # En Windows usa venv\Scripts\activate
-  pip install -r requirements.txt
-
-3. Configura las variables de entorno:
-
-   DJANGO_SECRET_KEY: La clave secreta de Django.
-   DATABASE_URL: La URL de conexión a tu base de datos MySQL.
-
-4. Ejecuta las migraciones:
-   python manage.py migrate
-
-5. Inicia el servidor de desarrollo:
-   python manage.py runserver
-
-Frontend (React/Next.js)
-
-1. Navega a la carpeta del frontend:
+```bash
 cd frontend
-
-2. Instala las dependencias de Node.js:
 npm install
+```
 
-3. Inicia el servidor de desarrollo:
+Crear `frontend/.env.local`:
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+```bash
 npm run dev
+```
 
-El proyecto debería estar disponible en http://localhost:3000.
+Disponible en `http://localhost:3000`
 
-Uso
-Autenticación:
+## Variables de entorno en producción
 
-Los usuarios deben registrarse o iniciar sesión para acceder a sus datos financieros.
-Gestión de Transacciones:
-
-Los usuarios pueden agregar, editar o eliminar transacciones.
-Pueden categorizar sus transacciones según categorías predefinidas o personalizadas.
-Gráficos:
-
-Se generan gráficos dinámicos que muestran el balance entre ingresos y gastos a lo largo del tiempo.
-Los usuarios pueden elegir el período de análisis (diario, mensual, anual).
-Exportación:
-
-Los datos pueden ser exportados a CSV o Excel para su análisis externo.
-Contribuciones
-Si deseas contribuir a este proyecto, por favor sigue estos pasos:
-
-Forkea el repositorio.
-Crea una rama para tus cambios (git checkout -b feature/nueva-funcionalidad).
-Realiza tus cambios y realiza un commit (git commit -m 'Agregada nueva funcionalidad').
-Empuja tus cambios (git push origin feature/nueva-funcionalidad).
-Crea un pull request.
-Licencia
-Este proyecto está bajo la licencia MIT. Para más detalles, consulta el archivo LICENSE.
-
-
+| Variable | Descripción |
+|---|---|
+| `USE_SQLITE` | Omitir o `false` para usar PostgreSQL |
+| `DB_ENGINE` | `django.db.backends.postgresql` |
+| `DB_NAME` | Nombre de la base de datos Neon |
+| `DB_USER` | Usuario Neon |
+| `DB_PASSWORD` | Contraseña Neon |
+| `DB_HOST` | Host Neon |
+| `DB_PORT` | `5432` |
+| `DJANGO_SECRET_KEY` | Clave secreta Django |
+| `MP_ACCESS_TOKEN` | Token de MercadoPago |
+| `NEXT_PUBLIC_API_URL` | URL del backend (Render) |
