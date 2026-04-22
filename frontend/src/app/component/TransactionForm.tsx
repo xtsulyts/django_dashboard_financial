@@ -6,6 +6,7 @@ import { useUser } from '../contex/UserContex';
 import { createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService';
 import { useRouter } from 'next/navigation';
 import { TransactionInput } from '@/types/transaction';
+import { toast } from 'sonner';
 
 // 1. Tipo para el FORMULARIO 
 type TransactionFormData = {
@@ -133,23 +134,21 @@ const handleSubmit = async (e: React.FormEvent) => {
     try {
       if (transaction?.id) {
         await updateTransaction(transaction.id, apiData, access_token);
+        toast.success('Transacción actualizada', { description: 'Los cambios se guardaron correctamente.' });
       } else {
         await createTransaction(apiData, access_token);
-
+        toast.success('Transacción creada', { description: 'Tu transacción fue registrada exitosamente.' });
       }
 
       if (onSubmitSuccess) {
         onSubmitSuccess();
-        //fetchTotales();
       }
       router.push("./movimientos");
       fetchTotales();
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Error al guardar la transacción.');
-      }
+      const mensaje = err instanceof Error ? err.message : 'Error al guardar la transacción.';
+      setError(mensaje);
+      toast.error('Error al guardar', { description: mensaje });
     } finally {
       setIsLoading(false);
     }
@@ -159,15 +158,15 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (transaction?.id && access_token) {
       try {
         await deleteTransaction(transaction.id, access_token);
+        toast.success('Transacción eliminada', { description: 'La transacción fue eliminada correctamente.' });
         if (onDeleteSuccess) {
           onDeleteSuccess();
         }
+        router.push('./movimientos');
       } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Error al eliminar la transacción.');
-        }
+        const mensaje = err instanceof Error ? err.message : 'Error al eliminar la transacción.';
+        setError(mensaje);
+        toast.error('Error al eliminar', { description: mensaje });
       }
     }
   };

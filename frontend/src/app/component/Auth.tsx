@@ -3,7 +3,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, User, Mail, Lock, CheckCircle, ArrowRight } from "lucide-react";
+import { AlertTriangle, User, Mail, Lock, CheckCircle, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const AuthComponent = () => {
   const router = useRouter();
@@ -13,6 +14,8 @@ const AuthComponent = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -34,7 +37,7 @@ const AuthComponent = () => {
       });
       
       if (response.status === 201) {
-        // Éxito - mostrar feedback y redirigir
+        toast.success("¡Cuenta creada!", { description: "Ya podés iniciar sesión con tus credenciales." });
         router.push("/login");
       }
     } catch (error: unknown) {
@@ -86,7 +89,9 @@ const AuthComponent = () => {
                   error: errors.username,
                   placeholder: "tu nombre",
                   icon: User,
-                  type: "text"
+                  type: "text",
+                  toggleShow: null,
+                  show: null,
                 },
                 {
                   label: "Correo electrónico",
@@ -95,7 +100,9 @@ const AuthComponent = () => {
                   error: errors.email,
                   placeholder: "tu@email.com",
                   icon: Mail,
-                  type: "email"
+                  type: "email",
+                  toggleShow: null,
+                  show: null,
                 },
                 {
                   label: "Contraseña",
@@ -104,7 +111,9 @@ const AuthComponent = () => {
                   error: errors.password1,
                   placeholder: "••••••••",
                   icon: Lock,
-                  type: "password"
+                  type: "password",
+                  toggleShow: () => setShowPassword((v) => !v),
+                  show: showPassword,
                 },
                 {
                   label: "Confirmar contraseña",
@@ -113,7 +122,9 @@ const AuthComponent = () => {
                   error: errors.confirmPassword || errors.password2,
                   placeholder: "••••••••",
                   icon: CheckCircle,
-                  type: "password"
+                  type: "password",
+                  toggleShow: () => setShowConfirmPassword((v) => !v),
+                  show: showConfirmPassword,
                 },
               ].map((field, index) => (
                 <div key={index}>
@@ -125,20 +136,30 @@ const AuthComponent = () => {
                       <field.icon className="w-4 h-4" />
                     </div>
                     <input
-                      type={field.type}
+                      type={field.toggleShow ? (field.show ? "text" : "password") : field.type}
                       value={field.value}
                       onChange={(e) => field.setValue(e.target.value)}
-                      className={`w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-800 border ${
-                        field.error 
-                          ? "border-red-500 focus:border-red-500 ring-red-500/20" 
+                      className={`w-full pl-12 ${field.toggleShow ? "pr-12" : "pr-4"} py-3.5 bg-white dark:bg-gray-800 border ${
+                        field.error
+                          ? "border-red-500 focus:border-red-500 ring-red-500/20"
                           : "border-gray-300 dark:border-gray-700 focus:border-amber-500"
                       } rounded-xl focus:ring-4 focus:ring-amber-500/20 transition-all outline-none text-gray-600 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500`}
                       placeholder={field.placeholder}
                       required
                     />
+                    {field.toggleShow && (
+                      <button
+                        type="button"
+                        onClick={field.toggleShow}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                        aria-label={field.show ? "Ocultar contraseña" : "Mostrar contraseña"}
+                      >
+                        {field.show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    )}
                   </div>
                   {field.error && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                       <AlertTriangle className="w-4 h-4 shrink-0" />
                       {field.error[0]}
                     </p>

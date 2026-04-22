@@ -9,6 +9,7 @@ import { TransactionProvider } from "./contex/TransactionContex";
 import Footer from "./component/Footer";
 import Nav from "./component/Nav";
 import ThemeProvider from "./component/ThemeProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +45,7 @@ export default function RootLayout({
         className={`${inter.variable} ${dmMono.variable} antialiased`}
       >
         <ThemeProvider>
+          <Toaster position="top-right" richColors closeButton />
           <Header/>
           <Nav/>
           {children}
